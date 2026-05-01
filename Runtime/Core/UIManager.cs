@@ -79,6 +79,7 @@ namespace KitforgeLabs.MobileUIKit.Core
             }
             var instance = Instantiate(prefab, _screenRoot);
             instance.gameObject.SetActive(false);
+            instance.Initialize(_themeConfig, _services);
             _screenCache[type] = instance;
             return (T)instance;
         }

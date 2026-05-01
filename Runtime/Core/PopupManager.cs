@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using KitforgeLabs.MobileUIKit.Services;
 using KitforgeLabs.MobileUIKit.Theme;
 using UnityEngine;
 
@@ -11,6 +12,7 @@ namespace KitforgeLabs.MobileUIKit.Core
         private const int MaxDepth = 3;
 
         [SerializeField] private UIThemeConfig _themeConfig;
+        [SerializeField] private UIServices _services;
         [SerializeField] private Transform _popupRoot;
         [SerializeField] private GameObject _backdrop;
         [SerializeField] private UIModuleBase[] _popupPrefabs;
@@ -156,8 +158,15 @@ namespace KitforgeLabs.MobileUIKit.Core
             }
             var instance = Instantiate(prefab, _popupRoot);
             instance.gameObject.SetActive(false);
+            instance.Initialize(_themeConfig, _services);
+            instance.DismissRequested += HandleDismissRequested;
             _popupCache[type] = instance;
             return instance;
+        }
+
+        private void HandleDismissRequested(UIModuleBase popup)
+        {
+            Dismiss(popup);
         }
 
         private UIModuleBase FindPrefab(Type type)
@@ -186,6 +195,10 @@ namespace KitforgeLabs.MobileUIKit.Core
             for (var i = 0; i < _activeStack.Count; i++)
             {
                 if (_activeStack[i].Module != null) _activeStack[i].Module.OnHide();
+            }
+            foreach (var entry in _popupCache)
+            {
+                if (entry.Value != null) entry.Value.DismissRequested -= HandleDismissRequested;
             }
             _activeStack.Clear();
             _pendingQueue.Clear();

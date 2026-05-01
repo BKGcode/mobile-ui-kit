@@ -25,6 +25,7 @@ namespace KitforgeLabs.MobileUIKit.Animation
         [Header("Tuning")]
         [SerializeField] private float _scaleFrom = 0.7f;
         [SerializeField] private float _scaleOvershoot = 1.10f;
+        [SerializeField] private float _hideScaleTo = 0.9f;
         [SerializeField] private Vector2 _positionOffset = new Vector2(0f, -120f);
         [SerializeField] private float _rotationFrom = -8f;
 
@@ -44,6 +45,7 @@ namespace KitforgeLabs.MobileUIKit.Animation
         public bool UseRotation => _useRotation;
         public float ScaleFrom => _scaleFrom;
         public float ScaleOvershoot => _scaleOvershoot;
+        public float HideScaleTo => _hideScaleTo;
         public Vector2 PositionOffset => _positionOffset;
         public float RotationFrom => _rotationFrom;
         public float PressedScale => _pressedScale;

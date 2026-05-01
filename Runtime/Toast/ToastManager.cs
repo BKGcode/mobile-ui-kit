@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using KitforgeLabs.MobileUIKit.Services;
 using KitforgeLabs.MobileUIKit.Theme;
 using UnityEngine;
 
@@ -10,6 +11,7 @@ namespace KitforgeLabs.MobileUIKit.Toast
     public sealed class ToastManager : MonoBehaviour
     {
         [SerializeField] private UIThemeConfig _themeConfig;
+        [SerializeField] private UIServices _services;
         [SerializeField] private Transform _toastRoot;
         [SerializeField] private UIToastBase[] _toastPrefabs;
         [SerializeField] private int _maxConcurrent = 3;
@@ -18,6 +20,7 @@ namespace KitforgeLabs.MobileUIKit.Toast
         private readonly Queue<PendingToast> _pending = new();
 
         public UIThemeConfig Theme => _themeConfig;
+        public UIServices Services => _services;
         public int ActiveCount => _active.Count;
 
         public T Show<T>(object data = null, float? duration = null) where T : UIToastBase
@@ -46,12 +49,19 @@ namespace KitforgeLabs.MobileUIKit.Toast
                 return null;
             }
             var instance = Instantiate(prefab, _toastRoot);
+            instance.Initialize(_themeConfig, _services);
+            instance.DismissRequested += HandleDismissRequested;
             if (request.Data != null) instance.BindUntyped(request.Data);
             instance.OnShow();
             var lifetime = request.Duration ?? instance.DefaultDuration;
             var routine = StartCoroutine(AutoDismiss(instance, lifetime));
             _active.Add(new ActiveToast { Instance = instance, Routine = routine });
             return instance;
+        }
+
+        private void HandleDismissRequested(UIToastBase toast)
+        {
+            DismissInstance(toast);
         }
 
         private IEnumerator AutoDismiss(UIToastBase toast, float lifetime)
@@ -77,6 +87,7 @@ namespace KitforgeLabs.MobileUIKit.Toast
             if (record.Routine != null) StopCoroutine(record.Routine);
             if (record.Instance != null)
             {
+                record.Instance.DismissRequested -= HandleDismissRequested;
                 record.Instance.OnHide();
                 Destroy(record.Instance.gameObject);
             }
@@ -105,8 +116,13 @@ namespace KitforgeLabs.MobileUIKit.Toast
         {
             for (var i = 0; i < _active.Count; i++)
             {
-                if (_active[i].Routine != null) StopCoroutine(_active[i].Routine);
-                if (_active[i].Instance != null) _active[i].Instance.OnHide();
+                var record = _active[i];
+                if (record.Routine != null) StopCoroutine(record.Routine);
+                if (record.Instance != null)
+                {
+                    record.Instance.DismissRequested -= HandleDismissRequested;
+                    record.Instance.OnHide();
+                }
             }
             _active.Clear();
             _pending.Clear();

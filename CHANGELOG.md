@@ -3,9 +3,39 @@
 All notable changes to this package will be documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-_Last updated: 2026-05-01_
+_Last updated: 2026-05-02_
 
 ## [Unreleased]
+
+### Group A — element 2/4: NotificationToast (scaffolded, code+tests, no spec/prefab yet)
+- **Group 0 extension** (`Runtime/Toast/UIToastBase.cs`): added `event Action<UIToastBase> DismissRequested`, `bool IsDismissing { get; protected set; }`, `protected UIThemeConfig Theme`, `protected UIServices Services`, `virtual Initialize(theme, services)`, `protected RaiseDismissRequested()`. Aligns Toast layer with Q1/Q2 decisions taken in element 1.
+- **`Runtime/Catalog/Toasts/`**: `ToastSeverity` enum (Info/Success/Warning/Error), `NotificationToastData` DTO (Message + Severity + DurationOverride + TapToDismiss), `NotificationToast` (`UIToast<TData>`, `[RequireComponent(UIAnimNotificationToast)]`, lazy `IUIAnimator`, severity → tint+icon+audio cue mapping, idempotent `DismissNow`, `OnTapped`/`OnDismissed` events, `ClearAllEvents` on Bind), `UIAnimNotificationToast` (slide-in via `PositionOffset` + fade, no scale — toasts slide, don't bounce).
+- **Severity → theme mapping** (decisions taken without spec — flag for review):
+  - Info → `PrimaryColor` + no icon + `UIAudioCue.Notification`
+  - Success → `SuccessColor` + `IconCheck` + `UIAudioCue.Success`
+  - Warning → `AccentColor` + no icon + `UIAudioCue.Notification` (no dedicated `WarningColor` in Theme — YAGNI until 2nd consumer)
+  - Error → `DangerColor` + no icon + `UIAudioCue.Error`
+- **`ToastManager`**: added `[SerializeField] UIServices _services`, `Initialize(theme, services)` propagation per toast, `DismissRequested` subscribe/unsubscribe lifecycle. ⚠️ **Breaking for Group 0 buyers** — existing `ToastManager` references in scene need new `_services` slot wired (migration note).
+- **EditMode tests**: `Tests/Editor/NotificationToastTests.cs` (5 tests: Bind null defaults, duration override fallback, duration override honored, idempotent DismissNow, Bind resets listeners). **All green: 5/5 (43/43 total).**
+- **Pending**: spec (`Documentation~/Specs/Catalog/NotificationToast.md`), prefab + Demo scene, CATALOG.md row link. Closes at end of Group A → bumps minor to `0.4.0`.
+
+### Group A — element 1/4: ConfirmPopup (closed, code+tests+spec)
+- **Catalog asmdef** `KitforgeLabs.MobileUIKit.Catalog` (refs Runtime + DOTween.Modules + TMP).
+- `Runtime/Catalog/Popups/Confirm/`: `ConfirmTone` (Neutral/Destructive/Positive), `ConfirmPopupData`, `ConfirmPopup` (`UIModule<TData>`), `UIAnimConfirmPopup` (`IUIAnimator` + DOTween).
+- **Architectural decisions closed**:
+  - Q1 — `UIModuleBase.Initialize(theme, services)` virtual injection. PopupManager/UIManager wire on instantiate. No more `GetComponentInParent`. Testable without scene.
+  - Q2 — `UIModuleBase.DismissRequested` event + `RaiseDismissRequested()` protected. Popups no longer hold a manager ref. PopupManager subscribes on resolve, unsubscribes on destroy.
+  - Q3 — `IUIAudioRouter` + `UIAudioCue` enum (None/PopupOpen/PopupClose/ButtonTap/Success/Error/Notification). Slot in `UIServices`. Popups call `Services?.Audio?.Play(cue)` null-safe.
+- **Race-condition hardening**: `UIModuleBase.IsDismissing` (protected set) elevated to base. Guards double-click confirm/cancel, back press during hide, backdrop spam.
+- **Event-leak fix**: `ConfirmPopup.Bind` resets `OnConfirmed`/`OnCancelled`/`OnDismissed` before re-bind.
+- **Null-safe Bind**: `Bind(null)` → `new ConfirmPopupData()`. `OnShow` calls `Bind(null)` if `_data == null`.
+- **Tunable**: `UIAnimPreset.HideScaleTo` (default `0.9f`) replaces hardcoded scale in animator.
+- **TA polish**: `[Serializable] private struct Refs` with `[Tooltip]` per field. Animator tooltips clarify `_card` is the scaled rect.
+- **`[RequireComponent(typeof(UIAnimConfirmPopup))]`** + lazy animator resolve (covers prefab + dynamic `AddComponent` paths).
+- **EditMode tests**: `Tests/Editor/KitforgeLabs.MobileUIKit.Catalog.Tests.asmdef` + `ConfirmPopupTests` (5 tests: Bind null, back-press routing with/without cancel, back-press during dismiss, Bind resets listeners). **All green: 5/5 (38/38 total).**
+- **Spec**: `Documentation~/Specs/Catalog/ConfirmPopup.md` (full micro-spec: DTO, services, events, animation, theme, edge cases, QA scenarios, file layout).
+- **CATALOG.md**: ConfirmPopup row links to spec; single-button alert mode documented.
+- **Pending (Editor manual)**: `ConfirmPopup` prefab + Demo scene entry under `Samples~/Catalog/`. Will close at end of Group A together with Toast/Pause/Tutorial → bumps minor to `0.4.0`.
 
 ## [0.3.0-alpha] — 2026-05-01
 

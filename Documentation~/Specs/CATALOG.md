@@ -20,7 +20,7 @@ The kit ships **15 ready-to-use mid-core mobile UI elements** in three layers:
 ### Popups (managed by `PopupManager`)
 | # | Element | Priority | Purpose |
 |---|---|---|---|
-| 1 | ConfirmPopup | Modal | Yes/No, Continue/Cancel — universal blocker |
+| 1 | ConfirmPopup | Modal | Yes/No, Continue/Cancel — universal blocker. `ShowCancel=false` collapses to single-button alert (no separate AlertPopup). See [Specs/Catalog/ConfirmPopup.md](Catalog/ConfirmPopup.md). |
 | 2 | SettingsPopup | Modal | Sound / music / vibration / language toggles |
 | 3 | RewardPopup | Gameplay | Item/coins obtained — tap to claim |
 | 4 | DailyLoginPopup | Meta | 7-day calendar reward |
