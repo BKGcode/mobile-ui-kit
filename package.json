@@ -1,10 +1,19 @@
 {
   "name": "com.kitforgelabs.mobile-ui-kit",
   "displayName": "Kitforge Mobile UI Kit",
-  "version": "0.1.0",
+  "version": "0.1.0-alpha",
   "unity": "6000.1",
-  "description": "Reusable mobile game UI modules for hybrid-casual production. Screens, popups, overlays and atoms ready to skin via UIThemeConfig.",
-  "keywords": ["ui", "mobile", "menu", "popup", "kitforge"],
+  "description": "Opinionated UGUI router, popup queue and theme contract for hybrid-casual mobile games. Stack-based screens (Push/Pop/Replace), priority-aware popups (Meta < Gameplay < Modal) and one ScriptableObject theme — wire it in five minutes, skin it once, ship it.",
+  "keywords": [
+    "ui",
+    "ugui",
+    "mobile",
+    "router",
+    "theme",
+    "popup",
+    "menu",
+    "kitforge"
+  ],
   "author": {
     "name": "Kitforge Labs",
     "url": "https://github.com/BKGcode"
@@ -12,8 +21,13 @@
   "dependencies": {},
   "samples": [
     {
+      "displayName": "Quickstart",
+      "description": "Zero-dependency bootstrap: a UIManager + PopupManager pair driven by [ContextMenu] entries. No VContainer, no DI — drop the prefab in a scene and press Play.",
+      "path": "Samples~/Quickstart"
+    },
+    {
       "displayName": "Game Wiring",
-      "description": "VContainer LifetimeScope with stub services and UIRouter — drop-in starting point for a host game project.",
+      "description": "VContainer LifetimeScope with stub services and UIRouter — opinionated starting point when you already use DI.",
       "path": "Samples~/GameWiring"
     }
   ]

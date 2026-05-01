@@ -46,13 +46,17 @@ namespace KitforgeLabs.MobileUIKit.Core
 
         public T Replace<T>(object data = null) where T : UIModuleBase
         {
+            var incoming = ResolveScreen<T>();
+            if (incoming == null) return null;
             if (_screenStack.Count > 0)
             {
                 var top = _screenStack.Pop();
                 top.OnHide();
                 top.gameObject.SetActive(false);
             }
-            return Push<T>(data);
+            _screenStack.Push(incoming);
+            ActivateScreen(incoming, data);
+            return incoming;
         }
 
         public void PopToRoot()
@@ -91,6 +95,16 @@ namespace KitforgeLabs.MobileUIKit.Core
             screen.gameObject.SetActive(true);
             if (data != null) screen.BindUntyped(data);
             screen.OnShow();
+        }
+
+        private void OnDestroy()
+        {
+            while (_screenStack.Count > 0)
+            {
+                var top = _screenStack.Pop();
+                if (top != null) top.OnHide();
+            }
+            _screenCache.Clear();
         }
 
         [ContextMenu("Validate Registry")]

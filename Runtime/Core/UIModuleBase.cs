@@ -9,6 +9,6 @@ namespace KitforgeLabs.MobileUIKit.Core
         public virtual void OnUpdate() { }
         public virtual void OnBackPressed() { }
 
-        internal abstract void BindUntyped(object data);
+        protected internal abstract void BindUntyped(object data);
     }
 }

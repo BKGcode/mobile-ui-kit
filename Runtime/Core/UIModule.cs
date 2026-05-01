@@ -4,6 +4,6 @@ namespace KitforgeLabs.MobileUIKit.Core
     {
         public abstract void Bind(TData data);
 
-        internal sealed override void BindUntyped(object data) => Bind((TData)data);
+        protected internal sealed override void BindUntyped(object data) => Bind((TData)data);
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,23 +7,23 @@ namespace KitforgeLabs.MobileUIKit.Core
     [DisallowMultipleComponent]
     public sealed class PopupManager : MonoBehaviour
     {
-        private const int MAX_DEPTH = 3;
+        private const int MaxDepth = 3;
 
         [SerializeField] private Transform _popupRoot;
         [SerializeField] private GameObject _backdrop;
         [SerializeField] private UIModuleBase[] _popupPrefabs;
 
-        private readonly Dictionary<System.Type, UIModuleBase> _popupCache = new();
-        private readonly List<PopupEntry> _activeStack = new();
-        private readonly List<PopupRequest> _pendingQueue = new();
+        private readonly Dictionary<Type, UIModuleBase> _popupCache = new();
+        private readonly List<PopupRecord> _activeStack = new();
+        private readonly List<PopupRecord> _pendingQueue = new();
 
         public int ActiveCount => _activeStack.Count;
         public UIModuleBase HighestPriorityPopup => _activeStack.Count > 0 ? _activeStack[_activeStack.Count - 1].Module : null;
 
         public T Show<T>(object data = null, PopupPriority priority = PopupPriority.Gameplay) where T : UIModuleBase
         {
-            var request = new PopupRequest { Type = typeof(T), Data = data, Priority = priority };
-            if (_activeStack.Count >= MAX_DEPTH && !TryEvictLowerPriority(priority))
+            var request = new PopupRecord { Type = typeof(T), Data = data, Priority = priority };
+            if (_activeStack.Count >= MaxDepth && !TryEvictLowerPriority(priority))
             {
                 EnqueuePending(request);
                 return null;
@@ -69,11 +70,12 @@ namespace KitforgeLabs.MobileUIKit.Core
             return true;
         }
 
-        private UIModuleBase ShowInternal(PopupRequest request)
+        private UIModuleBase ShowInternal(PopupRecord request)
         {
             var popup = ResolvePopup(request.Type);
             if (popup == null) return null;
-            InsertActiveByPriority(new PopupEntry { Module = popup, Priority = request.Priority });
+            request.Module = popup;
+            InsertActiveByPriority(request);
             popup.gameObject.SetActive(true);
             if (request.Data != null) popup.BindUntyped(request.Data);
             popup.OnShow();
@@ -81,7 +83,7 @@ namespace KitforgeLabs.MobileUIKit.Core
             return popup;
         }
 
-        private void InsertActiveByPriority(PopupEntry entry)
+        private void InsertActiveByPriority(PopupRecord entry)
         {
             var insertIndex = _activeStack.Count;
             for (var i = 0; i < _activeStack.Count; i++)
@@ -116,11 +118,11 @@ namespace KitforgeLabs.MobileUIKit.Core
             var evicted = _activeStack[lowestIndex];
             _activeStack.RemoveAt(lowestIndex);
             HidePopup(evicted.Module);
-            EnqueuePending(new PopupRequest { Type = evicted.Module.GetType(), Data = null, Priority = evicted.Priority });
+            EnqueuePending(new PopupRecord { Type = evicted.Type, Data = evicted.Data, Priority = evicted.Priority });
             return true;
         }
 
-        private void EnqueuePending(PopupRequest request)
+        private void EnqueuePending(PopupRecord request)
         {
             var insertIndex = _pendingQueue.Count;
             for (var i = 0; i < _pendingQueue.Count; i++)
@@ -132,7 +134,7 @@ namespace KitforgeLabs.MobileUIKit.Core
 
         private void DrainQueue()
         {
-            while (_pendingQueue.Count > 0 && _activeStack.Count < MAX_DEPTH)
+            while (_pendingQueue.Count > 0 && _activeStack.Count < MaxDepth)
             {
                 var next = _pendingQueue[0];
                 _pendingQueue.RemoveAt(0);
@@ -140,7 +142,7 @@ namespace KitforgeLabs.MobileUIKit.Core
             }
         }
 
-        private UIModuleBase ResolvePopup(System.Type type)
+        private UIModuleBase ResolvePopup(Type type)
         {
             if (_popupCache.TryGetValue(type, out var cached)) return cached;
             var prefab = FindPrefab(type);
@@ -155,7 +157,7 @@ namespace KitforgeLabs.MobileUIKit.Core
             return instance;
         }
 
-        private UIModuleBase FindPrefab(System.Type type)
+        private UIModuleBase FindPrefab(Type type)
         {
             if (_popupPrefabs == null) return null;
             for (var i = 0; i < _popupPrefabs.Length; i++)
@@ -176,15 +178,21 @@ namespace KitforgeLabs.MobileUIKit.Core
             if (_backdrop != null) _backdrop.SetActive(_activeStack.Count > 0);
         }
 
-        private struct PopupEntry
+        private void OnDestroy()
         {
-            public UIModuleBase Module;
-            public PopupPriority Priority;
+            for (var i = 0; i < _activeStack.Count; i++)
+            {
+                if (_activeStack[i].Module != null) _activeStack[i].Module.OnHide();
+            }
+            _activeStack.Clear();
+            _pendingQueue.Clear();
+            _popupCache.Clear();
         }
 
-        private struct PopupRequest
+        private struct PopupRecord
         {
-            public System.Type Type;
+            public Type Type;
+            public UIModuleBase Module;
             public object Data;
             public PopupPriority Priority;
         }
