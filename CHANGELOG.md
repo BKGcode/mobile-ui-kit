@@ -7,6 +7,23 @@ _Last updated: 2026-05-01_
 
 ## [Unreleased]
 
+### Session — 2026-05-01 (cont. 2) — Phase 1.5 EditMode tests
+GOAL: Cubrir UIRouter + PopupManager con EditMode tests (Phase 1.5) y arreglar smell residual en `UIRouter.RestrictPopupsTo`.
+DONE:
+- `UIRouter.cs`: arreglada firma de `RestrictPopupsTo` — estaba pegada a la llave anterior y sin modificador de acceso (privada de facto). Ahora `public void RestrictPopupsTo(...)` con formato correcto. Bug funcional: la API pública para restringir popups no se podía activar desde fuera.
+- `Tests/EditMode/KitforgeLabs.MobileUIKit.Tests.EditMode.asmdef`: nueva asmdef Editor-only con `defineConstraints: ["UNITY_INCLUDE_TESTS"]`, referencias a `KitforgeLabs.MobileUIKit` + `nunit.framework.dll` + Test Runner.
+- `UIRouterTests`: 9 tests — TransitionTo happy/idempotente/event payload, re-entrancy guard desde callback, IsValidPopup (null type, sin restricciones, con allow-list, null collection bloquea todo), ClearPopupRestrictions restaura estado abierto.
+- `PopupManagerTests`: 9 tests — Show inicial, prioridad orden (Modal sobre Meta), MaxDepth=3 cap, drain de queue tras Dismiss, eviction por prioridad superior, eviction preserva Data y restaura al dismiss, DismissAll limpia activos+pending, DispatchBackPressed delega al topmost, DispatchBackPressed sin activos returns false.
+DECISIONS:
+- Fakes de popup vía `new GameObject().AddComponent<>()` con subclases internas en el test; `Instantiate` clona OK desde scene objects (no requiere prefab asset). Reflection para inyectar `_popupRoot` y `_popupPrefabs` (SerializeField private).
+- EditMode (no PlayMode) — todos los flujos testeables son sincrónicos (no corrutinas).
+- `_popupCache` no se purga en `DismissAll` (sólo en `OnDestroy`); test `DismissAll_ClearsActiveAndPending` valida que pending también se limpia re-mostrando el primer popup.
+PENDING:
+- Tests de `UIManager` (Push/Pop/Replace/PopToRoot) — diferidos: requieren screen prefabs y `UIThemeConfig` SO; mismo patrón que PopupManagerTests pero más boilerplate. Phase 1.5 sigue abierta hasta cubrir UIManager.
+- Validación en Unity Test Runner — pendiente de ejecutar (Unity MCP offline en esta sesión). Compilación estática verde.
+- NOTES diferidas técnicas (PriorityQueue<>, registry compartido, backdrop fade) — sin cambios.
+REFS: `Runtime/Core/UIRouter.cs`, `Tests/EditMode/KitforgeLabs.MobileUIKit.Tests.EditMode.asmdef`, `Tests/EditMode/UIRouterTests.cs`, `Tests/EditMode/PopupManagerTests.cs`
+
 ### Session — 2026-05-01 (cont.) — PM checker FIX NOW
 GOAL: Cerrar Phase 1 aplicando los 4 FIX NOW del PM checker antes de tag v0.1.0-alpha.
 DONE:
@@ -71,6 +88,12 @@ REFS: Runtime/Core/PopupManager.cs, Runtime/Core/UIManager.cs, Runtime/Core/UIRo
 ### Fixed
 - UIRouter.IsValidPopup: bloque corrupto por merge fallido reparado (commit 2175e6f).
 - PopupManager eviction: re-encolaba con Data=null perdiendo estado del popup desalojado.
+- UIRouter.RestrictPopupsTo: firma sin modificador de acceso pegada a la llave anterior — la API pública para activar la allow-list no era invocable. Restaurada como `public void RestrictPopupsTo(IEnumerable<Type>)`.
+
+### Tests
+- Phase 1.5: `Tests/EditMode/` con `KitforgeLabs.MobileUIKit.Tests.EditMode.asmdef` (UNITY_INCLUDE_TESTS).
+- `UIRouterTests`: 9 tests cubriendo TransitionTo (happy / idempotente / event payload / re-entrancy guard) y popup allow-list (null type, sin restricciones, con allow-list, null collection, ClearPopupRestrictions).
+- `PopupManagerTests`: 9 tests cubriendo Show inicial, prioridad, MaxDepth=3, drain de queue, eviction con Data preserved, DismissAll, DispatchBackPressed.
 
 ## [0.1.0-alpha] - 2026-05-01
 

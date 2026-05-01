@@ -40,7 +40,9 @@ namespace KitforgeLabs.MobileUIKit.Core
             try { OnStateChanged?.Invoke(previous, next); }
             finally { _isTransitioning = false; }
             return true;
-        }void RestrictPopupsTo(IEnumerable<Type> allowedTypes)
+        }
+
+        public void RestrictPopupsTo(IEnumerable<Type> allowedTypes)
         {
             _popupAllowList.Clear();
             if (allowedTypes != null)
