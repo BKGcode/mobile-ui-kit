@@ -7,6 +7,36 @@ _Last updated: 2026-05-02_
 
 ## [Unreleased]
 
+### Group A — element 4/4: TutorialPopup (scaffolded, code+tests, no spec/prefab yet)
+- **`Runtime/Catalog/Popups/Tutorial/`**:
+  - `TutorialStep` POCO (Title + Body[TextArea] + optional Sprite).
+  - `TutorialPopupData` (List<TutorialStep>, StartIndex, ShowPrevious, ShowSkip, LoopBackToFirst, CloseOnBackdrop, TapToAdvance, custom labels Next/Previous/Skip/Done).
+  - `TutorialPopup` (`UIModule<TData>`, `[RequireComponent(UIAnimTutorialPopup)]`, lazy `IUIAnimator` + `internal SetAnimatorForTests`, public `GoNext`/`GoPrevious`/`SkipTutorial`/`CompleteTutorial`/`CurrentIndex`/`StepCount`/`IsFirstStep`/`IsLastStep`, dynamic Next-label that mutates to `DoneLabel` on last step, ProgressLabel "i / N" auto-formatted, theme-null warning one-shot, `ClearAllEvents` on Bind + OnDestroy).
+  - `UIAnimTutorialPopup` (clone of `UIAnimPausePopup` structurally — `SetUpdate(true)` defensive in show+hide for tutorials shown over a paused gameplay layer).
+- **Decisions taken without consult — flag for review**:
+  - Back press = Skip (mobile modal convention; Previous stays explicit).
+  - GoNext on last step → `OnCompleted` + dismiss; if `LoopBackToFirst=true`, wraps to index 0 instead and fires `OnNext`.
+  - `TapToAdvance` overrides `CloseOnBackdrop` on backdrop tap.
+  - `GoPrevious` on first step is silently ignored (no event, no audio cue).
+  - No `Time.timeScale` handling — Tutorial is gameplay-aware; if pause is needed, host wraps it (or composes inside Pause).
+  - Single Next button mutates label vs separate Done button (consistent with mobile onboarding patterns).
+  - Per-element animator (no shared code with Pause despite duplication — catalog rule: 1 animator per element).
+- **EditMode tests**: `Tests/Editor/TutorialPopupTests.cs` (10 tests: Bind null defaults, Bind sets StartIndex, GoNext advances + StepChanged, GoNext on last → Completed+dismiss, GoNext on last with loop wraps, GoPrevious on first ignored, GoPrevious decrements, back press → Skip + dismiss, back press while dismissing ignored, Bind resets listeners). **All green: 10/10 (59/59 total).**
+- **Pending**: spec (`Documentation~/Specs/Catalog/TutorialPopup.md`), prefab + Demo scene, CATALOG.md row link. Closes Group A → bumps minor to `0.4.0`.
+
+### Group A — element 3/4: PausePopup (scaffolded, code+tests, no spec/prefab yet)
+- **`Runtime/Catalog/Popups/Pause/`**: `PausePopupData` (7 buttons + 3 toggles inline + flags), `UIAnimPausePopup` (clone of Confirm with `SetUpdate(true)` for unscaled time), `PausePopup` (`UIModule<TData>`, captures/restores `Time.timeScale` around show/hide, Dismissing vs Shortcut button categories, inline toggles mutate `_data` without closing, public `Resume()`, `OnBackPressed→HandleResume`, theme-null warning, `OnDestroy` restores timeScale if `IsPaused`).
+- **Decisions taken without consult — flag for review**:
+  - Two button categories: **Dismissing** (Resume/Restart/Home/Quit) close, **Shortcut** (Settings/Shop/Help) raise event and keep popup open.
+  - Inline toggles (Sound/Music/Vibration) mutate `_data.XxxOn` + emit `OnXxxChanged(bool)`, never dismiss.
+  - `Time.timeScale` direct, no `ITimeService` (YAGNI until 2nd consumer).
+  - Pause applied AFTER show-anim (callback of `PlayShow`); restore BEFORE hide-anim.
+  - `UIAnimPausePopup` uses `SetUpdate(true)` defensively in hide-anim too.
+  - `CloseOnBackdrop` default = `false` (catalog-consistent).
+  - Public `Resume()` for external triggers (gameplay button, etc.).
+- **EditMode tests**: `Tests/Editor/PausePopupTests.cs` (6 tests: Bind null defaults, back→Resume+Dismiss, back ignored if IsDismissing, OnShow pauses + Resume restores, restores original value not hardcoded 1f, Bind resets listeners). **All green: 6/6 (49/49 total).**
+- **Pending**: spec (`Documentation~/Specs/Catalog/PausePopup.md`), prefab + Demo scene, CATALOG.md row link.
+
 ### Group A — element 2/4: NotificationToast (scaffolded, code+tests, no spec/prefab yet)
 - **Group 0 extension** (`Runtime/Toast/UIToastBase.cs`): added `event Action<UIToastBase> DismissRequested`, `bool IsDismissing { get; protected set; }`, `protected UIThemeConfig Theme`, `protected UIServices Services`, `virtual Initialize(theme, services)`, `protected RaiseDismissRequested()`. Aligns Toast layer with Q1/Q2 decisions taken in element 1.
 - **`Runtime/Catalog/Toasts/`**: `ToastSeverity` enum (Info/Success/Warning/Error), `NotificationToastData` DTO (Message + Severity + DurationOverride + TapToDismiss), `NotificationToast` (`UIToast<TData>`, `[RequireComponent(UIAnimNotificationToast)]`, lazy `IUIAnimator`, severity → tint+icon+audio cue mapping, idempotent `DismissNow`, `OnTapped`/`OnDismissed` events, `ClearAllEvents` on Bind), `UIAnimNotificationToast` (slide-in via `PositionOffset` + fade, no scale — toasts slide, don't bounce).
