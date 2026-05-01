@@ -7,6 +7,24 @@ _Last updated: 2026-05-01_
 
 ## [Unreleased]
 
+### Session — 2026-05-01 (cont. 4) — UIManager EditMode tests (Phase 1.5 close)
+GOAL: Cubrir UIManager con EditMode tests siguiendo el mismo patrón que UIRouter/PopupManager. Cierre de Phase 1.5.
+DONE:
+- `Tests/EditMode/UIManagerTests.cs`: **12 tests** — Push (first/second/cache reuse/missing prefab), Pop (happy/empty/last), Replace (empty stack/swap/missing prefab no corruption), PopToRoot (multi/single).
+- Setup pattern: GameObject inactivo durante `AddComponent<UIManager>()` + `SetField` reflection + `SetActive(true)` al final → evita que `Awake` corra con `_themeConfig == null` (que loggearía error y rompería los tests con `Unhandled log message`).
+- `_themeConfig` inyectado como `ScriptableObject.CreateInstance<UIThemeConfig>()` y destruido en TearDown.
+- LogAssert.Expect en los 2 tests de fallo de prefab (Push + Replace) — valida el contrato de error documentado en el README.
+- **Total Phase 1.5 EditMode tests: 9 (UIRouter) + 11 (PopupManager) + 12 (UIManager) = 32.**
+DECISIONS:
+- NO se extrajo el test harness compartido (NOTE del checker dev). Los 3 archivos comparten `SetField` + el patrón de fakes pero la duplicación es de ~6 líneas por archivo. Extraer ahora sería over-engineering — la regla "rule of three" ya se cumple (3 archivos), pero los helpers son tan triviales que el coste cognitivo de un harness compartido (otra asmdef? otra clase abstracta? generic constraints?) supera al de copiar 6 líneas. Si llega un 4º archivo de tests con el mismo patrón, extraer entonces.
+- `Replace_MissingPrefab_DoesNotPopExistingTop` valida explícitamente la decisión Phase 1 #3 del code-doctor (Replace<T> resuelve incoming antes de Pop). Es el test más importante del suite — protege contra regresión del bug original.
+PENDING:
+- Tag `v0.2.0-alpha` (espera validación real en Unity Test Runner).
+- Refactor `UIRouter.Start` → `Initialize()` público (NOTE diferido).
+- README arch decision #10 sobre `protected override` derive pattern (NOTE diferido).
+- Validación real en Unity Test Runner sigue pendiente (MCP offline).
+REFS: `Tests/EditMode/UIManagerTests.cs`
+
 ### Session — 2026-05-01 (cont. 3) — `/_checker as dev` follow-ups
 GOAL: Aplicar 2 FIX NOW + 1 NOTE detectados por `/_checker as dev` sobre el primer pase de Phase 1.5.
 DONE:
@@ -114,6 +132,7 @@ REFS: Runtime/Core/PopupManager.cs, Runtime/Core/UIManager.cs, Runtime/Core/UIRo
 - Phase 1.5: `Tests/EditMode/` con `KitforgeLabs.MobileUIKit.Tests.EditMode.asmdef` (UNITY_INCLUDE_TESTS).
 - `UIRouterTests`: 9 tests cubriendo TransitionTo (happy / idempotente / event payload / re-entrancy guard) y popup allow-list (null type, sin restricciones, con allow-list, null collection, ClearPopupRestrictions).
 - `PopupManagerTests`: 11 tests cubriendo Show inicial, prioridad, MaxDepth=3, drain de queue, eviction con Data preserved, DismissAll, DispatchBackPressed, IsShowing false-case, Show con tipo sin prefab registrado (LogAssert).
+- `UIManagerTests`: 12 tests cubriendo Push (first/second/cache reuse/missing prefab), Pop (happy/empty/last), Replace (empty stack/swap/missing prefab no corruption), PopToRoot (multi/single). Patrón GameObject inactivo durante AddComponent → field injection → SetActive(true) para evitar Awake con theme nulo.
 
 ## [0.1.0-alpha] - 2026-05-01
 
