@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using KitforgeLabs.MobileUIKit.Services;
 using KitforgeLabs.MobileUIKit.Theme;
 using UnityEngine;
 
@@ -8,6 +9,7 @@ namespace KitforgeLabs.MobileUIKit.Core
     public sealed class UIManager : MonoBehaviour
     {
         [SerializeField] private UIThemeConfig _themeConfig;
+        [SerializeField] private UIServices _services;
         [SerializeField] private Transform _screenRoot;
         [SerializeField] private UIModuleBase[] _screenPrefabs;
 
@@ -15,6 +17,7 @@ namespace KitforgeLabs.MobileUIKit.Core
         private readonly Stack<UIModuleBase> _screenStack = new();
 
         public UIThemeConfig Theme => _themeConfig;
+        public UIServices Services => _services;
         public UIModuleBase Current => _screenStack.Count > 0 ? _screenStack.Peek() : null;
 
         private void Awake()

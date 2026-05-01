@@ -14,7 +14,9 @@ Everything else (router app states, service interfaces) is optional and lives be
 
 ## Status
 
-**Phase 1 — alpha.** Core managers, theme and routing primitives shipped. Not yet hardened with tests. Public API may move before `v0.2.0`.
+**Phase 1.5 — alpha.** Core managers, theme and routing primitives shipped and covered by **33 EditMode tests** (UIRouter, PopupManager, UIManager). Public API may still move before `v1.0.0` — track BREAKING entries in [`CHANGELOG.md`](./CHANGELOG.md).
+
+Latest tag: `v0.2.1-alpha`.
 
 ---
 
@@ -50,7 +52,7 @@ This package will **not** grow to cover the items below. If you need them, this 
 Add to `Packages/manifest.json`:
 
 ```json
-"com.kitforgelabs.mobile-ui-kit": "https://github.com/BKGcode/com.kitforgelabs.mobile-ui-kit.git#v0.1.0-alpha"
+"com.kitforgelabs.mobile-ui-kit": "https://github.com/BKGcode/com.kitforgelabs.mobile-ui-kit.git#v0.2.1-alpha"
 ```
 
 Or via Package Manager → **Add package from git URL…**
@@ -87,7 +89,7 @@ The work below is complete. Tick what's shipped, not what's planned.
 - [x] `Samples~/GameWiring`: VContainer `LifetimeScope` + stub services.
 - [x] `Samples~/Quickstart`: zero-dependency bootstrap.
 - [x] `package.json` + `README.md` aligned with PM checker FIX NOW list.
-- [ ] EditMode tests (`UIRouter.TransitionTo`, `PopupManager` priority ordering) — **deferred to Phase 1.5**.
+- [x] EditMode tests — **Phase 1.5 closed**: 10 `UIRouter` + 11 `PopupManager` + 12 `UIManager` = **33 tests**, all green. Tagged `v0.2.0-alpha` (suite) → `v0.2.1-alpha` (cleanup: `UIRouter.Initialize()` + arch decision #10).
 
 ---
 

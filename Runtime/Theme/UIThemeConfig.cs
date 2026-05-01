@@ -1,3 +1,4 @@
+using KitforgeLabs.MobileUIKit.Animation;
 using TMPro;
 using UnityEngine;
 
@@ -32,8 +33,31 @@ namespace KitforgeLabs.MobileUIKit.Theme
 
         [Header("Shape")]
         [SerializeField] private float _cornerRadius = 16f;
+        [SerializeField] private float _minTouchTarget = 88f;
+
+        [Header("Sprites")]
+        [SerializeField] private Sprite _panelBackground;
+        [SerializeField] private Sprite _buttonPrimary;
+        [SerializeField] private Sprite _buttonSecondary;
+        [SerializeField] private Sprite _backdrop;
+        [SerializeField] private Sprite _divider;
+        [SerializeField] private Sprite _iconClose;
+        [SerializeField] private Sprite _iconBack;
+        [SerializeField] private Sprite _iconCheck;
+        [SerializeField] private Sprite _iconCoin;
+        [SerializeField] private Sprite _iconGem;
+
+        [Header("Audio")]
+        [SerializeField] private AudioClip _audioButtonClick;
+        [SerializeField] private AudioClip _audioPopupShow;
+        [SerializeField] private AudioClip _audioPopupHide;
+        [SerializeField] private AudioClip _audioSuccess;
+        [SerializeField] private AudioClip _audioError;
+        [SerializeField] private AudioClip _audioNotification;
 
         [Header("Animation")]
+        [SerializeField] private UIAnimStyle _defaultAnimStyle = UIAnimStyle.Playful;
+        [SerializeField] private UIAnimPresetLibrary _animPresetLibrary;
         [SerializeField] private float _transitionSpeed = 0.3f;
         [SerializeField] private float _bounceStrength = 1.1f;
 
@@ -59,7 +83,28 @@ namespace KitforgeLabs.MobileUIKit.Theme
         public float SpacingL => _spacingL;
 
         public float CornerRadius => _cornerRadius;
+        public float MinTouchTarget => _minTouchTarget;
 
+        public Sprite PanelBackground => _panelBackground;
+        public Sprite ButtonPrimary => _buttonPrimary;
+        public Sprite ButtonSecondary => _buttonSecondary;
+        public Sprite Backdrop => _backdrop;
+        public Sprite Divider => _divider;
+        public Sprite IconClose => _iconClose;
+        public Sprite IconBack => _iconBack;
+        public Sprite IconCheck => _iconCheck;
+        public Sprite IconCoin => _iconCoin;
+        public Sprite IconGem => _iconGem;
+
+        public AudioClip AudioButtonClick => _audioButtonClick;
+        public AudioClip AudioPopupShow => _audioPopupShow;
+        public AudioClip AudioPopupHide => _audioPopupHide;
+        public AudioClip AudioSuccess => _audioSuccess;
+        public AudioClip AudioError => _audioError;
+        public AudioClip AudioNotification => _audioNotification;
+
+        public UIAnimStyle DefaultAnimStyle => _defaultAnimStyle;
+        public UIAnimPresetLibrary AnimPresetLibrary => _animPresetLibrary;
         public float TransitionSpeed => _transitionSpeed;
         public float BounceStrength => _bounceStrength;
     }

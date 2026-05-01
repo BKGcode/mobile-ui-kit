@@ -1,14 +1,13 @@
 using KitforgeLabs.MobileUIKit.Animation;
 using UnityEngine;
 
-namespace KitforgeLabs.MobileUIKit.Core
+namespace KitforgeLabs.MobileUIKit.Toast
 {
-    public abstract class UIModuleBase : MonoBehaviour
+    public abstract class UIToastBase : MonoBehaviour
     {
+        public abstract float DefaultDuration { get; }
         public abstract void OnShow();
         public abstract void OnHide();
-        public virtual void OnUpdate() { }
-        public virtual void OnBackPressed() { }
 
         public virtual UIAnimStyle? AnimStyleOverride => null;
 

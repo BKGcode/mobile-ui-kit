@@ -7,6 +7,35 @@ _Last updated: 2026-05-01_
 
 ## [Unreleased]
 
+## [0.3.0-alpha] — 2026-05-01
+
+### Session — 2026-05-01 (cont. 6) — Phase 2 re-scoped + Group 0 foundation
+GOAL: Re-scope Phase 2 to deliver the prefab catalog (15 mid-core mobile UI elements) the kit name promises. Build Group 0 foundation (F1-F8) before any visible element.
+DONE:
+- **Spec**: `Documentation~/Specs/CATALOG.md` (15 elements decomposed into Screens / Popups / Transient+HUD; 10 plug-and-play MUST + 8 MUSTN'T contracts; 5-group build order).
+- **F5 Animation system**: `Runtime/Animation/` — `UIAnimStyle` enum (10 styles + Custom), `UIAnimEase` enum (17 easings, DOTween-mappable), `UIAnimChannel` enum, `UIAnimPreset` SO (per-channel duration/ease/overshoot + button-feedback tokens), `UIAnimPresetLibrary` SO (style → preset map with fallback), `IUIAnimator` interface (Runtime DOTween-free).
+- **F6 Theme extended**: `UIThemeConfig` adds 10 sprite slots (panel/button/backdrop/divider/icons), 6 audio slots (button-click/popup-show/popup-hide/success/error/notification), `MinTouchTarget`, `DefaultAnimStyle`, `AnimPresetLibrary` ref.
+- **F4 Theme exposure**: `PopupManager` now exposes `Theme` getter (mirrors `UIManager.Theme` pattern).
+- **F3 Service binding**: `Runtime/Services/UIServices.cs` — single MonoBehaviour container with Inspector slots for all 6 services (Economy/PlayerData/Progression/ShopData/Ads/Time) + runtime setters for DI interop. `UIManager` exposes `Services` getter.
+- **F1 Toast layer**: `Runtime/Toast/` — `UIToastBase`, `UIToast<TData>`, `ToastManager` (priority-less, auto-dismiss via Coroutine, `_maxConcurrent` cap with pending queue, `WaitForSecondsRealtime`).
+- **F2 HUD layer**: `Runtime/HUD/UIHUDBase.cs` — abstract base for HUD elements with `OnEnable`/`OnDisable` Subscribe/Unsubscribe pattern + Refresh().
+- **F7 SafeArea**: `Runtime/SafeArea/SafeAreaFitter.cs` — applies `Screen.safeArea` per-edge (configurable), polls `Update()` for orientation/resolution changes.
+- **F8 Editor validator**: `Editor/Validation/UIKitValidator.cs` — menu item `Kitforge/UI Kit/Validate Active Scene` + `IPreprocessBuildWithReport` hook. Checks null fields and duplicate types in registries; aborts build on errors.
+- `UIModuleBase`: virtual `AnimStyleOverride` property for per-element style override.
+DECISIONS:
+- 10 animation styles (Snappy/Bouncy/Playful/Punchy/Smooth/Elegant/Juicy/Soft/Mechanical/Cinematic) selected via Theme default + per-Module override; Disney Getaway Blast = Playful default.
+- `UIAnimPreset` as ScriptableObject (buyer-creatable), library SO (`UIAnimPresetLibrary`) maps style→preset for one-step swap.
+- Runtime asmdef stays DOTween-free; catalog asmdef will reference DOTween. `IUIAnimator` uses Action callbacks, not Tween return values.
+- Service binding pattern locked = Option B (UIServices container, Inspector-driven, DI-optional).
+- Validator built as Editor-side scan + pre-build hook (no runtime cost).
+PENDING:
+- Open Unity to generate `.meta` files for all new scripts.
+- Run EditMode tests to confirm no regression on the 33 existing tests.
+- Group 0 demo sample (`Samples~/Catalog_Group0_Foundation/`) + EditMode tests for new components (UIServices/ToastManager/SafeAreaFitter).
+- Build the 10 default `UIAnimPreset` SO assets per styles table.
+- `_tween` / `_tween-dev` agent update to consume `UIAnimPreset` (deferred — not a code task here).
+REFS: `Runtime/Animation/*`, `Runtime/Toast/*`, `Runtime/HUD/*`, `Runtime/SafeArea/*`, `Runtime/Services/UIServices.cs`, `Runtime/Theme/UIThemeConfig.cs`, `Runtime/Core/PopupManager.cs`, `Runtime/Core/UIManager.cs`, `Runtime/Core/UIModuleBase.cs`, `Editor/Validation/UIKitValidator.cs`, `Documentation~/Specs/CATALOG.md`
+
 ### Session — 2026-05-01 (cont. 5) — Phase 1.5 deferred NOTEs cleanup
 GOAL: Cerrar deuda diferida de Phase 1.5 sin abrir Phase 2.
 DONE:

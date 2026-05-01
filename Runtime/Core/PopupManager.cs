@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using KitforgeLabs.MobileUIKit.Theme;
 using UnityEngine;
 
 namespace KitforgeLabs.MobileUIKit.Core
@@ -9,6 +10,7 @@ namespace KitforgeLabs.MobileUIKit.Core
     {
         private const int MaxDepth = 3;
 
+        [SerializeField] private UIThemeConfig _themeConfig;
         [SerializeField] private Transform _popupRoot;
         [SerializeField] private GameObject _backdrop;
         [SerializeField] private UIModuleBase[] _popupPrefabs;
@@ -17,6 +19,7 @@ namespace KitforgeLabs.MobileUIKit.Core
         private readonly List<PopupRecord> _activeStack = new();
         private readonly List<PopupRecord> _pendingQueue = new();
 
+        public UIThemeConfig Theme => _themeConfig;
         public int ActiveCount => _activeStack.Count;
         public UIModuleBase HighestPriorityPopup => _activeStack.Count > 0 ? _activeStack[_activeStack.Count - 1].Module : null;
 
