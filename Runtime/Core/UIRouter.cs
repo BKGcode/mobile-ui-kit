@@ -14,11 +14,13 @@ namespace KitforgeLabs.MobileUIKit.Core
 
         private AppState _currentState;
         private bool _isTransitioning;
-        private readonly HashSet<Type> _allowedPopupsByState = new();
+        private readonly HashSet<Type> _popupAllowList = new();
+        private bool _popupAllowListActive;
 
         public AppState CurrentState => _currentState;
         public UIManager Screens => _uiManager;
         public PopupManager Popups => _popupManager;
+        public bool HasPopupRestrictions => _popupAllowListActive;
 
         public event Action<AppState, AppState> OnStateChanged;
 
@@ -38,11 +40,27 @@ namespace KitforgeLabs.MobileUIKit.Core
             try { OnStateChanged?.Invoke(previous, next); }
             finally { _isTransitioning = false; }
             return true;
+        }void RestrictPopupsTo(IEnumerable<Type> allowedTypes)
+        {
+            _popupAllowList.Clear();
+            if (allowedTypes != null)
+            {
+                foreach (var type in allowedTypes) _popupAllowList.Add(type);
+            }
+            _popupAllowListActive = true;
+        }
+
+        public void ClearPopupRestrictions()
+        {
+            _popupAllowList.Clear();
+            _popupAllowListActive = false;
         }
 
         public bool IsValidPopup(Type popupType)
         {
             if (popupType == null) return false;
+            if (!_popupAllowListActive) return true;
+            return _popupAllowListn false;
             if (_allowedPopupsByState.Count == 0) return true;
             return _allowedPopupsByState.Contains(popupType);
         }

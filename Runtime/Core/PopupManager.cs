@@ -23,9 +23,9 @@ namespace KitforgeLabs.MobileUIKit.Core
         public T Show<T>(object data = null, PopupPriority priority = PopupPriority.Gameplay) where T : UIModuleBase
         {
             var request = new PopupRequest { Type = typeof(T), Data = data, Priority = priority };
-            if (_activeStack.Count >= MAX_DEPTH)
+            if (_activeStack.Count >= MAX_DEPTH && !TryEvictLowerPriority(priority))
             {
-                _pendingQueue.Add(request);
+                EnqueuePending(request);
                 return null;
             }
             return (T)ShowInternal(request);
@@ -74,12 +74,61 @@ namespace KitforgeLabs.MobileUIKit.Core
         {
             var popup = ResolvePopup(request.Type);
             if (popup == null) return null;
-            _activeStack.Add(new PopupEntry { Module = popup, Priority = request.Priority });
+            InsertActiveByPriority(new PopupEntry { Module = popup, Priority = request.Priority });
             popup.gameObject.SetActive(true);
             if (request.Data != null) popup.BindUntyped(request.Data);
             popup.OnShow();
             UpdateBackdrop();
             return popup;
+        }
+
+        private void InsertActiveByPriority(PopupEntry entry)
+        {
+            var insertIndex = _activeStack.Count;
+            for (var i = 0; i < _activeStack.Count; i++)
+            {
+                if (entry.Priority < _activeStack[i].Priority) { insertIndex = i; break; }
+            }
+            _activeStack.Insert(insertIndex, entry);
+            ApplySiblingOrder();
+        }
+
+        private void ApplySiblingOrder()
+        {
+            for (var i = 0; i < _activeStack.Count; i++)
+            {
+                _activeStack[i].Module.transform.SetSiblingIndex(i);
+            }
+        }
+
+        private bool TryEvictLowerPriority(PopupPriority incoming)
+        {
+            var lowestIndex = -1;
+            var lowest = incoming;
+            for (var i = 0; i < _activeStack.Count; i++)
+            {
+                if (_activeStack[i].Priority < lowest)
+                {
+                    lowest = _activeStack[i].Priority;
+                    lowestIndex = i;
+                }
+            }
+            if (lowestIndex < 0) return false;
+            var evicted = _activeStack[lowestIndex];
+            _activeStack.RemoveAt(lowestIndex);
+            HidePopup(evicted.Module);
+            EnqueuePending(new PopupRequest { Type = evicted.Module.GetType(), Data = null, Priority = evicted.Priority });
+            return true;
+        }
+
+        private void EnqueuePending(PopupRequest request)
+        {
+            var insertIndex = _pendingQueue.Count;
+            for (var i = 0; i < _pendingQueue.Count; i++)
+            {
+                if (request.Priority > _pendingQueue[i].Priority) { insertIndex = i; break; }
+            }
+            _pendingQueue.Insert(insertIndex, request);
         }
 
         private void DrainQueue()
