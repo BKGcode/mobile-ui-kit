@@ -5,7 +5,7 @@ namespace KitforgeLabs.MobileUIKit.GameWiring
 {
     public class UIRouterStub
     {
-        private AppState _currentState = AppState.Splash;
+        private AppState _currentState = AppState.Loading;
 
         public AppState CurrentState => _currentState;
 

@@ -2,12 +2,12 @@ namespace KitforgeLabs.MobileUIKit.Routing
 {
     public enum AppState
     {
-        Splash,
+        Loading,
         MainMenu,
         LevelSelect,
-        Gameplay,
-        Win,
-        Lose,
-        Shop
+        Playing,
+        Paused,
+        GameOver,
+        Results
     }
 }

@@ -1,7 +1,9 @@
 {
     "name": "KitforgeLabs.MobileUIKit",
     "rootNamespace": "KitforgeLabs.MobileUIKit",
-    "references": [],
+    "references": [
+        "Unity.TextMeshPro"
+    ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

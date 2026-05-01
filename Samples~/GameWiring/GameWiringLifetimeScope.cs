@@ -17,7 +17,7 @@ namespace KitforgeLabs.MobileUIKit.GameWiring
             builder.Register<ITimeService, StubTimeService>(Lifetime.Singleton);
 
             builder.Register<UIRouterStub>(Lifetime.Singleton);
-            builder.RegisterBuildCallback(container => container.Resolve<UIRouterStub>().TransitionTo(AppState.Splash));
+            builder.RegisterBuildCallback(container => container.Resolve<UIRouterStub>().TransitionTo(AppState.Loading));
         }
     }
 }
