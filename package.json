@@ -1,0 +1,20 @@
+{
+  "name": "com.kitforgelabs.mobile-ui-kit",
+  "displayName": "Kitforge Mobile UI Kit",
+  "version": "0.1.0",
+  "unity": "6000.1",
+  "description": "Reusable mobile game UI modules for hybrid-casual production. Screens, popups, overlays and atoms ready to skin via UIThemeConfig.",
+  "keywords": ["ui", "mobile", "menu", "popup", "kitforge"],
+  "author": {
+    "name": "Kitforge Labs",
+    "url": "https://github.com/BKGcode"
+  },
+  "dependencies": {},
+  "samples": [
+    {
+      "displayName": "Game Wiring",
+      "description": "VContainer LifetimeScope with stub services and UIRouter — drop-in starting point for a host game project.",
+      "path": "Samples~/GameWiring"
+    }
+  ]
+}
