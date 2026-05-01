@@ -60,9 +60,7 @@ namespace KitforgeLabs.MobileUIKit.Core
         {
             if (popupType == null) return false;
             if (!_popupAllowListActive) return true;
-            return _popupAllowListn false;
-            if (_allowedPopupsByState.Count == 0) return true;
-            return _allowedPopupsByState.Contains(popupType);
+            return _popupAllowList.Contains(popupType);
         }
 
         public void HandleBackPressed()
