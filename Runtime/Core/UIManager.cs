@@ -9,7 +9,6 @@ namespace KitforgeLabs.MobileUIKit.Core
     {
         [SerializeField] private UIThemeConfig _themeConfig;
         [SerializeField] private Transform _screenRoot;
-        [SerializeField] private Canvas _screenCanvas;
         [SerializeField] private UIModuleBase[] _screenPrefabs;
 
         private readonly Dictionary<System.Type, UIModuleBase> _screenCache = new();

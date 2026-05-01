@@ -9,7 +9,6 @@ namespace KitforgeLabs.MobileUIKit.Core
         private const int MAX_DEPTH = 3;
 
         [SerializeField] private Transform _popupRoot;
-        [SerializeField] private Canvas _popupCanvas;
         [SerializeField] private GameObject _backdrop;
         [SerializeField] private UIModuleBase[] _popupPrefabs;
 
@@ -18,7 +17,7 @@ namespace KitforgeLabs.MobileUIKit.Core
         private readonly List<PopupRequest> _pendingQueue = new();
 
         public int ActiveCount => _activeStack.Count;
-        public UIModuleBase TopPopup => _activeStack.Count > 0 ? _activeStack[_activeStack.Count - 1].Module : null;
+        public UIModuleBase HighestPriorityPopup => _activeStack.Count > 0 ? _activeStack[_activeStack.Count - 1].Module : null;
 
         public T Show<T>(object data = null, PopupPriority priority = PopupPriority.Gameplay) where T : UIModuleBase
         {
@@ -65,8 +64,8 @@ namespace KitforgeLabs.MobileUIKit.Core
         public bool DispatchBackPressed()
         {
             if (_activeStack.Count == 0) return false;
-            var top = _activeStack[_activeStack.Count - 1].Module;
-            top.OnBackPressed();
+            var topMost = _activeStack[_activeStack.Count - 1].Module;
+            topMost.OnBackPressed();
             return true;
         }
 
