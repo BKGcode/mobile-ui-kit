@@ -5,7 +5,7 @@ namespace KitforgeLabs.MobileUIKit.Routing
         Loading,
         MainMenu,
         LevelSelect,
-        Playing,
+        Gameplay,
         Paused,
         GameOver,
         Results

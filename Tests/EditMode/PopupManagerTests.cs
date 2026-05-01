@@ -2,6 +2,7 @@ using System.Reflection;
 using KitforgeLabs.MobileUIKit.Core;
 using NUnit.Framework;
 using UnityEngine;
+using UnityEngine.TestTools;
 
 namespace KitforgeLabs.MobileUIKit.Tests.EditMode
 {
@@ -162,6 +163,29 @@ namespace KitforgeLabs.MobileUIKit.Tests.EditMode
             Assert.IsFalse(_manager.DispatchBackPressed());
         }
 
+        [Test]
+        public void IsShowing_TypeNotPresent_ReturnsFalse()
+        {
+            Assert.IsFalse(_manager.IsShowing<FakePopupA>());
+
+            _manager.Show<FakePopupA>(priority: PopupPriority.Gameplay);
+
+            Assert.IsTrue(_manager.IsShowing<FakePopupA>());
+            Assert.IsFalse(_manager.IsShowing<FakePopupB>());
+        }
+
+        [Test]
+        public void Show_TypeWithoutRegisteredPrefab_LogsErrorAndReturnsNull()
+        {
+            SetField(_manager, "_popupPrefabs", new UIModuleBase[] { _prefabA });
+
+            LogAssert.Expect(LogType.Error, new System.Text.RegularExpressions.Regex(@"\[PopupManager\] No prefab registered for FakePopupB"));
+            var result = _manager.Show<FakePopupB>(priority: PopupPriority.Gameplay);
+
+            Assert.IsNull(result);
+            Assert.AreEqual(0, _manager.ActiveCount);
+        }
+
         private FakePopup CreatePrefab<T>(string name) where T : FakePopup
         {
             var go = new GameObject(name);
@@ -188,7 +212,7 @@ namespace KitforgeLabs.MobileUIKit.Tests.EditMode
             public override void OnShow() { ShowCount++; }
             public override void OnHide() { HideCount++; }
             public override void OnBackPressed() { BackPressedCount++; }
-            protected internal override void BindUntyped(object data) { LastData = data; }
+            protected override void BindUntyped(object data) { LastData = data; }
         }
 
         private sealed class FakePopupA : FakePopup { }

@@ -62,7 +62,7 @@ namespace KitforgeLabs.MobileUIKit.Quickstart
             Debug.Log($"[QuickstartScreen] OnHide on '{name}'.", this);
         }
 
-        protected internal override void BindUntyped(object data) { }
+        protected override void BindUntyped(object data) { }
     }
 
     public sealed class QuickstartPopup : UIModuleBase
@@ -82,6 +82,6 @@ namespace KitforgeLabs.MobileUIKit.Quickstart
             Debug.Log($"[QuickstartPopup] OnBackPressed on '{name}'.", this);
         }
 
-        protected internal override void BindUntyped(object data) { }
+        protected override void BindUntyped(object data) { }
     }
 }

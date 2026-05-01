@@ -135,14 +135,14 @@ namespace KitforgeLabs.MobileUIKit.Tests.EditMode
         {
             public override void OnShow() { }
             public override void OnHide() { }
-            protected internal override void BindUntyped(object data) { }
+            protected override void BindUntyped(object data) { }
         }
 
         private sealed class FakePopupB : UIModuleBase
         {
             public override void OnShow() { }
             public override void OnHide() { }
-            protected internal override void BindUntyped(object data) { }
+            protected override void BindUntyped(object data) { }
         }
     }
 }

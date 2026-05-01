@@ -7,6 +7,24 @@ _Last updated: 2026-05-01_
 
 ## [Unreleased]
 
+### Session — 2026-05-01 (cont. 3) — `/_checker as dev` follow-ups
+GOAL: Aplicar 2 FIX NOW + 1 NOTE detectados por `/_checker as dev` sobre el primer pase de Phase 1.5.
+DONE:
+- **FIX NOW**: `Samples~/Quickstart/QuickstartBootstrap.cs` — `QuickstartScreen.BindUntyped` y `QuickstartPopup.BindUntyped` cambiados de `protected internal override` a `protected override`. Mismo bug latente que `Tests/EditMode`: cruzando assembly boundary, `protected internal` se ve como `protected` y CS0507 explota. No lo cazamos antes porque `Samples~/` con tilde no se compila hasta que el buyer importa el sample — habría reventado en máquina del cliente.
+- **FIX NOW**: `PopupManagerTests` +2 tests — `IsShowing_TypeNotPresent_ReturnsFalse` (false case del API más usado) y `Show_TypeWithoutRegisteredPrefab_LogsErrorAndReturnsNull` (con `LogAssert.Expect`, valida el contrato de fallo más probable en producción cuando un dev olvida registrar un prefab). Total tests EditMode: 9+11 = **20**.
+- **NOTE aplicado (breaking)**: rename `AppState.Playing` → `AppState.Gameplay`. Vocabulario alineado con `PopupPriority.Gameplay` que usa el resto del kit. 1 archivo Runtime + 1 archivo Tests actualizados (sólo 2 usos en todo el paquete).
+- `package.json` bump `0.1.0-alpha` → `0.2.0-alpha` por el rename breaking.
+DECISIONS:
+- Bump pre-1.0 con `-alpha` mantiene la señal de inestabilidad. El tag `v0.1.0-alpha` se preserva como histórico — el siguiente tag será `v0.2.0-alpha` cuando cerremos Phase 1.5 con UIManager tests.
+- `protected override` en samples confirmado como contrato del derive pattern. Pendiente documentar en README → Architecture decisions table como entrada nº 10 (no urgente, cuando toque pasar de alpha).
+PENDING:
+- UIManager EditMode tests — Phase 1.5 sigue abierta.
+- Test harness compartido (extraer reflection helpers `SetField`/`InvokeStart` antes de duplicarlos en UIManagerTests) — NOTE del checker dev.
+- Refactor `UIRouter.Start` → método público `Initialize()` para no depender de reflection en tests — NOTE del checker dev, deferrable.
+- README entry nº 10 en Architecture decisions table sobre `protected override` derive pattern — NOTE.
+- Validación real en Unity Test Runner sigue pendiente (MCP offline).
+REFS: `Samples~/Quickstart/QuickstartBootstrap.cs`, `Tests/EditMode/PopupManagerTests.cs`, `Tests/EditMode/UIRouterTests.cs`, `Runtime/Routing/AppState.cs`, `package.json`
+
 ### Session — 2026-05-01 (cont. 2) — Phase 1.5 EditMode tests
 GOAL: Cubrir UIRouter + PopupManager con EditMode tests (Phase 1.5) y arreglar smell residual en `UIRouter.RestrictPopupsTo`.
 DONE:
@@ -84,16 +102,18 @@ REFS: Runtime/Core/PopupManager.cs, Runtime/Core/UIManager.cs, Runtime/Core/UIRo
 - PopupManager: PopupEntry + PopupRequest unificados en PopupRecord único.
 - PopupManager: MAX_DEPTH → MaxDepth (UNITY_RULES const naming).
 - UIManager.Replace<T>: valida prefab incoming antes de Pop — no corrompe stack si Push fallaría.
+- **BREAKING**: `AppState.Playing` renombrado a `AppState.Gameplay` para alinear vocabulario con `PopupPriority.Gameplay`. `package.json` bumped `0.1.0-alpha` → `0.2.0-alpha`.
 
 ### Fixed
 - UIRouter.IsValidPopup: bloque corrupto por merge fallido reparado (commit 2175e6f).
 - PopupManager eviction: re-encolaba con Data=null perdiendo estado del popup desalojado.
 - UIRouter.RestrictPopupsTo: firma sin modificador de acceso pegada a la llave anterior — la API pública para activar la allow-list no era invocable. Restaurada como `public void RestrictPopupsTo(IEnumerable<Type>)`.
+- `Samples~/Quickstart/QuickstartBootstrap.cs`: `QuickstartScreen.BindUntyped` y `QuickstartPopup.BindUntyped` cambiados de `protected internal override` a `protected override`. Bug latente que sólo reventaba en máquina del buyer al importar el sample (Samples~/ con tilde no compila en CI del paquete).
 
 ### Tests
 - Phase 1.5: `Tests/EditMode/` con `KitforgeLabs.MobileUIKit.Tests.EditMode.asmdef` (UNITY_INCLUDE_TESTS).
 - `UIRouterTests`: 9 tests cubriendo TransitionTo (happy / idempotente / event payload / re-entrancy guard) y popup allow-list (null type, sin restricciones, con allow-list, null collection, ClearPopupRestrictions).
-- `PopupManagerTests`: 9 tests cubriendo Show inicial, prioridad, MaxDepth=3, drain de queue, eviction con Data preserved, DismissAll, DispatchBackPressed.
+- `PopupManagerTests`: 11 tests cubriendo Show inicial, prioridad, MaxDepth=3, drain de queue, eviction con Data preserved, DismissAll, DispatchBackPressed, IsShowing false-case, Show con tipo sin prefab registrado (LogAssert).
 
 ## [0.1.0-alpha] - 2026-05-01
 
