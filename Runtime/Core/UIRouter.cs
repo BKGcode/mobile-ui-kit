@@ -14,6 +14,7 @@ namespace KitforgeLabs.MobileUIKit.Core
 
         private AppState _currentState;
         private bool _isTransitioning;
+        private bool _isInitialized;
         private readonly HashSet<Type> _popupAllowList = new();
         private bool _popupAllowListActive;
 
@@ -21,11 +22,16 @@ namespace KitforgeLabs.MobileUIKit.Core
         public UIManager Screens => _uiManager;
         public PopupManager Popups => _popupManager;
         public bool HasPopupRestrictions => _popupAllowListActive;
+        public bool IsInitialized => _isInitialized;
 
         public event Action<AppState, AppState> OnStateChanged;
 
-        private void Start()
+        private void Start() => Initialize();
+
+        public void Initialize()
         {
+            if (_isInitialized) return;
+            _isInitialized = true;
             _currentState = _initialState;
             OnStateChanged?.Invoke(_initialState, _initialState);
         }

@@ -7,6 +7,20 @@ _Last updated: 2026-05-01_
 
 ## [Unreleased]
 
+### Session — 2026-05-01 (cont. 5) — Phase 1.5 deferred NOTEs cleanup
+GOAL: Cerrar deuda diferida de Phase 1.5 sin abrir Phase 2.
+DONE:
+- `UIRouter.Initialize()`: nuevo método público idempotente. `Start()` ahora delega en `Initialize()`. Tests dejan de usar reflection sobre `Start` privado — llaman `_router.Initialize()` directo. Añadido `IsInitialized` getter.
+- `UIRouterTests`: +1 test `Initialize_CalledTwice_IsIdempotent` (total UIRouter = 10, total Phase 1.5 = 33).
+- README arch decision #10: documenta el patrón `protected override` para `BindUntyped` en derivaciones cross-assembly. Cierra el bug latente del sample que el `/_checker as dev` detectó.
+DECISIONS:
+- `Initialize` idempotente con flag `_isInitialized` — evita doble-disparo de `OnStateChanged` si Awake/Start corre y además llamamos manual.
+- `Start()` se mantiene como `private void Start() => Initialize()` para no romper escenas existentes que dependen del ciclo Unity.
+PENDING:
+- `git push origin main --tags` para subir Phase 1 + Phase 1.5 al remoto.
+- Definir alcance Phase 2 con `planner` skill.
+REFS: `Runtime/Core/UIRouter.cs`, `Tests/EditMode/UIRouterTests.cs`, `README.md`
+
 ### Session — 2026-05-01 (cont. 4) — UIManager EditMode tests (Phase 1.5 close)
 GOAL: Cubrir UIManager con EditMode tests siguiendo el mismo patrón que UIRouter/PopupManager. Cierre de Phase 1.5.
 DONE:

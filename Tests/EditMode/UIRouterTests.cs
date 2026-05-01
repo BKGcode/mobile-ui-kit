@@ -16,7 +16,7 @@ namespace KitforgeLabs.MobileUIKit.Tests.EditMode
         {
             _host = new GameObject(nameof(UIRouterTests));
             _router = _host.AddComponent<UIRouter>();
-            InvokeStart(_router);
+            _router.Initialize();
         }
 
         [TearDown]
@@ -125,10 +125,17 @@ namespace KitforgeLabs.MobileUIKit.Tests.EditMode
             Assert.IsTrue(_router.IsValidPopup(typeof(FakePopupB)));
         }
 
-        private static void InvokeStart(MonoBehaviour behaviour)
+        [Test]
+        public void Initialize_CalledTwice_IsIdempotent()
         {
-            var method = behaviour.GetType().GetMethod("Start", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
-            method?.Invoke(behaviour, null);
+            var calls = 0;
+            _router.OnStateChanged += (_, _) => calls++;
+
+            _router.Initialize();
+            _router.Initialize();
+
+            Assert.AreEqual(0, calls);
+            Assert.IsTrue(_router.IsInitialized);
         }
 
         private sealed class FakePopupA : UIModuleBase

@@ -104,6 +104,7 @@ The work below is complete. Tick what's shipped, not what's planned.
 | 7 | `ChangeLog` ships **inside** the UPM package | Buyer reads release notes from Package Manager UI. | Studio-side `_Develop/KF_*_dev/ChangeLog.md` is for internal session log only. |
 | 8 | VContainer is **opt-in via Sample**, never a Runtime reference | Avoids forcing a DI container on buyers who use Zenject, no DI, or their own injector. | Two samples coexist: `Quickstart` (no DI) and `GameWiring` (VContainer). |
 | 9 | No comments, ≤ 15-line methods, `var` everywhere | UNITY_RULES, applied without exception. | Readability via naming, not prose. |
+| 10 | `BindUntyped` is `protected override` (not `protected internal`) when host assemblies derive `UIModule<TData>` | Cross-assembly subclasses cannot widen accessibility from `protected internal` — the C# compiler emits CS0507. Buyers deriving in their own asmdef would hit this on first compile. | The base method stays `protected internal` so internal samples can call it; derivations declare `protected override`. Validated by `Samples~/Quickstart` and EditMode test fakes. |
 
 ---
 
