@@ -1,0 +1,71 @@
+.lib-header {
+    flex-direction: row;
+    margin-top: 8px;
+    border-bottom-width: 1px;
+    border-bottom-color: var(--unity-colors-default-border);
+    padding-bottom: 4px;
+}
+
+.lib-header-cell {
+    -unity-font-style: bold;
+    color: var(--unity-colors-default-text);
+}
+
+.lib-table {
+    flex-direction: column;
+    margin-top: 4px;
+}
+
+.lib-row {
+    flex-direction: row;
+    align-items: center;
+    height: 22px;
+    margin-bottom: 2px;
+}
+
+.lib-col-style {
+    width: 110px;
+    color: var(--unity-colors-default-text);
+}
+
+.lib-col-preset {
+    flex-grow: 1;
+    margin-right: 8px;
+}
+
+.lib-col-status {
+    width: 100px;
+    -unity-text-align: middle-right;
+}
+
+.status-ok {
+    color: rgb(60, 180, 90);
+}
+
+.status-fallback {
+    color: rgb(220, 170, 50);
+}
+
+.status-missing {
+    color: rgb(220, 80, 80);
+    -unity-font-style: bold;
+}
+
+.lib-fallback {
+    flex-direction: row;
+    align-items: center;
+    margin-top: 12px;
+    padding-top: 6px;
+    border-top-width: 1px;
+    border-top-color: var(--unity-colors-default-border);
+}
+
+.lib-fallback-label {
+    width: 110px;
+    -unity-font-style: bold;
+    color: var(--unity-colors-default-text);
+}
+
+.lib-fallback-picker {
+    flex-grow: 1;
+}
