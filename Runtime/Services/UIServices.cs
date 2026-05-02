@@ -3,6 +3,7 @@ using UnityEngine;
 namespace KitforgeLabs.MobileUIKit.Services
 {
     [DisallowMultipleComponent]
+    [DefaultExecutionOrder(-100)]
     public sealed class UIServices : MonoBehaviour
     {
         [SerializeField] private MonoBehaviour _economyServiceRef;

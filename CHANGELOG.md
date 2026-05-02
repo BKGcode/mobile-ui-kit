@@ -7,6 +7,44 @@ _Last updated: 2026-05-02_
 
 ## [Unreleased]
 
+## [0.5.0-alpha] — 2026-05-02
+
+> Group B — Currency catalog. Adds 3 popups (Reward / Shop / NotEnoughCurrency), 2 HUD elements (Coins / Gems), 3 in-memory service stubs (Economy / Shop / Ads), one demo scene chaining the full monetization loop, and an `UIAnimPopupBase` consolidating the per-popup animator boilerplate.
+
+### Added
+- **5 catalog elements** under `Runtime/Catalog/`:
+  - `Popups/Reward/` — `RewardKind`, `RewardPopupData`, `RewardPopup`, `UIAnimRewardPopup`. Supports `Coins`/`Gems`/`Item`/`Bundle` reward kinds, optional `AutoClaimSeconds`, optional backdrop-tap-to-claim. Emits `OnClaimed(CurrencyType, int)` + `OnDismissed`. Item/Bundle use sentinel `(CurrencyType)(-1)` to signal "host-resolved" amount. Popup never mutates economy — host wires the credit.
+  - `Popups/Shop/` — `ShopPopupData`, `ShopCategoryFilter`, `ShopItemView` (cell), `ShopPopup`, `UIAnimShopPopup`. Clone-from-template grid; subscribes to `IEconomyService.OnCoinsChanged`/`OnGemsChanged` and re-evaluates affordability without rebuild. Calls `IShopDataProvider.Purchase(itemId)` only — never `IEconomyService.Spend*`. Disables the cell of an item that returned `InsufficientFunds` until the next currency event refreshes it (prevents repeat-fire spam).
+  - `Popups/NotEnough/` — `NotEnoughCurrencyPopupData`, `NotEnoughCurrencyPopup`, `UIAnimNotEnoughCurrencyPopup`. Three CTAs: BuyMore / WatchAd / Decline. Queries `IAdsService.IsRewardedAdReady()` on Bind to gray out Watch Ad when no ad is available. Emits `OnBuyMoreRequested(CurrencyType, int)` / `OnWatchAdRequested(CurrencyType, int)` / `OnDeclined`. Logs warning if all CTAs hidden + backdrop disabled (foot-gun guard for iOS-only builds without hardware back).
+  - `HUD/HUDCoins.cs` + `HUD/HUDGems.cs` — Live counters reactive to `IEconomyService` typed events. Punch-scale tween on every change (kill-before-create, `SetLink(gameObject)`). Default format `"N0"` (thousand separators). Optional `UnityEvent` click hook for "open shop" wiring. `"--"` fallback + actionable error log when `IEconomyService` is unavailable.
+- **`UIAnimPopupBase`** under `Runtime/Catalog/_Internal/`. Consolidates the show / hide / preset / sequence / Snap / ResetToShowStart logic that was previously duplicated across each popup's animator. New popups now inherit and add zero code (e.g., `public sealed class UIAnimRewardPopup : UIAnimPopupBase { }`). Group B animator files reduced from 3 × 110 lines to 1 base + 3 × 3-line stubs.
+- **3 in-memory stubs** under `Samples~/Catalog_GroupB_Currency/Stubs/`: `InMemoryEconomyService` (250 coins / 5 gems seed, debug ContextMenus), `InMemoryShopDataProvider` (4 hardcoded items spanning Currency / Consumable / Cosmetic categories, delegates `Spend` to the economy service via `[RequireComponent]`), `InMemoryAdsService` (1s simulated rewarded ad). All deterministic — no network, no save, no persistence.
+- **`Build Group B Sample` editor menu** (`CatalogGroupBBuilder.cs`): generates 5 prefabs + 1 demo scene under `Assets/Catalog_GroupB_Demo/`. Pre-flight check warns if Theme or stubs are missing. Wires UIServices + 3 stubs + HUD instances + Demo MonoBehaviour with all prefab references in one click.
+- **Demo MonoBehaviour** (`CatalogGroupBDemo.cs`) with 19 `[ContextMenu]` triggers across 5 sections: HUD debug (5 — Add/Spend coins/gems), Reward variations (7 — Coins/Gems/Item/Bundle/Auto/Empty/Backdrop), Shop variations (3 — All/Currency/Cosmetics), NotEnough variations (3 — Coins/Gems/Decline-only), and 1 **`Chain — Shop → NotEnough → Ad → Reward`** end-to-end demonstration. Chain trigger pre-flight-checks all three popup prefabs are assigned before opening the Shop.
+- **Specs** under `Documentation~/Specs/Catalog/`: `RewardPopup.md`, `ShopPopup.md`, `NotEnoughCurrencyPopup.md`, `HUD-Coins.md`, `HUD-Gems.md`. Each opens with a "Decisions to confirm" table promoting per-element implementation choices to spec contract.
+- **EditMode tests +37**: 8 RewardPopup, 9 ShopPopup (including `InsufficientFunds_Disables_The_Matching_Cell_Until_Affordability_Refreshes`), 10 NotEnoughCurrencyPopup, 4 HUDCoins, 4 HUDGems (including `Coins_Changed_Does_NOT_Update_Gems_HUD` for typed-event isolation). Total catalog tests: 90+.
+- **Test helpers** under `Tests/Editor/Helpers/`: `NullAnimator.cs` and `FakeEconomyService.cs` shared across the 5 new test fixtures. Replaced 3× duplicate `NullAnimator` and 2× duplicate `FakeEconomyService` private nested classes.
+
+### Changed
+- **`UIHUDBase`**: added `protected void SetServicesInternal(UIServices)` to enable test injection without reflection. HUDCoins/HUDGems `SetServicesForTests` now a one-line forward instead of `BindingFlags.NonPublic` field hacking.
+- **Sample registration**: `package.json` `samples[]` now lists 3 entries (Quickstart, Catalog Group A, Catalog Group B).
+- **`NotEnoughCurrencyPopupData` defaults aligned to spec N5**: `ShowDecline` `true` → **`false`** (decline button is opt-in; backdrop/back already cover the implicit decline path). `CloseOnBackdrop` `false` → **`true`** (forgiving UX; tap-out cancels the offer). DTO was internally inconsistent with `Documentation~/Specs/Catalog/NotEnoughCurrencyPopup.md` § N5; tests `Default_DTO_Hides_Decline_Button` and `CloseOnBackdrop_True_By_Default` codified the spec contract. **No buyer-visible regression** (no tagged version shipped the previous defaults).
+
+### Fixed
+- **`Samples~/Catalog_GroupB_Currency/CatalogGroupBDemo.cs`**: removed duplicate `using KitforgeLabs.MobileUIKit.Catalog.NotEnough` directive and duplicate `[SerializeField] private GameObject _notEnoughPrefab` field declaration (CS0102 compile error). Group B sample asmdef failed to compile, which silently cascaded — `Build Group B Sample` resolved demo + stub types via `System.Type.GetType` and got `null` from a non-compiling assembly, producing a demo scene with no `CatalogGroupBDemo` component, no in-memory stubs, and no HUD service wiring. The 19 ContextMenu triggers were not exercisable until this fix landed.
+- **`Tests/Editor/Helpers/FakeShopDataProvider.cs`** (new — mirrors `FakeEconomyService` pattern): minimal `IShopDataProvider` test fake exposing `SetItems` / `QueuePurchaseResult`. `ShopPopupTests.SetUp` now creates a `UIServices` + injects the fake via `services.SetShopData(_shopData)` + calls `_popup.Initialize(null, services)`. Without this, 7 of 8 ShopPopup tests false-failed on a fresh test run because `ShopPopup.Bind` → `RebuildGrid` → `ResolveItems` emits `[ShopPopup] No IShopDataProvider available` `LogError`, and Unity's Test Runner treats unexpected `LogError` as a failure. **Symptom only — no runtime change**; the LogError is intentional buyer-facing diagnostic when wiring is forgotten.
+- **`UIServices`**: added `[DefaultExecutionOrder(-100)]` so its `Awake` (where serialized service refs are resolved into typed properties: `Economy`, `ShopData`, `Ads`, …) is guaranteed to run before any consumer's `OnEnable`. Without this, Unity does NOT guarantee Awake-before-OnEnable across GameObjects in the same scene; HUDCoins/HUDGems `OnEnable → Refresh` could read `Services.Economy == null` and emit the actionable buyer-facing `LogError` even when wiring was correct in the Inspector. Caught only during the in-Editor Group B chain demo verification — the 119 EditMode tests injected services manually via `SetServicesForTests` and could not exercise this code path. **Buyer impact:** silently fixes any UIServices+HUD scene where script execution order was previously undefined.
+
+### Deferred (Group C)
+- `RewardFlow.GrantAndShow` / `RewardFlow.GrantAndShowSequence` / `ShopFlow.OpenWithPurchaseChain` — capability-gate fails for Group B (1 chain callsite). Will land when 3+ callsites materialize at Group C kickoff (DailyLogin / LevelComplete / GameOver). Spec stub written in `RewardPopup.md` and `ShopPopup.md` to lock the event surface that the helpers will consume.
+- `IEconomyService` v1 (typed `OnCoinsChanged`/`OnGemsChanged`) → v2 (parameterized `OnChanged(CurrencyType, int)`) migration — open question for Group C kickoff before HUD-Energy lands. Tradeoff table documented in `HUD-Gems.md` and `kitforge_mobile_ui_kit_roadmap.md`.
+
+### Done criteria
+- [x] Group B 5 elements + tests + specs + Build Group B Sample editor menu + demo scene + chain trigger.
+- [x] All popups respect MUSTN'T #1 (no service mutation, no popup-to-popup spawn calls).
+- [x] HUD-Coins and HUD-Gems coexist in the same scene with isolated punch tweens (no cross-channel leakage).
+- [x] Chain demo wires the full Shop → NotEnough → Ad → Reward → HUD update loop using only public events.
+
 ## [0.4.1-alpha] — 2026-05-02
 
 ### Removed

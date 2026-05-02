@@ -9,6 +9,8 @@ namespace KitforgeLabs.MobileUIKit.HUD
 
         protected UIServices Services => _services;
 
+        protected void SetServicesInternal(UIServices services) => _services = services;
+
         protected virtual void OnEnable()
         {
             if (_services == null)

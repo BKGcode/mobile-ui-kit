@@ -22,21 +22,21 @@ The kit ships **15 ready-to-use mid-core mobile UI elements** in three layers:
 |---|---|---|---|
 | 1 | ConfirmPopup | Modal | Yes/No, Continue/Cancel — universal blocker. `ShowCancel=false` collapses to single-button alert (no separate AlertPopup). See [Specs/Catalog/ConfirmPopup.md](Catalog/ConfirmPopup.md). |
 | 2 | SettingsPopup | Modal | Sound / music / vibration / language toggles |
-| 3 | RewardPopup | Gameplay | Item/coins obtained — tap to claim |
+| 3 | RewardPopup | Gameplay | Item/coins obtained — tap to claim. See [Specs/Catalog/RewardPopup.md](Catalog/RewardPopup.md). |
 | 4 | DailyLoginPopup | Meta | 7-day calendar reward |
-| 5 | ShopPopup | Modal | Grid of items with prices + buy buttons |
+| 5 | ShopPopup | Modal | Grid of items with prices + buy buttons. See [Specs/Catalog/ShopPopup.md](Catalog/ShopPopup.md). |
 | 6 | LevelCompletePopup | Gameplay | Stars / score / next / retry |
 | 7 | GameOverPopup | Modal | Continue (rewarded ad) / restart / quit |
 | 8 | PausePopup | Modal | Resume / restart / settings / quit. Owns `Time.timeScale` while visible. See [Specs/Catalog/PausePopup.md](Catalog/PausePopup.md). |
-| 9 | NotEnoughCurrencyPopup | Modal | Offer to buy more / watch ad |
+| 9 | NotEnoughCurrencyPopup | Modal | Offer to buy more / watch ad. See [Specs/Catalog/NotEnoughCurrencyPopup.md](Catalog/NotEnoughCurrencyPopup.md). |
 | 10 | TutorialPopup | Gameplay | Multi-step tutorial with Next/Previous/Skip + dynamic Done label + loop wrap. See [Specs/Catalog/TutorialPopup.md](Catalog/TutorialPopup.md). |
 
 ### Transient / HUD (NEW LAYER — not in Phase 1)
 | # | Element | Manager | Purpose |
 |---|---|---|---|
 | 11 | NotificationToast | `ToastManager` | Non-blocking, auto-dismiss, severity-tinted (Info / Success / Warning / Error), tap-to-dismiss. See [Specs/Catalog/NotificationToast.md](Catalog/NotificationToast.md). |
-| 14a | HUD-Coins | none (binds to screen) | Live coin counter, reacts to economy events |
-| 14b | HUD-Gems | none (binds to screen) | Live gem counter |
+| 14a | HUD-Coins | none (binds to screen) | Live coin counter, reacts to economy events. See [Specs/Catalog/HUD-Coins.md](Catalog/HUD-Coins.md). |
+| 14b | HUD-Gems | none (binds to screen) | Live gem counter. See [Specs/Catalog/HUD-Gems.md](Catalog/HUD-Gems.md). |
 | 14c | HUD-Energy | none (binds to screen) | Energy bar with regen timer |
 | 14d | HUD-Timer | none (binds to screen) | Countdown / count-up timer |
 
@@ -120,7 +120,7 @@ VContainer/Zenject users wrap their container resolution into `UIServices` sette
 |---|---|---|
 | **0 — Foundation** | F1-F8 | Hello-Toast + Hello-HUD-Coin demo works |
 | **A — Pure UI** | Confirm, Tutorial, Pause, Toast | 4 elements coexist; back button traverses correctly |
-| **B — Currency** | Reward, Shop, NotEnough, HUD-Coins, HUD-Gems | Buy → spend → HUD updates → unaffordable → NotEnough → ad → reward |
+| **B — Currency** | Reward, Shop, NotEnough, HUD-Coins, HUD-Gems | Buy → spend → HUD updates → unaffordable → NotEnough → ad → reward. Specs: [Reward](Catalog/RewardPopup.md), [Shop](Catalog/ShopPopup.md), [NotEnough](Catalog/NotEnoughCurrencyPopup.md), [HUD-Coins](Catalog/HUD-Coins.md), [HUD-Gems](Catalog/HUD-Gems.md). |
 | **C — Progression / Time** | DailyLogin, LevelComplete, GameOver, HUD-Energy, HUD-Timer | Full level loop with Continue (ad) |
 | **D — Player Data** | Settings | Persists across sessions |
 | **E — Screens** | Loading, MainMenu | Full app boot demo end-to-end |
