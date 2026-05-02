@@ -52,7 +52,7 @@ This package will **not** grow to cover the items below. If you need them, this 
 Add to `Packages/manifest.json`:
 
 ```json
-"com.kitforgelabs.mobile-ui-kit": "https://github.com/BKGcode/com.kitforgelabs.mobile-ui-kit.git#v0.2.1-alpha"
+"com.kitforgelabs.mobile-ui-kit": "https://github.com/BKGcode/mobile-ui-kit.git#v0.2.1-alpha"
 ```
 
 Or via Package Manager → **Add package from git URL…**
