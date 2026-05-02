@@ -121,7 +121,7 @@ namespace KitforgeLabs.MobileUIKit.Catalog.Pause
             }
             Services?.Audio?.Play(UIAudioCue.PopupOpen);
             if (Animator == null) { ApplyPauseTimeScale(); return; }
-            Animator.ApplyPreset(ResolvePreset());
+            Animator.ApplyPreset(ResolveAnimPreset());
             Animator.PlayShow(ApplyPauseTimeScale);
         }
 
@@ -316,9 +316,5 @@ namespace KitforgeLabs.MobileUIKit.Catalog.Pause
             if (b != null) b.onClick.RemoveListener(action);
         }
 
-        private UIAnimPreset ResolvePreset()
-        {
-            return AnimPresetOverride != null ? AnimPresetOverride : Theme?.DefaultAnimPreset;
-        }
     }
 }

@@ -16,7 +16,7 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
         private const string DefaultPresetName = "Playful";
         private const string DefaultThemePath = "Assets/Settings/UI/UIThemeConfig_Default.asset";
 
-        [MenuItem("Tools/Kitforge/Create Default UI Theme + Presets")]
+        [MenuItem("Tools/Kitforge/UI Kit/Bootstrap Defaults")]
         public static void CreateAll()
         {
             EnsureFolders();

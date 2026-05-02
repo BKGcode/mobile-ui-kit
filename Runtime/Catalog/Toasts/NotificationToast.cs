@@ -85,7 +85,7 @@ namespace KitforgeLabs.MobileUIKit.Catalog.Toasts
             }
             Services?.Audio?.Play(SeverityToCue(_data.Severity));
             if (Animator == null) return;
-            Animator.ApplyPreset(ResolvePreset());
+            Animator.ApplyPreset(ResolveAnimPreset());
             Animator.PlayShow();
         }
 
@@ -182,9 +182,5 @@ namespace KitforgeLabs.MobileUIKit.Catalog.Toasts
             }
         }
 
-        private UIAnimPreset ResolvePreset()
-        {
-            return AnimPresetOverride != null ? AnimPresetOverride : Theme?.DefaultAnimPreset;
-        }
     }
 }

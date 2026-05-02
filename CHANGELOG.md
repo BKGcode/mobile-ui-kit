@@ -15,7 +15,9 @@ _Last updated: 2026-05-02_
 - **`UIModuleBase` / `UIToastBase`**: `virtual UIAnimStyle? AnimStyleOverride => null` -> `virtual UIAnimPreset AnimPresetOverride => null`. Per-element override is now a direct preset ref.
 - **All 4 popups + toast `ResolvePreset()` simplified**: `AnimPresetOverride ?? Theme?.DefaultAnimPreset`. Two levels of indirection collapsed into one.
 - **`UIAnimPreset`**: removed `_style` identity field + `Style` getter (asset filename + folder communicate identity now).
-- **`DefaultUIAnimPresetsCreator` rebuilt**: menu renamed to `Tools/Kitforge/Create Default UI Theme + Presets`. Single click creates 10 presets at `Assets/Settings/UIAnimPresets/` AND a `UIThemeConfig_Default.asset` at `Assets/Settings/UI/` pre-wired to the Playful preset. Buyer's OOTB experience drops from 8 steps to 1.
+- **`DefaultUIAnimPresetsCreator` rebuilt**: menu `Tools/Kitforge/UI Kit/Bootstrap Defaults`. Single click creates 10 presets at `Assets/Settings/UIAnimPresets/` AND a `UIThemeConfig_Default.asset` at `Assets/Settings/UI/` pre-wired to the Playful preset. Buyer's OOTB experience drops from 8 steps to 1.
+- **Silent failure fix**: `UIModuleBase` and `UIToastBase` now expose `ResolveAnimPreset()` with a one-shot `Debug.LogWarning` if no preset is resolved (Theme null OR `DefaultAnimPreset` null OR override null). Points the buyer at the bootstrap menu by name. Replaces the duplicated `ResolvePreset()` private helper in 4 popups + toast.
+- **README Quickstart rewritten**: step 1 is now the bootstrap menu, step 4 references the auto-generated `UIThemeConfig_Default` asset. Buyer never sees a null preset on first run.
 - **Pending**: update `*PopupTests` if any reference the removed enum (`UIAnimStyle` not found in tests grep — should be safe but Unity Test Runner re-run required to confirm).
 
 ### Group A — element 4/4: TutorialPopup (scaffolded, code+tests, no spec/prefab yet)

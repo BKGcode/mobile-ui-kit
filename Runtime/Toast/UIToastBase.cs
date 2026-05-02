@@ -25,10 +25,23 @@ namespace KitforgeLabs.MobileUIKit.Toast
 
         public virtual UIAnimPreset AnimPresetOverride => null;
 
+        private bool _presetWarningLogged;
+
         public virtual void Initialize(UIThemeConfig theme, UIServices services)
         {
             Theme = theme;
             Services = services;
+        }
+
+        protected UIAnimPreset ResolveAnimPreset()
+        {
+            var preset = AnimPresetOverride != null ? AnimPresetOverride : Theme?.DefaultAnimPreset;
+            if (preset == null && !_presetWarningLogged)
+            {
+                _presetWarningLogged = true;
+                Debug.LogWarning($"[{GetType().Name}] No animation preset resolved — toast will appear without animation. Run 'Tools/Kitforge/UI Kit/Bootstrap Defaults' or assign UIThemeConfig.DefaultAnimPreset.", this);
+            }
+            return preset;
         }
 
         protected void RaiseDismissRequested()

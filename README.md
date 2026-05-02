@@ -68,11 +68,11 @@ In Package Manager, select **Kitforge Mobile UI Kit → Samples** and import:
 
 ## Quickstart (5 steps)
 
-1. **Import the `Quickstart` sample** from Package Manager. Files land under `Assets/Samples/Kitforge Mobile UI Kit/0.1.0/Quickstart/`.
-2. **Open the `Quickstart` sample README** and follow the scene-setup section: create one `Canvas`, two empty `RectTransform` roots (`ScreenRoot`, `PopupRoot`), drop the `QuickstartBootstrap` prefab.
-3. **Create one screen prefab and one popup prefab.** Each is a `MonoBehaviour` deriving from `UIModule<TData>` (or `UIModuleBase`), placed under the matching root. Assign them to the `_screenPrefabs` / `_popupPrefabs` arrays on the bootstrap.
-4. **Assign a `UIThemeConfig` asset** to `UIManager._themeConfig`. Right-click in Project → **Create → Kitforge Labs → UI Theme Config**.
-5. **Press Play, then right-click `QuickstartBootstrap` in the Hierarchy** → run `Push Quickstart Screen`, `Show Quickstart Popup`, `Pop Screen`. Watch the stack and popup queue react.
+1. **Bootstrap the defaults**: top menu → **Tools → Kitforge → UI Kit → Bootstrap Defaults**. Generates 10 `UIAnimPreset` SOs at `Assets/Settings/UIAnimPresets/` and a pre-wired `UIThemeConfig_Default.asset` at `Assets/Settings/UI/`. The Theme is auto-selected and pinged when the dialog closes.
+2. **Import the `Quickstart` sample** from Package Manager. Files land under `Assets/Samples/Kitforge Mobile UI Kit/<version>/Quickstart/`.
+3. **Set up the scene**: open the `Quickstart` README and follow scene-setup — one `Canvas`, two empty `RectTransform` roots (`ScreenRoot`, `PopupRoot`), drop the `QuickstartBootstrap` prefab.
+4. **Wire the Theme**: drag `UIThemeConfig_Default` into `UIManager._themeConfig` and `PopupManager._themeConfig`. Create one screen prefab and one popup prefab (deriving from `UIModule<TData>` or `UIModuleBase`) and assign them to the bootstrap arrays.
+5. **Press Play**, then right-click `QuickstartBootstrap` in the Hierarchy → run `Push Quickstart Screen`, `Show Quickstart Popup`, `Pop Screen`. Watch the stack and popup queue react.
 
 ---
 

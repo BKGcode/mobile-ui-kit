@@ -94,7 +94,7 @@ namespace KitforgeLabs.MobileUIKit.Catalog.Confirm
             }
             Services?.Audio?.Play(UIAudioCue.PopupOpen);
             if (Animator == null) return;
-            Animator.ApplyPreset(ResolvePreset());
+            Animator.ApplyPreset(ResolveAnimPreset());
             Animator.PlayShow();
         }
 
@@ -185,9 +185,5 @@ namespace KitforgeLabs.MobileUIKit.Catalog.Confirm
             }
         }
 
-        private UIAnimPreset ResolvePreset()
-        {
-            return AnimPresetOverride != null ? AnimPresetOverride : Theme?.DefaultAnimPreset;
-        }
     }
 }
