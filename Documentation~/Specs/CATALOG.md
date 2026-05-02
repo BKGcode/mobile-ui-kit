@@ -79,7 +79,7 @@ Every catalog element MUST satisfy these contracts so combinations work without 
 ### 3.2 MUSTN'T
 
 1. **No popup may call `PopupManager.Show` for another popup** — emit an event; host wires the chain.
-2. **No popup may write `Time.timeScale`** — only the game/router responds to `AppState.Paused`.
+2. **No popup may write `Time.timeScale`** — only the game/router responds to `AppState.Paused`. **Exception: `PausePopup`** is the documented opt-in owner of `Time.timeScale` while visible (industry-standard mobile pattern). Captures the value in `OnShow`, restores in `OnHide`/`OnDestroy`, and exposes `_pauseTimeScale` (default `0`) in the Inspector. Any host that prefers an event-driven model can set `_pauseTimeScale = 1` and consume `OnPaused`/`OnResumed` instead.
 3. **No element may hold a static reference** to a service or another element.
 4. **No element may assume a specific service implementation** — only the interface.
 5. **No element may persist via PlayerPrefs / SaveSystem directly** — go through `IPlayerDataService`.

@@ -233,7 +233,7 @@ namespace KitforgeLabs.MobileUIKit.Catalog.Tutorial
         {
             if (_refs.ProgressLabel == null) return;
             if (StepCount <= 1) { _refs.ProgressLabel.SetText(string.Empty); return; }
-            _refs.ProgressLabel.SetText($"{index + 1} / {StepCount}");
+            _refs.ProgressLabel.SetText("{0} / {1}", index + 1, StepCount);
         }
 
         private void ApplyNextLabel()

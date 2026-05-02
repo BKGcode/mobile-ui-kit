@@ -42,6 +42,7 @@ namespace KitforgeLabs.MobileUIKit.Catalog.Confirm
 
         private ConfirmPopupData _data;
         private IUIAnimator _animator;
+        private bool _themeWarningLogged;
 
         private IUIAnimator Animator
         {
@@ -86,6 +87,11 @@ namespace KitforgeLabs.MobileUIKit.Catalog.Confirm
         public override void OnShow()
         {
             if (_data == null) Bind(null);
+            if (Theme == null && !_themeWarningLogged)
+            {
+                _themeWarningLogged = true;
+                Debug.LogWarning("[ConfirmPopup] Theme not initialized — colors/audio will not apply. Spawn via PopupManager.", this);
+            }
             Services?.Audio?.Play(UIAudioCue.PopupOpen);
             if (Animator == null) return;
             Animator.ApplyPreset(ResolvePreset());

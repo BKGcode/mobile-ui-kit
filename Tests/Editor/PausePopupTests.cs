@@ -103,5 +103,26 @@ namespace KitforgeLabs.MobileUIKit.Catalog.Tests
             _popup.OnBackPressed();
             Assert.AreEqual(beforeCount, _resumeCount, "Listeners attached before re-Bind must NOT receive events after re-Bind.");
         }
+
+        [Test]
+        public void OnShow_Fires_OnPaused_Event_Once()
+        {
+            var pausedCount = 0;
+            _popup.Bind(new PausePopupData());
+            _popup.OnPaused += () => pausedCount++;
+            _popup.OnShow();
+            Assert.AreEqual(1, pausedCount, "OnPaused must fire exactly once on OnShow.");
+        }
+
+        [Test]
+        public void Resume_Fires_OnResumed_Event_Once()
+        {
+            var resumedCount = 0;
+            _popup.Bind(new PausePopupData());
+            _popup.OnResumed += () => resumedCount++;
+            _popup.OnShow();
+            _popup.OnBackPressed();
+            Assert.AreEqual(1, resumedCount, "OnResumed must fire exactly once after resume.");
+        }
     }
 }

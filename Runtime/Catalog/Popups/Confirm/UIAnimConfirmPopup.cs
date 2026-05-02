@@ -69,7 +69,7 @@ namespace KitforgeLabs.MobileUIKit.Catalog.Confirm
         {
             var ease = _preset.ShowEase.ToDoTween();
             var duration = _preset.ShowDuration;
-            var seq = DOTween.Sequence().SetLink(gameObject).SetUpdate(false);
+            var seq = DOTween.Sequence().SetLink(gameObject).SetUpdate(true);
             if (_preset.UseScale) seq.Join(_card.DOScale(_baseScale, duration).SetEase(ease));
             if (_preset.UseFade) seq.Join(_canvasGroup.DOFade(1f, duration).SetEase(ease));
             if (_preset.UsePosition) seq.Join(_card.DOAnchorPos(_basePosition, duration).SetEase(ease));
@@ -82,7 +82,7 @@ namespace KitforgeLabs.MobileUIKit.Catalog.Confirm
         {
             var ease = _preset.HideEase.ToDoTween();
             var duration = _preset.HideDuration;
-            var seq = DOTween.Sequence().SetLink(gameObject).SetUpdate(false);
+            var seq = DOTween.Sequence().SetLink(gameObject).SetUpdate(true);
             if (_preset.UseScale) seq.Join(_card.DOScale(_baseScale * _preset.HideScaleTo, duration).SetEase(ease));
             if (_preset.UseFade) seq.Join(_canvasGroup.DOFade(0f, duration).SetEase(ease));
             seq.OnComplete(() => onComplete?.Invoke());

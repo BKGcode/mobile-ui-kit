@@ -62,6 +62,8 @@ namespace KitforgeLabs.MobileUIKit.Catalog.Pause
         public event Action<bool> OnMusicChanged;
         public event Action<bool> OnVibrationChanged;
         public event Action OnDismissed;
+        public event Action OnPaused;
+        public event Action OnResumed;
 
         public bool IsPaused { get; private set; }
 
@@ -187,6 +189,7 @@ namespace KitforgeLabs.MobileUIKit.Catalog.Pause
             _restoreTimeScale = Time.timeScale;
             Time.timeScale = _pauseTimeScale;
             IsPaused = true;
+            OnPaused?.Invoke();
         }
 
         private void RestoreTimeScale()
@@ -194,6 +197,7 @@ namespace KitforgeLabs.MobileUIKit.Catalog.Pause
             if (!IsPaused) return;
             Time.timeScale = _restoreTimeScale;
             IsPaused = false;
+            OnResumed?.Invoke();
         }
 
         private void ClearAllEvents()
@@ -209,6 +213,8 @@ namespace KitforgeLabs.MobileUIKit.Catalog.Pause
             OnMusicChanged = null;
             OnVibrationChanged = null;
             OnDismissed = null;
+            OnPaused = null;
+            OnResumed = null;
         }
 
         private void ApplyTexts(PausePopupData data)
