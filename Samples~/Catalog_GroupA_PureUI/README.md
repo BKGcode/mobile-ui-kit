@@ -71,4 +71,4 @@ If you need a structural change, fork the prefab into your project and update th
 
 - Specs: `Packages/com.kitforgelabs.mobile-ui-kit/Documentation~/Specs/Catalog/{ConfirmPopup,PausePopup,TutorialPopup,NotificationToast}.md`
 - Quickstart sample (Phase 1 framework, no catalog elements): `Samples~/Quickstart/`
-- Game wiring with VContainer: `Samples~/GameWiring/`
+- Game wiring with VContainer (parked, not in Package Manager): `Samples~/GameWiring/` — returns once service contracts stabilize at end of Group D.

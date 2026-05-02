@@ -56,14 +56,14 @@ This package will **not** grow to cover the items below. If you need them, this 
 | TextMeshPro | Runtime (`KitforgeLabs.MobileUIKit.asmdef` references it) | Package Manager (built-in) |
 | DOTween Pro | Recommended for screen/popup show & hide animations | [Asset Store](https://assetstore.unity.com/packages/tools/visual-scripting/dotween-pro-32416) |
 | UniTask | Recommended for `async` flows in your game code that drive `Push` / `Show` | [OpenUPM](https://openupm.com/packages/com.cysharp.unitask/) |
-| VContainer | **Opt-in only.** Required by `Samples~/GameWiring`. Runtime asmdef does not reference it. | [OpenUPM](https://openupm.com/packages/jp.hadashikick.vcontainer/) |
+| VContainer | **Opt-in only.** Runtime asmdef does not reference it. Wire your container to `UIServices` setters at boot. | [OpenUPM](https://openupm.com/packages/jp.hadashikick.vcontainer/) |
 
 ### Add the package
 
 Add to `Packages/manifest.json`:
 
 ```json
-"com.kitforgelabs.mobile-ui-kit": "https://github.com/BKGcode/mobile-ui-kit.git#v0.3.0-alpha"
+"com.kitforgelabs.mobile-ui-kit": "https://github.com/BKGcode/mobile-ui-kit.git#v0.4.1-alpha"
 ```
 
 Or via Package Manager → **Add package from git URL…**
@@ -73,7 +73,6 @@ Or via Package Manager → **Add package from git URL…**
 In Package Manager, select **Kitforge Mobile UI Kit → Samples** and import:
 
 - **Quickstart** — zero dependencies, two `[ContextMenu]` entries, ready to play.
-- **Game Wiring** — VContainer `LifetimeScope` + 6 service stubs.
 - **Catalog — Group A — Pure UI** — Confirm / Pause / Tutorial / NotificationToast. After importing, run `Tools → Kitforge → UI Kit → Build Group A Sample` to materialize the 4 prefabs and a Demo scene under `Assets/Catalog_GroupA_Demo/`.
 
 ---
@@ -98,7 +97,6 @@ The work below is complete. Tick what's shipped, not what's planned.
 - [x] `UIThemeConfig` ScriptableObject + custom Editor with color preview.
 - [x] `UIModuleBase` + generic `UIModule<TData>` with `protected internal` `BindUntyped` (host assemblies can derive directly).
 - [x] 6 service interfaces (`IEconomyService`, `IPlayerDataService`, `IProgressionService`, `IShopDataProvider`, `IAdsService`, `ITimeService`) + 4 DTOs.
-- [x] `Samples~/GameWiring`: VContainer `LifetimeScope` + stub services.
 - [x] `Samples~/Quickstart`: zero-dependency bootstrap.
 - [x] `package.json` + `README.md` aligned with PM checker FIX NOW list.
 - [x] EditMode tests — **Phase 1.5 closed**: 10 `UIRouter` + 11 `PopupManager` + 12 `UIManager` = **33 tests**, all green. Tagged `v0.2.0-alpha` (suite) → `v0.2.1-alpha` (cleanup: `UIRouter.Initialize()` + arch decision #10).
@@ -109,14 +107,14 @@ The work below is complete. Tick what's shipped, not what's planned.
 
 | # | Decision | Rationale | Implication |
 |---|---|---|---|
-| 1 | Runtime asmdef has **zero DI dependency** | Buyers without VContainer must boot in one step. | DI lives in `Samples~/GameWiring`, not in `Runtime/`. |
+| 1 | Runtime asmdef has **zero DI dependency** | Buyers without VContainer must boot in one step. | Service binding lives in `UIServices` MonoBehaviour container (Inspector setters); DI users wrap their container resolution into those setters at boot. |
 | 2 | `UIManager` is a `MonoBehaviour`, not a singleton | UNITY_RULES forbid singletons; one scene = one manager via Inspector references. | Multiple `UIManager` instances per scene are valid (rare but supported). |
 | 3 | Screens registered as a flat **`UIModuleBase[]` registry**, resolved by `Type` | Keeps Inspector authoring trivial; no `[CreateAssetMenu]` graph asset to maintain. | One prefab per concrete `UIModule` subclass. Duplicate types caught by `ValidateRegistry`. |
 | 4 | Popup priority is an `enum`, not a numeric weight | Three buckets (Meta / Gameplay / Modal) cover every hybrid-casual case we surveyed. | Adding a fourth bucket is a breaking change — done deliberately. |
 | 5 | `PopupRecord` stores `Data` so eviction can re-enqueue with state | A modal evicting a Gameplay popup must restore the gameplay popup with its original payload. | `PopupRecord` is a `struct` to avoid GC churn; size kept ≤ 32 bytes. |
 | 6 | `_pendingQueue` is a `List<PopupRecord>` with insertion sort, not `PriorityQueue<>` | List churn is bounded by `MaxDepth = 3`; `PriorityQueue<>` adds an allocation per `Show`. | Promoted to `PriorityQueue<>` only if a future module justifies it. |
 | 7 | `ChangeLog` ships **inside** the UPM package | Buyer reads release notes from Package Manager UI. | Studio-side `_Develop/KF_*_dev/ChangeLog.md` is for internal session log only. |
-| 8 | VContainer is **opt-in via Sample**, never a Runtime reference | Avoids forcing a DI container on buyers who use Zenject, no DI, or their own injector. | Two samples coexist: `Quickstart` (no DI) and `GameWiring` (VContainer). |
+| 8 | VContainer is **opt-in**, never a Runtime reference | Avoids forcing a DI container on buyers who use Zenject, no DI, or their own injector. | DI users wire their container into the `UIServices` MonoBehaviour setters at boot. A VContainer-driven `GameWiring` sample is parked under `Samples~/` (not exposed in Package Manager) until service contracts stabilize at the end of Group D — see CHANGELOG `[0.4.1-alpha]`. |
 | 9 | No comments, ≤ 15-line methods, `var` everywhere | UNITY_RULES, applied without exception. | Readability via naming, not prose. |
 | 10 | `BindUntyped` is `protected override` (not `protected internal`) when host assemblies derive `UIModule<TData>` | Cross-assembly subclasses cannot widen accessibility from `protected internal` — the C# compiler emits CS0507. Buyers deriving in their own asmdef would hit this on first compile. | The base method stays `protected internal` so internal samples can call it; derivations declare `protected override`. Validated by `Samples~/Quickstart` and EditMode test fakes. |
 | 11 | A single `UIThemeConfig` asset feeds **all three managers** (`UIManager._themeConfig`, `PopupManager._themeConfig`, `ToastManager._themeConfig`) | "Skin it once" is the kit's pitch. Multiple Theme assets per scene = inconsistent visuals across screens / popups / toasts; defeats the value proposition. | Buyer assigns the same `UIThemeConfig_Default` ref into all three managers' Inspector slots. Bootstrap Defaults menu auto-creates this asset; the demo scene built by `Build Group A Sample` wires it automatically. |

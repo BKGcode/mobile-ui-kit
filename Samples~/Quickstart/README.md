@@ -2,7 +2,7 @@
 
 > Zero dependencies. No DI. Two `[ContextMenu]` entries. Drop the prefab in a scene and press Play.
 
-This sample shows the smallest viable wiring of `UIManager` + `PopupManager`. If you need a VContainer-driven setup with service stubs, import the `Game Wiring` sample instead.
+This sample shows the smallest viable wiring of `UIManager` + `PopupManager`. A VContainer-driven setup with service stubs is parked under `Samples~/GameWiring/` (not exposed in Package Manager) until service contracts stabilize at the end of Group D.
 
 ## What ships
 
@@ -60,10 +60,10 @@ This sample shows the smallest viable wiring of `UIManager` + `PopupManager`. If
 ## What this sample is **not**
 
 - Not a production setup. No animations, no theming applied to UI elements, no input wiring.
-- Not a router demo. `UIRouter` is exercised in the `Game Wiring` sample, not here.
+- Not a router demo. `UIRouter` is exercised by host games via `UIServices` setters; the parked GameWiring sample carries an example.
 - Not a popup priority demo. Both context-menu calls use `PopupPriority.Gameplay`. Override the call site to test eviction (`Modal` over `Gameplay`).
 - Not a pattern reference. Real screens with payload derive from `UIModule<TData>`; the samples here use `UIModuleBase` directly because they have no data to bind.
 
 ## Next step
 
-Once this runs, read the package `README.md` (`Architecture decisions` table) and import the `Game Wiring` sample for the VContainer-driven version.
+Once this runs, read the package `README.md` (`Architecture decisions` table) and import the `Catalog — Group A — Pure UI` sample to materialize the 4 catalog prefabs + Demo scene.

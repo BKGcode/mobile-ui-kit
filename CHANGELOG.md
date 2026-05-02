@@ -7,6 +7,21 @@ _Last updated: 2026-05-02_
 
 ## [Unreleased]
 
+## [0.4.1-alpha] — 2026-05-02
+
+### Removed
+- **`Game Wiring` sample parked**: removed from `package.json` `samples[]` so Package Manager no longer offers it for import. Source files stay under `Samples~/GameWiring/` (`GameWiringLifetimeScope.cs`, `StubServices.cs`, `UIRouterStub.cs`, `KitforgeLabs.MobileUIKit.GameWiring.asmdef`, `README.md`) for revival once service contracts stabilize at end of Group D. **Why**: pre-existing buyer-facing P0 caught during v0.4.0 verification — sample required VContainer (opt-in, not installed in PACHINKO host) and the 5 stub services had ~30 unimplemented interface members added during v0.3.0 G3 work. Importing the sample blocked the entire host project from compiling. Path to revival = update stubs after Group D ships `IPlayerDataService` + `SettingsPopup`, then re-add the entry to `samples[]`.
+
+### Changed
+- **README**: VContainer prereq note rewritten — no longer mentions `Samples~/GameWiring`; instead points buyers to `UIServices` MonoBehaviour setters as the DI integration surface. Architecture decision #1 + #8 updated. Phase 1 done-criteria checkbox for `Samples~/GameWiring` removed (no longer shipped). Install URL bumped to `v0.4.1-alpha`.
+- **Quickstart README**: 3 cross-references to `Game Wiring` rewritten as "parked under `Samples~/`, returns once Group D ships".
+- **Catalog Group A README**: "See also" link to GameWiring annotated as parked.
+
+### Done criteria
+- [x] `package.json` `samples[]` lists Quickstart + Catalog Group A only (2 entries).
+- [x] No README references guide buyers to import a broken sample.
+- [x] `Samples~/GameWiring/` source preserved on disk for future revival.
+
 ## [0.4.0-alpha] — 2026-05-02
 
 > Group A — Pure UI catalog. Tag cut after Unity Editor verification of the 7-item Done criteria below: Bootstrap Defaults runs, `Build Group A Sample` produces 4 prefabs + scene with all 5 references wired (Theme + 4 prefabs), 4 prefabs open clean (36/36 catalog refs + 4/4 animator refs), 12 ContextMenu entries spawn correctly in Play, EditMode Test Runner reports 86/86 green, Editor.asmdef compiles after the Catalog reference addition, `git status` aligned with the deliverables list.
