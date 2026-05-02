@@ -187,9 +187,7 @@ namespace KitforgeLabs.MobileUIKit.Catalog.Confirm
 
         private UIAnimPreset ResolvePreset()
         {
-            if (Theme == null || Theme.AnimPresetLibrary == null) return null;
-            var style = AnimStyleOverride ?? Theme.DefaultAnimStyle;
-            return Theme.AnimPresetLibrary.Resolve(style);
+            return AnimPresetOverride != null ? AnimPresetOverride : Theme?.DefaultAnimPreset;
         }
     }
 }

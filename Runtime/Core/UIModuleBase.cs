@@ -14,7 +14,7 @@ namespace KitforgeLabs.MobileUIKit.Core
         protected UIThemeConfig Theme { get; private set; }
         protected UIServices Services { get; private set; }
 
-        public virtual UIAnimStyle? AnimStyleOverride => null;
+        public virtual UIAnimPreset AnimPresetOverride => null;
 
         public virtual void Initialize(UIThemeConfig theme, UIServices services)
         {

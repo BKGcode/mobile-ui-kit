@@ -36,17 +36,17 @@ All three events are reset on every `Bind(...)` to prevent handler accumulation 
 - `[RequireComponent(typeof(UIAnimConfirmPopup))]`. Animator auto-resolved in `Awake` and lazily on first access.
 - Show: scale pop-in + fade-in on `_card` (CanvasGroup `_canvasGroup` on root).
 - Hide: scale-down to `UIAnimPreset.HideScaleTo` (default `0.9f`) + fade-out, then `FinalizeDismissal` callback.
-- Preset resolved from `Theme.AnimPresetLibrary` using `AnimStyleOverride ?? Theme.DefaultAnimStyle`.
+- Preset resolved as `AnimPresetOverride ?? Theme.DefaultAnimPreset`. If both are null, animator no-ops (instant show/hide).
 - `OnHide` calls `Animator.Skip()` — semantic = "kill any residual tween". Real hide is driven by `DismissWithAnimation` from interaction handlers.
 
 ## Theme tokens consumed
 - `PrimaryColor` / `DangerColor` / `SuccessColor` (tone tint on `Refs.ConfirmTint`).
-- `AnimPresetLibrary` + `DefaultAnimStyle` (animator preset).
+- `DefaultAnimPreset` (animator preset, single SO ref).
 - Sprites/fonts: applied at prefab authoring time from Theme slots; not re-applied at runtime.
 
 ## Edge cases
 - **Null DTO**: `OnShow` calls `Bind(null)` → empty fields, defaults applied.
-- **Missing Theme**: `ApplyTone` no-ops; animator falls back silently if `AnimPresetLibrary == null`.
+- **Missing Theme**: `ApplyTone` no-ops; animator no-ops silently if `DefaultAnimPreset == null`.
 - **Single-button alert**: `ShowCancel=false` hides cancel button; back press routes to `OnConfirmed`.
 - **Backdrop with `CloseOnBackdrop=false`**: backdrop is non-interactable.
 - **Re-Show same instance**: `Bind` resets event listeners + `IsDismissing=false`. No leak.

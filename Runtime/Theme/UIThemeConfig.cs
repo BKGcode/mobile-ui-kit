@@ -56,8 +56,8 @@ namespace KitforgeLabs.MobileUIKit.Theme
         [SerializeField] private AudioClip _audioNotification;
 
         [Header("Animation")]
-        [SerializeField] private UIAnimStyle _defaultAnimStyle = UIAnimStyle.Playful;
-        [SerializeField] private UIAnimPresetLibrary _animPresetLibrary;
+        [Tooltip("Animation preset used by all kit popups/toasts unless overridden per-element. If null, popups appear without animation.")]
+        [SerializeField] private UIAnimPreset _defaultAnimPreset;
         [SerializeField] private float _transitionSpeed = 0.3f;
         [SerializeField] private float _bounceStrength = 1.1f;
 
@@ -103,8 +103,7 @@ namespace KitforgeLabs.MobileUIKit.Theme
         public AudioClip AudioError => _audioError;
         public AudioClip AudioNotification => _audioNotification;
 
-        public UIAnimStyle DefaultAnimStyle => _defaultAnimStyle;
-        public UIAnimPresetLibrary AnimPresetLibrary => _animPresetLibrary;
+        public UIAnimPreset DefaultAnimPreset => _defaultAnimPreset;
         public float TransitionSpeed => _transitionSpeed;
         public float BounceStrength => _bounceStrength;
     }

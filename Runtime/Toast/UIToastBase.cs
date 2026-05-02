@@ -23,7 +23,7 @@ namespace KitforgeLabs.MobileUIKit.Toast
         /// </summary>
         public abstract void OnHide();
 
-        public virtual UIAnimStyle? AnimStyleOverride => null;
+        public virtual UIAnimPreset AnimPresetOverride => null;
 
         public virtual void Initialize(UIThemeConfig theme, UIServices services)
         {

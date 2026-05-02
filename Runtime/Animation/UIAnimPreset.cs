@@ -5,9 +5,6 @@ namespace KitforgeLabs.MobileUIKit.Animation
     [CreateAssetMenu(menuName = "Kitforge/UI Kit/Anim Preset", fileName = "UIAnimPreset", order = 10)]
     public class UIAnimPreset : ScriptableObject
     {
-        [Header("Identity")]
-        [SerializeField] private UIAnimStyle _style = UIAnimStyle.Playful;
-
         [Header("Show")]
         [SerializeField] private float _showDuration = 0.40f;
         [SerializeField] private UIAnimEase _showEase = UIAnimEase.OutBack;
@@ -34,7 +31,6 @@ namespace KitforgeLabs.MobileUIKit.Animation
         [SerializeField] private float _pressedDuration = 0.08f;
         [SerializeField] private UIAnimEase _pressedEase = UIAnimEase.OutQuad;
 
-        public UIAnimStyle Style => _style;
         public float ShowDuration => _showDuration;
         public UIAnimEase ShowEase => _showEase;
         public float HideDuration => _hideDuration;

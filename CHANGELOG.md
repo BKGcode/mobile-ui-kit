@@ -7,6 +7,17 @@ _Last updated: 2026-05-02_
 
 ## [Unreleased]
 
+### Animation system simplified — drop enum + library indirection (BREAKING)
+- **Why**: 3-piece system (UIAnimStyle enum + UIAnimPresetLibrary SO + UIAnimPreset SOs) violated the kit's own pitch ("skin it once") — buyer needed 8 manual steps to get a fresh Theme to animate. Default Theme silently produced un-animated popups with zero feedback.
+- **Removed**: `UIAnimStyle` enum (10 styles + Custom), `UIAnimPresetLibrary` SO (style->preset map with fallback), `UIAnimPresetLibraryEditor` (Editor inspector for the library).
+- **Removed from `UIThemeConfig`**: `_defaultAnimStyle` field, `_animPresetLibrary` field, `DefaultAnimStyle` getter, `AnimPresetLibrary` getter.
+- **Added to `UIThemeConfig`**: `_defaultAnimPreset` field (single `UIAnimPreset` ref), `DefaultAnimPreset` getter, tooltip clarifying "null = popups appear without animation".
+- **`UIModuleBase` / `UIToastBase`**: `virtual UIAnimStyle? AnimStyleOverride => null` -> `virtual UIAnimPreset AnimPresetOverride => null`. Per-element override is now a direct preset ref.
+- **All 4 popups + toast `ResolvePreset()` simplified**: `AnimPresetOverride ?? Theme?.DefaultAnimPreset`. Two levels of indirection collapsed into one.
+- **`UIAnimPreset`**: removed `_style` identity field + `Style` getter (asset filename + folder communicate identity now).
+- **`DefaultUIAnimPresetsCreator` rebuilt**: menu renamed to `Tools/Kitforge/Create Default UI Theme + Presets`. Single click creates 10 presets at `Assets/Settings/UIAnimPresets/` AND a `UIThemeConfig_Default.asset` at `Assets/Settings/UI/` pre-wired to the Playful preset. Buyer's OOTB experience drops from 8 steps to 1.
+- **Pending**: update `*PopupTests` if any reference the removed enum (`UIAnimStyle` not found in tests grep — should be safe but Unity Test Runner re-run required to confirm).
+
 ### Group A — element 4/4: TutorialPopup (scaffolded, code+tests, no spec/prefab yet)
 - **`Runtime/Catalog/Popups/Tutorial/`**:
   - `TutorialStep` POCO (Title + Body[TextArea] + optional Sprite).
