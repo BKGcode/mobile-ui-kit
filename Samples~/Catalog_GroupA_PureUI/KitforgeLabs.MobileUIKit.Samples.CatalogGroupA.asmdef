@@ -1,14 +1,12 @@
 {
-    "name": "KitforgeLabs.MobileUIKit.Editor",
-    "rootNamespace": "KitforgeLabs.MobileUIKit.Editor",
+    "name": "KitforgeLabs.MobileUIKit.Samples.CatalogGroupA",
+    "rootNamespace": "KitforgeLabs.MobileUIKit.Samples.CatalogGroupA",
     "references": [
         "KitforgeLabs.MobileUIKit",
         "KitforgeLabs.MobileUIKit.Catalog",
         "Unity.TextMeshPro"
     ],
-    "includePlatforms": [
-        "Editor"
-    ],
+    "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": false,

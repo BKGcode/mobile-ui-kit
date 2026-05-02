@@ -22,6 +22,14 @@ namespace KitforgeLabs.MobileUIKit.Core
         {
             Theme = theme;
             Services = services;
+            ApplyThemeToChildren(theme);
+        }
+
+        protected void ApplyThemeToChildren(UIThemeConfig theme)
+        {
+            if (theme == null) return;
+            var themed = GetComponentsInChildren<IThemedElement>(true);
+            for (var i = 0; i < themed.Length; i++) themed[i].ApplyTheme(theme);
         }
 
         protected UIAnimPreset ResolveAnimPreset()

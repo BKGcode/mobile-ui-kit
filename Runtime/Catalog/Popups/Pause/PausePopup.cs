@@ -139,13 +139,13 @@ namespace KitforgeLabs.MobileUIKit.Catalog.Pause
         public void Resume() => HandleResume();
 
         private void HandleResume() => DismissWith(OnResume);
-        private void HandleRestart() => DismissWith(OnRestart);
-        private void HandleHome() => DismissWith(OnHome);
-        private void HandleQuit() => DismissWith(OnQuit);
+        internal void HandleRestart() => DismissWith(OnRestart);
+        internal void HandleHome() => DismissWith(OnHome);
+        internal void HandleQuit() => DismissWith(OnQuit);
 
-        private void HandleSettings() => RaiseShortcut(OnSettings);
-        private void HandleShop() => RaiseShortcut(OnShop);
-        private void HandleHelp() => RaiseShortcut(OnHelp);
+        internal void HandleSettings() => RaiseShortcut(OnSettings);
+        internal void HandleShop() => RaiseShortcut(OnShop);
+        internal void HandleHelp() => RaiseShortcut(OnHelp);
 
         private void HandleBackdrop()
         {
@@ -288,19 +288,19 @@ namespace KitforgeLabs.MobileUIKit.Catalog.Pause
             if (_refs.VibrationToggle != null) _refs.VibrationToggle.onValueChanged.RemoveListener(HandleVibrationChanged);
         }
 
-        private void HandleSoundChanged(bool v)
+        internal void HandleSoundChanged(bool v)
         {
             if (_data != null) _data.SoundOn = v;
             OnSoundChanged?.Invoke(v);
         }
 
-        private void HandleMusicChanged(bool v)
+        internal void HandleMusicChanged(bool v)
         {
             if (_data != null) _data.MusicOn = v;
             OnMusicChanged?.Invoke(v);
         }
 
-        private void HandleVibrationChanged(bool v)
+        internal void HandleVibrationChanged(bool v)
         {
             if (_data != null) _data.VibrationOn = v;
             OnVibrationChanged?.Invoke(v);

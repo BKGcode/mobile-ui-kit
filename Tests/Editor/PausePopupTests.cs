@@ -1,5 +1,9 @@
+using KitforgeLabs.MobileUIKit.Animation;
 using KitforgeLabs.MobileUIKit.Catalog.Pause;
+using KitforgeLabs.MobileUIKit.Services;
+using KitforgeLabs.MobileUIKit.Theme;
 using NUnit.Framework;
+using UnityEditor;
 using UnityEngine;
 
 namespace KitforgeLabs.MobileUIKit.Catalog.Tests
@@ -8,7 +12,10 @@ namespace KitforgeLabs.MobileUIKit.Catalog.Tests
     public class PausePopupTests
     {
         private GameObject _go;
+        private GameObject _servicesGo;
         private PausePopup _popup;
+        private UIThemeConfig _theme;
+        private UIAnimPreset _preset;
         private float _initialTimeScale;
         private int _resumeCount;
         private int _dismissedCount;
@@ -22,6 +29,14 @@ namespace KitforgeLabs.MobileUIKit.Catalog.Tests
             _go.AddComponent<CanvasGroup>();
             _go.AddComponent<UIAnimPausePopup>();
             _popup = _go.AddComponent<PausePopup>();
+            _theme = ScriptableObject.CreateInstance<UIThemeConfig>();
+            _preset = ScriptableObject.CreateInstance<UIAnimPreset>();
+            var so = new SerializedObject(_theme);
+            so.FindProperty("_defaultAnimPreset").objectReferenceValue = _preset;
+            so.ApplyModifiedPropertiesWithoutUndo();
+            _servicesGo = new GameObject("PausePopup_Services");
+            var services = _servicesGo.AddComponent<UIServices>();
+            _popup.Initialize(_theme, services);
             _resumeCount = 0;
             _dismissedCount = 0;
         }
@@ -30,6 +45,9 @@ namespace KitforgeLabs.MobileUIKit.Catalog.Tests
         public void TearDown()
         {
             if (_go != null) Object.DestroyImmediate(_go);
+            if (_servicesGo != null) Object.DestroyImmediate(_servicesGo);
+            if (_theme != null) Object.DestroyImmediate(_theme);
+            if (_preset != null) Object.DestroyImmediate(_preset);
             Time.timeScale = _initialTimeScale;
         }
 
@@ -123,6 +141,132 @@ namespace KitforgeLabs.MobileUIKit.Catalog.Tests
             _popup.OnShow();
             _popup.OnBackPressed();
             Assert.AreEqual(1, resumedCount, "OnResumed must fire exactly once after resume.");
+        }
+
+        [Test]
+        public void Restart_Click_Fires_Event_And_Dismisses()
+        {
+            var count = 0;
+            _popup.Bind(new PausePopupData());
+            _popup.OnRestart += () => count++;
+            _popup.OnDismissed += () => _dismissedCount++;
+            _popup.HandleRestart();
+            Assert.AreEqual(1, count, "OnRestart must fire once.");
+            Assert.AreEqual(1, _dismissedCount, "Dismiss must follow Restart.");
+            Assert.IsTrue(_popup.IsDismissing);
+        }
+
+        [Test]
+        public void Home_Click_Fires_Event_And_Dismisses()
+        {
+            var count = 0;
+            _popup.Bind(new PausePopupData());
+            _popup.OnHome += () => count++;
+            _popup.OnDismissed += () => _dismissedCount++;
+            _popup.HandleHome();
+            Assert.AreEqual(1, count);
+            Assert.AreEqual(1, _dismissedCount);
+            Assert.IsTrue(_popup.IsDismissing);
+        }
+
+        [Test]
+        public void Quit_Click_Fires_Event_And_Dismisses()
+        {
+            var count = 0;
+            _popup.Bind(new PausePopupData());
+            _popup.OnQuit += () => count++;
+            _popup.OnDismissed += () => _dismissedCount++;
+            _popup.HandleQuit();
+            Assert.AreEqual(1, count);
+            Assert.AreEqual(1, _dismissedCount);
+            Assert.IsTrue(_popup.IsDismissing);
+        }
+
+        [Test]
+        public void Settings_Click_Fires_Event_And_Stays_Open()
+        {
+            var count = 0;
+            _popup.Bind(new PausePopupData());
+            _popup.OnSettings += () => count++;
+            _popup.OnDismissed += () => _dismissedCount++;
+            _popup.HandleSettings();
+            Assert.AreEqual(1, count, "OnSettings must fire once.");
+            Assert.AreEqual(0, _dismissedCount, "Settings is a shortcut — popup must stay open.");
+            Assert.IsFalse(_popup.IsDismissing);
+        }
+
+        [Test]
+        public void Shop_Click_Fires_Event_And_Stays_Open()
+        {
+            var count = 0;
+            _popup.Bind(new PausePopupData());
+            _popup.OnShop += () => count++;
+            _popup.OnDismissed += () => _dismissedCount++;
+            _popup.HandleShop();
+            Assert.AreEqual(1, count);
+            Assert.AreEqual(0, _dismissedCount);
+            Assert.IsFalse(_popup.IsDismissing);
+        }
+
+        [Test]
+        public void Help_Click_Fires_Event_And_Stays_Open()
+        {
+            var count = 0;
+            _popup.Bind(new PausePopupData());
+            _popup.OnHelp += () => count++;
+            _popup.OnDismissed += () => _dismissedCount++;
+            _popup.HandleHelp();
+            Assert.AreEqual(1, count);
+            Assert.AreEqual(0, _dismissedCount);
+            Assert.IsFalse(_popup.IsDismissing);
+        }
+
+        [Test]
+        public void Sound_Toggle_Mutates_Data_And_Fires_Event_And_Stays_Open()
+        {
+            var data = new PausePopupData { SoundOn = true };
+            var lastValue = true;
+            var count = 0;
+            _popup.Bind(data);
+            _popup.OnSoundChanged += v => { count++; lastValue = v; };
+            _popup.OnDismissed += () => _dismissedCount++;
+            _popup.HandleSoundChanged(false);
+            Assert.AreEqual(1, count, "OnSoundChanged must fire once.");
+            Assert.IsFalse(lastValue, "Event payload must reflect new toggle state.");
+            Assert.IsFalse(data.SoundOn, "DTO field must be mutated to match.");
+            Assert.AreEqual(0, _dismissedCount, "Toggle must NOT dismiss the popup.");
+        }
+
+        [Test]
+        public void Music_Toggle_Mutates_Data_And_Fires_Event_And_Stays_Open()
+        {
+            var data = new PausePopupData { MusicOn = true };
+            var lastValue = true;
+            var count = 0;
+            _popup.Bind(data);
+            _popup.OnMusicChanged += v => { count++; lastValue = v; };
+            _popup.OnDismissed += () => _dismissedCount++;
+            _popup.HandleMusicChanged(false);
+            Assert.AreEqual(1, count);
+            Assert.IsFalse(lastValue);
+            Assert.IsFalse(data.MusicOn);
+            Assert.AreEqual(0, _dismissedCount);
+        }
+
+        [Test]
+        public void Vibration_Toggle_Mutates_Data_And_Fires_Event_And_Stays_Open()
+        {
+            var data = new PausePopupData { VibrationOn = true };
+            var lastValue = true;
+            var count = 0;
+            _popup.Bind(data);
+            _popup.OnVibrationChanged += v => { count++; lastValue = v; };
+            _popup.OnDismissed += () => _dismissedCount++;
+            _popup.HandleVibrationChanged(false);
+            Assert.AreEqual(1, count);
+            Assert.IsFalse(lastValue);
+            Assert.IsFalse(data.VibrationOn);
+            Assert.AreEqual(0, _dismissedCount);
         }
     }
 }

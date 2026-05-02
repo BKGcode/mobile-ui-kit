@@ -185,5 +185,106 @@ namespace KitforgeLabs.MobileUIKit.Catalog.Tests
             _popup.GoNext();
             Assert.AreEqual(beforeNext, _nextCount, "Listeners attached before re-Bind must NOT receive events after re-Bind.");
         }
+
+        [Test]
+        public void Backdrop_With_TapToAdvance_Calls_GoNext()
+        {
+            var data = ThreeStepData();
+            data.TapToAdvance = true;
+            _popup.Bind(data);
+            SubscribeCounters();
+            _popup.HandleBackdrop();
+            Assert.AreEqual(1, _popup.CurrentIndex, "TapToAdvance must advance the step.");
+            Assert.AreEqual(1, _nextCount);
+            Assert.AreEqual(0, _skipCount, "TapToAdvance must NOT trigger Skip.");
+            Assert.IsFalse(_popup.IsDismissing);
+        }
+
+        [Test]
+        public void Backdrop_With_CloseOnBackdrop_Calls_Skip()
+        {
+            var data = ThreeStepData();
+            data.CloseOnBackdrop = true;
+            _popup.Bind(data);
+            SubscribeCounters();
+            _popup.HandleBackdrop();
+            Assert.AreEqual(1, _skipCount, "CloseOnBackdrop must route to Skip.");
+            Assert.AreEqual(1, _dismissedCount);
+            Assert.IsTrue(_popup.IsDismissing);
+        }
+
+        [Test]
+        public void Backdrop_With_Both_Flags_TapToAdvance_Wins()
+        {
+            var data = ThreeStepData();
+            data.TapToAdvance = true;
+            data.CloseOnBackdrop = true;
+            _popup.Bind(data);
+            SubscribeCounters();
+            _popup.HandleBackdrop();
+            Assert.AreEqual(1, _popup.CurrentIndex, "TapToAdvance must win over CloseOnBackdrop.");
+            Assert.AreEqual(1, _nextCount);
+            Assert.AreEqual(0, _skipCount);
+            Assert.IsFalse(_popup.IsDismissing);
+        }
+
+        [Test]
+        public void StartIndex_Negative_Is_Clamped_To_Zero()
+        {
+            _popup.Bind(ThreeStepData(startIndex: -5));
+            Assert.AreEqual(0, _popup.CurrentIndex, "Negative StartIndex must clamp to 0.");
+            Assert.IsTrue(_popup.IsFirstStep);
+        }
+
+        [Test]
+        public void StartIndex_Beyond_Bounds_Is_Clamped_To_Last()
+        {
+            _popup.Bind(ThreeStepData(startIndex: 99));
+            Assert.AreEqual(2, _popup.CurrentIndex, "Out-of-bounds StartIndex must clamp to StepCount - 1.");
+            Assert.IsTrue(_popup.IsLastStep);
+        }
+
+        [Test]
+        public void CompleteTutorial_Public_Api_Forces_Completion_Mid_Flow()
+        {
+            _popup.Bind(ThreeStepData(startIndex: 1));
+            SubscribeCounters();
+            _popup.CompleteTutorial();
+            Assert.AreEqual(1, _completedCount, "CompleteTutorial must fire OnCompleted regardless of step.");
+            Assert.AreEqual(1, _dismissedCount);
+            Assert.IsTrue(_popup.IsDismissing);
+        }
+
+        [Test]
+        public void Rebind_Resets_CurrentIndex_From_New_StartIndex()
+        {
+            _popup.Bind(ThreeStepData(startIndex: 2));
+            Assert.AreEqual(2, _popup.CurrentIndex);
+            _popup.Bind(ThreeStepData(startIndex: 0));
+            Assert.AreEqual(0, _popup.CurrentIndex, "Re-Bind must apply the new StartIndex.");
+            Assert.IsTrue(_popup.IsFirstStep);
+            Assert.IsFalse(_popup.IsDismissing, "Re-Bind must reset IsDismissing.");
+        }
+
+        [Test]
+        public void GoNext_With_Empty_Steps_Is_NoOp()
+        {
+            _popup.Bind(new TutorialPopupData());
+            SubscribeCounters();
+            _popup.GoNext();
+            Assert.AreEqual(0, _nextCount, "GoNext on empty Steps must NOT fire OnNext.");
+            Assert.AreEqual(0, _completedCount);
+            Assert.AreEqual(0, _stepChangedCount);
+        }
+
+        [Test]
+        public void GoPrevious_With_Empty_Steps_Is_NoOp()
+        {
+            _popup.Bind(new TutorialPopupData());
+            SubscribeCounters();
+            _popup.GoPrevious();
+            Assert.AreEqual(0, _previousCount);
+            Assert.AreEqual(0, _stepChangedCount);
+        }
     }
 }

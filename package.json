@@ -1,9 +1,9 @@
 {
   "name": "com.kitforgelabs.mobile-ui-kit",
   "displayName": "Kitforge Mobile UI Kit",
-  "version": "0.3.0-alpha",
+  "version": "0.4.0-alpha",
   "unity": "6000.1",
-  "description": "Opinionated UGUI router, popup queue and theme contract for hybrid-casual mobile games. Stack-based screens (Push/Pop/Replace), priority-aware popups (Meta < Gameplay < Modal) and one ScriptableObject theme — wire it in five minutes, skin it once, ship it.",
+  "description": "Opinionated UGUI router, popup queue, theme contract AND a catalog of mid-core mobile UI elements (Confirm / Pause / Tutorial / Toast in v0.4; Shop / Reward / Settings / DailyLogin / GameOver / LevelComplete / HUD / Screens shipping group-by-group). Stack-based screens, priority-aware popups, one ScriptableObject theme — wire it in five minutes, skin it once, ship it.",
   "keywords": [
     "ui",
     "ugui",
@@ -29,6 +29,11 @@
       "displayName": "Game Wiring",
       "description": "VContainer LifetimeScope with stub services and UIRouter — opinionated starting point when you already use DI.",
       "path": "Samples~/GameWiring"
+    },
+    {
+      "displayName": "Catalog — Group A — Pure UI",
+      "description": "ConfirmPopup, PausePopup, TutorialPopup, NotificationToast. After importing, run Tools → Kitforge → UI Kit → Build Group A Sample to materialize the 4 prefabs and a Demo scene with [ContextMenu] triggers.",
+      "path": "Samples~/Catalog_GroupA_PureUI"
     }
   ]
 }

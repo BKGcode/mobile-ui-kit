@@ -1,4 +1,7 @@
+using System.Reflection;
 using KitforgeLabs.MobileUIKit.Catalog.Toasts;
+using KitforgeLabs.MobileUIKit.Services;
+using KitforgeLabs.MobileUIKit.Theme;
 using NUnit.Framework;
 using UnityEngine;
 
@@ -78,6 +81,100 @@ namespace KitforgeLabs.MobileUIKit.Catalog.Tests
             _toast.Bind(new NotificationToastData());
             _toast.DismissNow();
             Assert.AreEqual(beforeCount, _dismissedCount, "Listeners attached before re-Bind must NOT receive events after re-Bind.");
+        }
+
+        [Test]
+        public void Tap_With_TapToDismiss_True_Fires_Event_And_Dismisses()
+        {
+            _toast.Bind(new NotificationToastData { TapToDismiss = true });
+            SubscribeCounters();
+            _toast.HandleTap();
+            Assert.AreEqual(1, _tappedCount, "OnTapped must fire once on tap.");
+            Assert.AreEqual(1, _dismissedCount, "Tap must trigger dismissal.");
+            Assert.IsTrue(_toast.IsDismissing);
+        }
+
+        [Test]
+        public void Tap_With_TapToDismiss_False_Is_NoOp()
+        {
+            _toast.Bind(new NotificationToastData { TapToDismiss = false });
+            SubscribeCounters();
+            _toast.HandleTap();
+            Assert.AreEqual(0, _tappedCount, "OnTapped must NOT fire when TapToDismiss=false.");
+            Assert.AreEqual(0, _dismissedCount);
+            Assert.IsFalse(_toast.IsDismissing);
+        }
+
+        [Test]
+        public void Tap_During_Dismiss_Is_Ignored()
+        {
+            _toast.Bind(new NotificationToastData());
+            SubscribeCounters();
+            _toast.DismissNow();
+            _toast.HandleTap();
+            Assert.AreEqual(0, _tappedCount, "Tap after DismissNow must NOT fire OnTapped.");
+            Assert.AreEqual(1, _dismissedCount, "OnDismissed must fire only once.");
+        }
+
+        [Test]
+        public void SeverityToColor_Mapping_Is_Correct()
+        {
+            var theme = BuildTheme();
+            Assert.AreEqual(theme.PrimaryColor, NotificationToast.SeverityToColor(ToastSeverity.Info, theme));
+            Assert.AreEqual(theme.SuccessColor, NotificationToast.SeverityToColor(ToastSeverity.Success, theme));
+            Assert.AreEqual(theme.WarningColor, NotificationToast.SeverityToColor(ToastSeverity.Warning, theme));
+            Assert.AreEqual(theme.DangerColor, NotificationToast.SeverityToColor(ToastSeverity.Error, theme));
+            Object.DestroyImmediate(theme);
+        }
+
+        [Test]
+        public void SeverityToIcon_Mapping_Is_Correct()
+        {
+            var theme = BuildTheme();
+            var info = Sprite.Create(Texture2D.whiteTexture, new Rect(0, 0, 1, 1), Vector2.zero);
+            var check = Sprite.Create(Texture2D.whiteTexture, new Rect(0, 0, 1, 1), Vector2.zero);
+            var warn = Sprite.Create(Texture2D.whiteTexture, new Rect(0, 0, 1, 1), Vector2.zero);
+            var err = Sprite.Create(Texture2D.whiteTexture, new Rect(0, 0, 1, 1), Vector2.zero);
+            SetPrivateField(theme, "_iconInfo", info);
+            SetPrivateField(theme, "_iconCheck", check);
+            SetPrivateField(theme, "_iconWarning", warn);
+            SetPrivateField(theme, "_iconError", err);
+            Assert.AreSame(info, NotificationToast.SeverityToIcon(ToastSeverity.Info, theme));
+            Assert.AreSame(check, NotificationToast.SeverityToIcon(ToastSeverity.Success, theme));
+            Assert.AreSame(warn, NotificationToast.SeverityToIcon(ToastSeverity.Warning, theme));
+            Assert.AreSame(err, NotificationToast.SeverityToIcon(ToastSeverity.Error, theme));
+            Object.DestroyImmediate(theme);
+            Object.DestroyImmediate(info);
+            Object.DestroyImmediate(check);
+            Object.DestroyImmediate(warn);
+            Object.DestroyImmediate(err);
+        }
+
+        [Test]
+        public void SeverityToCue_Mapping_Is_Correct()
+        {
+            Assert.AreEqual(UIAudioCue.Notification, NotificationToast.SeverityToCue(ToastSeverity.Info));
+            Assert.AreEqual(UIAudioCue.Success, NotificationToast.SeverityToCue(ToastSeverity.Success));
+            Assert.AreEqual(UIAudioCue.Notification, NotificationToast.SeverityToCue(ToastSeverity.Warning));
+            Assert.AreEqual(UIAudioCue.Error, NotificationToast.SeverityToCue(ToastSeverity.Error));
+        }
+
+        [Test]
+        public void Rebind_With_Different_Severity_Does_Not_Throw()
+        {
+            _toast.Bind(new NotificationToastData { Severity = ToastSeverity.Info });
+            Assert.DoesNotThrow(() => _toast.Bind(new NotificationToastData { Severity = ToastSeverity.Error }));
+        }
+
+        private static UIThemeConfig BuildTheme()
+        {
+            return ScriptableObject.CreateInstance<UIThemeConfig>();
+        }
+
+        private static void SetPrivateField(object target, string fieldName, object value)
+        {
+            var field = target.GetType().GetField(fieldName, BindingFlags.NonPublic | BindingFlags.Instance);
+            field.SetValue(target, value);
         }
     }
 }

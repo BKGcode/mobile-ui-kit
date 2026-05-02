@@ -27,14 +27,14 @@ The kit ships **15 ready-to-use mid-core mobile UI elements** in three layers:
 | 5 | ShopPopup | Modal | Grid of items with prices + buy buttons |
 | 6 | LevelCompletePopup | Gameplay | Stars / score / next / retry |
 | 7 | GameOverPopup | Modal | Continue (rewarded ad) / restart / quit |
-| 8 | PausePopup | Modal | Resume / restart / settings / quit |
+| 8 | PausePopup | Modal | Resume / restart / settings / quit. Owns `Time.timeScale` while visible. See [Specs/Catalog/PausePopup.md](Catalog/PausePopup.md). |
 | 9 | NotEnoughCurrencyPopup | Modal | Offer to buy more / watch ad |
-| 10 | TutorialPopup | Gameplay | Text + character + continue/skip |
+| 10 | TutorialPopup | Gameplay | Multi-step tutorial with Next/Previous/Skip + dynamic Done label + loop wrap. See [Specs/Catalog/TutorialPopup.md](Catalog/TutorialPopup.md). |
 
 ### Transient / HUD (NEW LAYER — not in Phase 1)
 | # | Element | Manager | Purpose |
 |---|---|---|---|
-| 11 | NotificationToast | `ToastManager` (new) | Non-blocking, auto-dismiss, stack-able |
+| 11 | NotificationToast | `ToastManager` | Non-blocking, auto-dismiss, severity-tinted (Info / Success / Warning / Error), tap-to-dismiss. See [Specs/Catalog/NotificationToast.md](Catalog/NotificationToast.md). |
 | 14a | HUD-Coins | none (binds to screen) | Live coin counter, reacts to economy events |
 | 14b | HUD-Gems | none (binds to screen) | Live gem counter |
 | 14c | HUD-Energy | none (binds to screen) | Energy bar with regen timer |

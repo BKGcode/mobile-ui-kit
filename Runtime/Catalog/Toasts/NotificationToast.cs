@@ -101,7 +101,7 @@ namespace KitforgeLabs.MobileUIKit.Catalog.Toasts
             DismissWithAnimation();
         }
 
-        private void HandleTap()
+        internal void HandleTap()
         {
             if (IsDismissing || _data == null || !_data.TapToDismiss) return;
             IsDismissing = true;
@@ -141,7 +141,7 @@ namespace KitforgeLabs.MobileUIKit.Catalog.Toasts
             {
                 var icon = SeverityToIcon(severity, Theme);
                 if (icon != null) _refs.SeverityIcon.sprite = icon;
-                _refs.SeverityIcon.enabled = icon != null;
+                _refs.SeverityIcon.gameObject.SetActive(icon != null);
             }
         }
 
@@ -151,27 +151,29 @@ namespace KitforgeLabs.MobileUIKit.Catalog.Toasts
             _refs.TapArea.interactable = tapToDismiss;
         }
 
-        private static Color SeverityToColor(ToastSeverity severity, UIThemeConfig theme)
+        internal static Color SeverityToColor(ToastSeverity severity, UIThemeConfig theme)
         {
             switch (severity)
             {
                 case ToastSeverity.Success: return theme.SuccessColor;
-                case ToastSeverity.Warning: return theme.AccentColor;
+                case ToastSeverity.Warning: return theme.WarningColor;
                 case ToastSeverity.Error:   return theme.DangerColor;
                 default:                    return theme.PrimaryColor;
             }
         }
 
-        private static Sprite SeverityToIcon(ToastSeverity severity, UIThemeConfig theme)
+        internal static Sprite SeverityToIcon(ToastSeverity severity, UIThemeConfig theme)
         {
             switch (severity)
             {
                 case ToastSeverity.Success: return theme.IconCheck;
-                default:                    return null;
+                case ToastSeverity.Warning: return theme.IconWarning;
+                case ToastSeverity.Error:   return theme.IconError;
+                default:                    return theme.IconInfo;
             }
         }
 
-        private static UIAudioCue SeverityToCue(ToastSeverity severity)
+        internal static UIAudioCue SeverityToCue(ToastSeverity severity)
         {
             switch (severity)
             {

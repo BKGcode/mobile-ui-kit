@@ -16,6 +16,7 @@ namespace KitforgeLabs.MobileUIKit.Theme
         [SerializeField] private Color _textPrimary = new Color(0.10f, 0.10f, 0.12f, 1f);
         [SerializeField] private Color _textSecondary = new Color(0.45f, 0.48f, 0.55f, 1f);
         [SerializeField] private Color _successColor = new Color(0.30f, 0.78f, 0.45f, 1f);
+        [SerializeField] private Color _warningColor = new Color(1.00f, 0.60f, 0.15f, 1f);
         [SerializeField] private Color _dangerColor = new Color(0.92f, 0.30f, 0.30f, 1f);
 
         [Header("Typography")]
@@ -44,6 +45,9 @@ namespace KitforgeLabs.MobileUIKit.Theme
         [SerializeField] private Sprite _iconClose;
         [SerializeField] private Sprite _iconBack;
         [SerializeField] private Sprite _iconCheck;
+        [SerializeField] private Sprite _iconInfo;
+        [SerializeField] private Sprite _iconWarning;
+        [SerializeField] private Sprite _iconError;
         [SerializeField] private Sprite _iconCoin;
         [SerializeField] private Sprite _iconGem;
 
@@ -58,8 +62,6 @@ namespace KitforgeLabs.MobileUIKit.Theme
         [Header("Animation")]
         [Tooltip("Animation preset used by all kit popups/toasts unless overridden per-element. If null, popups appear without animation.")]
         [SerializeField] private UIAnimPreset _defaultAnimPreset;
-        [SerializeField] private float _transitionSpeed = 0.3f;
-        [SerializeField] private float _bounceStrength = 1.1f;
 
         public Color PrimaryColor => _primaryColor;
         public Color SecondaryColor => _secondaryColor;
@@ -69,6 +71,7 @@ namespace KitforgeLabs.MobileUIKit.Theme
         public Color TextPrimary => _textPrimary;
         public Color TextSecondary => _textSecondary;
         public Color SuccessColor => _successColor;
+        public Color WarningColor => _warningColor;
         public Color DangerColor => _dangerColor;
 
         public TMP_FontAsset FontHeading => _fontHeading;
@@ -93,6 +96,9 @@ namespace KitforgeLabs.MobileUIKit.Theme
         public Sprite IconClose => _iconClose;
         public Sprite IconBack => _iconBack;
         public Sprite IconCheck => _iconCheck;
+        public Sprite IconInfo => _iconInfo;
+        public Sprite IconWarning => _iconWarning;
+        public Sprite IconError => _iconError;
         public Sprite IconCoin => _iconCoin;
         public Sprite IconGem => _iconGem;
 
@@ -104,7 +110,5 @@ namespace KitforgeLabs.MobileUIKit.Theme
         public AudioClip AudioNotification => _audioNotification;
 
         public UIAnimPreset DefaultAnimPreset => _defaultAnimPreset;
-        public float TransitionSpeed => _transitionSpeed;
-        public float BounceStrength => _bounceStrength;
     }
 }

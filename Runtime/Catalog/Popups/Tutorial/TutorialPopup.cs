@@ -122,7 +122,7 @@ namespace KitforgeLabs.MobileUIKit.Catalog.Tutorial
 
         public void GoNext()
         {
-            if (IsDismissing) return;
+            if (IsDismissing || StepCount == 0) return;
             Services?.Audio?.Play(UIAudioCue.ButtonTap);
             if (IsLastStep)
             {
@@ -141,7 +141,7 @@ namespace KitforgeLabs.MobileUIKit.Catalog.Tutorial
 
         public void GoPrevious()
         {
-            if (IsDismissing || IsFirstStep) return;
+            if (IsDismissing || StepCount == 0 || IsFirstStep) return;
             Services?.Audio?.Play(UIAudioCue.ButtonTap);
             SetIndex(CurrentIndex - 1);
             OnPrevious?.Invoke(CurrentIndex);
@@ -168,7 +168,7 @@ namespace KitforgeLabs.MobileUIKit.Catalog.Tutorial
             DismissWithAnimation();
         }
 
-        private void HandleBackdrop()
+        internal void HandleBackdrop()
         {
             if (IsDismissing || _data == null) return;
             if (_data.TapToAdvance) { GoNext(); return; }
