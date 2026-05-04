@@ -1,7 +1,7 @@
 {
   "name": "com.kitforgelabs.mobile-ui-kit",
   "displayName": "Kitforge Mobile UI Kit",
-  "version": "0.6.0-alpha",
+  "version": "0.7.0-alpha",
   "unity": "6000.1",
   "description": "Opinionated UGUI router, popup queue, theme contract AND a catalog of mid-core mobile UI elements (Confirm / Pause / Tutorial / Toast in v0.4; Shop / Reward / Settings / DailyLogin / GameOver / LevelComplete / HUD / Screens shipping group-by-group). Stack-based screens, priority-aware popups, one ScriptableObject theme — wire it in five minutes, skin it once, ship it.",
   "keywords": [
@@ -39,6 +39,16 @@
       "displayName": "Catalog — Group C — Progression",
       "description": "DailyLoginPopup, LevelCompletePopup, GameOverPopup, HUDEnergy, HUDTimer plus 2 in-memory service stubs (Time / Progression — wires into Group B's Economy / Shop / Ads). Requires Group B sample for the LevelComplete → Reward sequence chain. After importing, run Tools → Kitforge → UI Kit → Build Group C Sample to materialize the 5 prefabs and a Demo scene with [ContextMenu] triggers — try 'Chain — LevelComplete → Reward sequence (3 rewards)' to see post-level reward flow.",
       "path": "Samples~/Catalog_GroupC_Progression"
+    },
+    {
+      "displayName": "Catalog — Group D — Player Data",
+      "description": "SettingsPopup (5 controls: music / sfx volume sliders + language picker + notifications / haptics toggles) backed by IPlayerDataService for cross-session persistence + IUILocalizationService for live re-skin trigger. Includes 2 in-memory sample stubs (Player Data / Localization). After importing, run Tools → Kitforge → UI Kit → Build Group D Sample to materialize the SettingsPopup prefab and a Demo scene with [ContextMenu] triggers — try 'Settings — Show all', then 'PlayerData — Print all kfmui.settings.* values' to verify persistence across Play sessions.",
+      "path": "Samples~/Catalog_GroupD_PlayerData"
+    },
+    {
+      "displayName": "Game Wiring (VContainer)",
+      "description": "VContainer LifetimeScope + 8 in-memory Stub* implementations of the kit service interfaces (Economy / PlayerData / Progression / ShopData / Ads / Time / Audio / Localization). Reference for VContainer-first host projects — replace each Stub* registration with your real implementation. Includes a UIServicesBinder pattern (in README) that bridges VContainer-resolved services to the kit's UIServices MonoBehaviour container.",
+      "path": "Samples~/GameWiring"
     }
   ]
 }

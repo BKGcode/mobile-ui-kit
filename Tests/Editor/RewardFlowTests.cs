@@ -135,6 +135,64 @@ namespace KitforgeLabs.MobileUIKit.Catalog.Tests
         }
 
         [Test]
+        public void Single_With_Null_PopupManager_LogsError_And_NoOps()
+        {
+            var callbackCount = 0;
+            LogAssert.Expect(LogType.Error, new Regex("popups argument is null"));
+            RewardFlow.GrantAndShow(null, _economy, new RewardPopupData(), (c, a) => callbackCount++);
+            Assert.AreEqual(0, callbackCount, "onClaimed must NOT fire on validation error.");
+        }
+
+        [Test]
+        public void Single_With_Null_Economy_LogsError_And_NoOps()
+        {
+            var callbackCount = 0;
+            LogAssert.Expect(LogType.Error, new Regex("IEconomyService argument is null"));
+            RewardFlow.GrantAndShow(_manager, null, new RewardPopupData(), (c, a) => callbackCount++);
+            Assert.AreEqual(0, callbackCount);
+        }
+
+        [Test]
+        public void Single_With_Null_Reward_LogsError_And_NoOps()
+        {
+            var callbackCount = 0;
+            LogAssert.Expect(LogType.Error, new Regex("reward argument is null"));
+            RewardFlow.GrantAndShow(_manager, _economy, null, (c, a) => callbackCount++);
+            Assert.AreEqual(0, callbackCount);
+        }
+
+        [Test]
+        public void Single_With_Coins_Reward_Shows_And_Credits_Economy_On_Claim_Then_Fires_Callback()
+        {
+            var cached = PreWarmRewardPopupWithNullAnimator();
+            var receivedCurrency = (CurrencyType)(-99);
+            var receivedAmount = 0;
+
+            RewardFlow.GrantAndShow(_manager, _economy, new RewardPopupData { Kind = RewardKind.Coins, Amount = 100 },
+                (c, a) => { receivedCurrency = c; receivedAmount = a; });
+            cached.OnBackPressed();
+
+            Assert.AreEqual(100, _economy.Get(CurrencyType.Coins), "Coins reward must credit economy on claim.");
+            Assert.AreEqual(CurrencyType.Coins, receivedCurrency, "onClaimed must receive the granted currency.");
+            Assert.AreEqual(100, receivedAmount, "onClaimed must receive the granted amount.");
+        }
+
+        [Test]
+        public void Single_With_Item_Sentinel_Currency_Does_Not_Credit_Economy_But_Fires_Callback()
+        {
+            var cached = PreWarmRewardPopupWithNullAnimator();
+            var callbackCount = 0;
+
+            RewardFlow.GrantAndShow(_manager, _economy, new RewardPopupData { Kind = RewardKind.Item, ItemId = "epic_sword" },
+                (c, a) => callbackCount++);
+            cached.OnBackPressed();
+
+            Assert.AreEqual(0, _economy.Get(CurrencyType.Coins), "Item reward must NOT auto-credit economy (host resolves).");
+            Assert.AreEqual(0, _economy.Get(CurrencyType.Gems));
+            Assert.AreEqual(1, callbackCount, "onClaimed still fires for Item rewards (host resolves the actual grant).");
+        }
+
+        [Test]
         public void Sequence_Filters_Item_Bundle_Sentinel_Currency_Without_Crediting()
         {
             var cached = PreWarmRewardPopupWithNullAnimator();

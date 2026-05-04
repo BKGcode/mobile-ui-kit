@@ -14,6 +14,13 @@ namespace KitforgeLabs.MobileUIKit.Samples.CatalogGroupC
     /// extra wiring. Defaults: day 1, never claimed (LastClaimUtc = MinValue so DailyLogin
     /// auto-trigger fires on first Play), energy = max (IsFull = true). <c>[DefaultExecutionOrder(-100)]</c>
     /// guarantees Awake runs before consumer HUDs read state in their OnEnable.
+    /// <para>
+    /// Daily login persistence (M2 retro-fit 2026-05-04): if <c>_playerDataServiceRef</c> is
+    /// wired, daily login state hydrates from <see cref="IPlayerDataService"/> on Awake and
+    /// persists on every <see cref="MarkDailyLoginClaimed"/> / <see cref="MarkDailyLoginDoubled"/>.
+    /// If null, falls back to in-memory backing (cross-Play state lost — original behavior).
+    /// Streak preservation: real demo for buyers evaluating the kit.
+    /// </para>
     /// </summary>
     [DisallowMultipleComponent]
     [DefaultExecutionOrder(-100)]
@@ -21,6 +28,9 @@ namespace KitforgeLabs.MobileUIKit.Samples.CatalogGroupC
     {
         [Tooltip("MonoBehaviour implementing IEconomyService. Used for the regen tick to call Add(Energy, 1). Wire UIServices' Economy ref or any IEconomyService impl.")]
         [SerializeField] private MonoBehaviour _economyServiceRef;
+
+        [Tooltip("Optional MonoBehaviour implementing IPlayerDataService. If wired, daily login state persists across sessions. If null, in-memory only (original v0.6.0-alpha behavior).")]
+        [SerializeField] private MonoBehaviour _playerDataServiceRef;
 
         [Tooltip("Seconds between energy regen ticks. Default 60s.")]
         [SerializeField] private float _regenSeconds = 60f;
@@ -49,13 +59,17 @@ namespace KitforgeLabs.MobileUIKit.Samples.CatalogGroupC
         public event Action<int> OnLevelUnlocked;
 
         private IEconomyService _economy;
+        private IPlayerDataService _playerData;
 
         public void SetEconomyForTests(IEconomyService economy) => _economy = economy;
+        public void SetPlayerDataForTests(IPlayerDataService playerData) => _playerData = playerData;
 
         private void Awake()
         {
             if (_economy == null) _economy = _economyServiceRef as IEconomyService;
+            if (_playerData == null) _playerData = _playerDataServiceRef as IPlayerDataService;
             if (_levels.Count == 0) SeedLevels();
+            DailyLoginPersistence.Load(_playerData, ref _dailyLoginState);
         }
 
         private void Update()
@@ -129,9 +143,14 @@ namespace KitforgeLabs.MobileUIKit.Samples.CatalogGroupC
             _dailyLoginState.LastClaimUtc = DateTime.UtcNow;
             _dailyLoginState.CurrentDay++;
             _dailyLoginState.DoubledToday = false;
+            DailyLoginPersistence.Save(_playerData, _dailyLoginState);
         }
 
-        public void MarkDailyLoginDoubled() => _dailyLoginState.DoubledToday = true;
+        public void MarkDailyLoginDoubled()
+        {
+            _dailyLoginState.DoubledToday = true;
+            DailyLoginPersistence.Save(_playerData, _dailyLoginState);
+        }
 
         public void SetEnergyValue(int value)
         {

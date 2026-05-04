@@ -15,6 +15,8 @@ namespace KitforgeLabs.MobileUIKit.GameWiring
             builder.Register<IShopDataProvider, StubShopDataProvider>(Lifetime.Singleton);
             builder.Register<IAdsService, StubAdsService>(Lifetime.Singleton);
             builder.Register<ITimeService, StubTimeService>(Lifetime.Singleton);
+            builder.Register<IUIAudioRouter, StubAudioRouter>(Lifetime.Singleton);
+            builder.Register<IUILocalizationService, StubLocalizationService>(Lifetime.Singleton);
 
             builder.Register<UIRouterStub>(Lifetime.Singleton);
             builder.RegisterBuildCallback(container => container.Resolve<UIRouterStub>().TransitionTo(AppState.Loading));

@@ -7,26 +7,51 @@ using UnityEngine;
 namespace KitforgeLabs.MobileUIKit.Catalog.Reward
 {
     /// <summary>
-    /// Convenience helper that shows N <see cref="RewardPopup"/> instances in sequence —
-    /// chained via <c>OnDismissed → next.Show()</c> — and credits the
+    /// Convenience helpers that show <see cref="RewardPopup"/> instances and credit the
     /// <see cref="IEconomyService"/> when the player claims each non-sentinel reward.
     /// Item/Bundle rewards (sentinel currency <see cref="RewardPopup.ItemCurrencySentinel"/>)
     /// surface via <c>OnClaimed</c> but are NOT auto-credited — the host resolves them.
     /// <para>
+    /// <see cref="GrantAndShow"/>: single reward + credit + optional <c>onClaimed</c>
+    /// callback. Capability-gate re-audited Group D 2026-05-04 (`/_checker as user`):
+    /// `CatalogGroupBDemo` itself repeats the equivalent pattern 3 times — shipped because
+    /// silent-bug risk (forgetting the item-sentinel skip credits items as currency).
+    /// </para>
+    /// <para>
+    /// <see cref="GrantAndShowSequence"/>: N rewards chained via <c>OnDismissed → next.Show()</c>;
     /// <c>onSequenceComplete</c> fires only after the LAST reward dismisses successfully.
     /// Validation errors (null/empty inputs) and queue-saturation early-aborts do NOT
     /// invoke it — the contract is "all rewards claimed", not "sequence attempted".
-    /// </para>
-    /// <para>
     /// Capability-gate (Group C 2026-05-04): shipped because 2 callsites in Group C
     /// elements (DailyLogin <c>OnDayClaimed</c>, LevelComplete <c>OnNextRequested</c>)
-    /// repeat the same chain wiring. Sibling helpers <c>RewardFlow.GrantAndShow</c>
-    /// (single) and <c>ShopFlow.OpenWithPurchaseChain</c> deferred to Group D
-    /// (1 callsite each — capability-gate failed).
+    /// repeat the same chain wiring.
+    /// </para>
+    /// <para>
+    /// Sibling helper <c>ShopFlow.OpenWithPurchaseChain</c> remains OUT-of-scope at
+    /// <c>v1.0.0-rc</c> — chain shape is opinionated (Ad-fund vs IAP-fund); buyers fork.
+    /// Documented as "monetization chain pattern" recipe in M4 QUICKSTART.
     /// </para>
     /// </summary>
     public static class RewardFlow
     {
+        public static void GrantAndShow(
+            PopupManager popups,
+            IEconomyService economy,
+            RewardPopupData reward,
+            Action<CurrencyType, int> onClaimed = null)
+        {
+            if (popups == null) { LogErrorSingle("popups argument is null. Cannot show reward."); return; }
+            if (economy == null) { LogErrorSingle("IEconomyService argument is null. Cannot credit reward. See Quickstart § Service binding."); return; }
+            if (reward == null) { LogErrorSingle("reward argument is null. Nothing to show."); return; }
+            var popup = popups.Show<RewardPopup>(reward);
+            if (popup == null) { LogErrorSingle("PopupManager.Show returned null (queue saturated). Aborting."); return; }
+            popup.OnClaimed += (currency, amount) =>
+            {
+                if ((int)currency != RewardPopup.ItemCurrencySentinel) economy.Add(currency, amount);
+                onClaimed?.Invoke(currency, amount);
+            };
+        }
+
         public static void GrantAndShowSequence(
             PopupManager popups,
             IEconomyService economy,
@@ -85,6 +110,11 @@ namespace KitforgeLabs.MobileUIKit.Catalog.Reward
         private static void LogError(string body)
         {
             Debug.LogError($"RewardFlow.GrantAndShowSequence: {body}");
+        }
+
+        private static void LogErrorSingle(string body)
+        {
+            Debug.LogError($"RewardFlow.GrantAndShow: {body}");
         }
     }
 }

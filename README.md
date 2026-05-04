@@ -21,13 +21,13 @@ Everything else (router app states, service interfaces) is optional and lives be
 | **0 — Foundation** | ToastManager, UIServices, HUD layer, SafeArea, animation contract, validator | ✅ shipped at `v0.3.0-alpha` |
 | **A — Pure UI** | ConfirmPopup, PausePopup, TutorialPopup, NotificationToast | ✅ shipped at `v0.4.0-alpha` (+ hotfix `v0.4.1-alpha`) — `Build Group A Sample` menu materializes the 4 prefabs + Demo scene |
 | **B — Currency** | RewardPopup, ShopPopup, NotEnoughCurrencyPopup, HUD-Coins → `HUDCurrency`, HUD-Gems → `HUDCurrency` | ✅ shipped at `v0.5.0-alpha` — `Build Group B Sample` chain demo (Shop → NotEnough → Ad → Reward) playable in-Editor |
-| **C — Progression** | DailyLogin, LevelComplete, GameOver, HUD-Energy, HUD-Timer | ✅ shipped at `v0.6.0-alpha` BREAKING — `IEconomyService` v2 + `HUDCurrency` parameterized + `IProgressionService` extended; 5 catalog elements + `RewardFlow.GrantAndShowSequence` helper (sibling `GrantAndShow` single + `ShopFlow.OpenWithPurchaseChain` deferred to Group D per capability-gate); `Build Group C Sample` builder + 5 prefabs + demo scene + 6 chain `[ContextMenu]` scenarios + 2 sample stubs (`InMemoryProgressionService` + `InMemoryTimeService`). Buyers upgrading from `v0.5.0-alpha`: see [`CHANGELOG.md`](./CHANGELOG.md) § migration blocks 1-5. |
-| **D — Player Data** | SettingsPopup | ⏳ tag `v0.7.0-alpha` |
+| **C — Progression** | DailyLogin, LevelComplete, GameOver, HUD-Energy, HUD-Timer | ✅ shipped at `v0.6.0-alpha` BREAKING — `IEconomyService` v2 + `HUDCurrency` parameterized + `IProgressionService` extended; 5 catalog elements + `RewardFlow.GrantAndShowSequence` helper; `Build Group C Sample` builder + 5 prefabs + demo scene + 6 chain `[ContextMenu]` scenarios + 2 sample stubs (`InMemoryProgressionService` + `InMemoryTimeService`). Buyers upgrading from `v0.5.0-alpha`: see [`CHANGELOG.md`](./CHANGELOG.md) § migration blocks 1-5. |
+| **D — Player Data** | SettingsPopup | ✅ shipped at `v0.7.0-alpha` BREAKING — `IPlayerDataService` rewritten (12-method primitive surface) + new `IUILocalizationService` (re-skin dispatch) + `PlayerPrefsPlayerDataService` Runtime impl + `RewardFlow.GrantAndShow` (single, capability-gate re-audit promoted from Group C deferral) + DailyLogin persistence retro-fit via `DailyLoginPersistence` helper + Game Wiring sample revival (8 stubs + VContainer-gated asmdef). 8 canonical kit-side keys frozen at `v1.0.0-rc` (5 settings + 3 dailylogin) under `kfmui.<scope>.<name>` namespace. Buyers upgrading from `v0.6.0-alpha`: see [`CHANGELOG.md`](./CHANGELOG.md) § migration. |
 | **E — Screens** | LoadingScreen, MainMenuScreen | ⏳ tag `v0.8.0-alpha` BREAKING (bundles OnUpdate infra dispatch fix) |
 
-Total tests: **206 EditMode** (33 framework + 173 catalog: Group A 53 + Group B 33 + DailyLogin 26 + LevelComplete 16 + GameOver 18 + HUD-Energy 10 + HUD-Timer 10 + RewardFlow 7). Public API may still move before `v1.0.0` — track BREAKING entries in [`CHANGELOG.md`](./CHANGELOG.md).
+Total tests: **261 EditMode** (33 framework + 228 catalog: Group A 53 + Group B 33 + DailyLogin 26 + LevelComplete 16 + GameOver 18 + HUD-Energy 10 + HUD-Timer 10 + RewardFlow 12 + IPlayerDataService 16 + IUILocalizationService 10 + SettingsPopup 19 + DailyLoginPersistence 5). Public API may still move before `v1.0.0` — track BREAKING entries in [`CHANGELOG.md`](./CHANGELOG.md).
 
-Latest tag: `v0.6.0-alpha` BREAKING (Group C progression catalog — closes M1). Next: `v0.7.0-alpha` (Group D — SettingsPopup + `IPlayerDataService` + Game Wiring sample revival).
+Latest tag: `v0.7.0-alpha` BREAKING (Group D player data catalog — closes M2). Next: `v0.8.0-alpha` BREAKING (Group E — LoadingScreen + MainMenuScreen + OnUpdate infra dispatch fix).
 
 After Group E ships, the package enters a hardening + documentation pass (Theme presets, severity icons, performance benchmarks, hero screenshots, cumulative migration guide, API freeze) and reaches **`v1.0.0-rc`** — Asset Store release candidate. See [`CHANGELOG.md`](./CHANGELOG.md) § "Pending" for the running list.
 
@@ -65,7 +65,7 @@ This package will **not** grow to cover the items below. If you need them, this 
 Add to `Packages/manifest.json`:
 
 ```json
-"com.kitforgelabs.mobile-ui-kit": "https://github.com/BKGcode/mobile-ui-kit.git#v0.6.0-alpha"
+"com.kitforgelabs.mobile-ui-kit": "https://github.com/BKGcode/mobile-ui-kit.git#v0.7.0-alpha"
 ```
 
 Or via Package Manager → **Add package from git URL…**
@@ -78,6 +78,8 @@ In Package Manager, select **Kitforge Mobile UI Kit → Samples** and import:
 - **Catalog — Group A — Pure UI** — Confirm / Pause / Tutorial / NotificationToast. After importing, run `Tools → Kitforge → UI Kit → Build Group A Sample` to materialize the 4 prefabs and a Demo scene under `Assets/Catalog_GroupA_Demo/`.
 - **Catalog — Group B — Currency** — Reward / Shop / NotEnoughCurrency / HUDCoins / HUDGems + 3 in-memory stubs (Economy / Shop / Ads). After importing, run `Tools → Kitforge → UI Kit → Build Group B Sample` to materialize 5 prefabs + demo scene with a `Chain — Shop → NotEnough → Ad → Reward` `[ContextMenu]` trigger under `Assets/Catalog_GroupB_Demo/`.
 - **Catalog — Group C — Progression** — DailyLogin / LevelComplete / GameOver / HUDEnergy / HUDTimer + 2 in-memory stubs (Time / Progression — wires into Group B's Economy / Shop / Ads). Requires Group B sample for the LevelComplete → Reward sequence chain. After importing, run `Tools → Kitforge → UI Kit → Build Group C Sample` to materialize 5 prefabs + demo scene with 6 chain `[ContextMenu]` scenarios under `Assets/Catalog_GroupC_Demo/`.
+- **Catalog — Group D — Player Data** — SettingsPopup (5 controls: music / sfx volume sliders + language picker + notifications / haptics toggles) backed by `IPlayerDataService` for cross-session persistence + `IUILocalizationService` for live re-skin trigger + 2 in-memory stubs (`InMemoryPlayerDataService` + `InMemoryLocalizationService`). After importing, run `Tools → Kitforge → UI Kit → Build Group D Sample` to materialize the SettingsPopup prefab + demo scene with 9 `[ContextMenu]` scenarios under `Assets/Catalog_GroupD_Demo/`.
+- **Game Wiring (VContainer)** — VContainer `LifetimeScope` + 8 in-memory `Stub*` impls of every kit service interface. Reference for VContainer-first host projects. Asmdef gated behind `KFMUI_HAS_VCONTAINER` define — silently excluded if VContainer is not installed in the host project.
 
 ---
 
@@ -100,7 +102,7 @@ The work below is complete. Tick what's shipped, not what's planned.
 - [x] `UIRouter`: `AppState` transitions with re-entrancy guard, popup allow-list with explicit flag, back-button dispatch.
 - [x] `UIThemeConfig` ScriptableObject + custom Editor with color preview.
 - [x] `UIModuleBase` + generic `UIModule<TData>` with `protected internal` `BindUntyped` (host assemblies can derive directly).
-- [x] 6 service interfaces (`IEconomyService`, `IPlayerDataService`, `IProgressionService`, `IShopDataProvider`, `IAdsService`, `ITimeService`) + 4 DTOs.
+- [x] 8 service interfaces (`IEconomyService`, `IPlayerDataService`, `IProgressionService`, `IShopDataProvider`, `IAdsService`, `ITimeService`, `IUIAudioRouter`, `IUILocalizationService`) — `IUIAudioRouter` shipped Group 0, `IUILocalizationService` shipped M2.
 - [x] `Samples~/Quickstart`: zero-dependency bootstrap.
 - [x] `package.json` + `README.md` aligned with PM checker FIX NOW list.
 - [x] EditMode tests — **Phase 1.5 closed**: 10 `UIRouter` + 11 `PopupManager` + 12 `UIManager` = **33 tests**, all green. Tagged `v0.2.0-alpha` (suite) → `v0.2.1-alpha` (cleanup: `UIRouter.Initialize()` + arch decision #10).
