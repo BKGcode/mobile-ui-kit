@@ -13,6 +13,7 @@ namespace KitforgeLabs.MobileUIKit.Services
         [SerializeField] private MonoBehaviour _adsServiceRef;
         [SerializeField] private MonoBehaviour _timeServiceRef;
         [SerializeField] private MonoBehaviour _audioRouterRef;
+        [SerializeField] private MonoBehaviour _localizationServiceRef;
 
         public IEconomyService Economy { get; private set; }
         public IPlayerDataService PlayerData { get; private set; }
@@ -21,6 +22,7 @@ namespace KitforgeLabs.MobileUIKit.Services
         public IAdsService Ads { get; private set; }
         public ITimeService Time { get; private set; }
         public IUIAudioRouter Audio { get; private set; }
+        public IUILocalizationService Localization { get; private set; }
 
         private void Awake()
         {
@@ -31,6 +33,7 @@ namespace KitforgeLabs.MobileUIKit.Services
             Ads ??= Resolve<IAdsService>(_adsServiceRef, nameof(Ads));
             Time ??= Resolve<ITimeService>(_timeServiceRef, nameof(Time));
             Audio ??= Resolve<IUIAudioRouter>(_audioRouterRef, nameof(Audio));
+            Localization ??= Resolve<IUILocalizationService>(_localizationServiceRef, nameof(Localization));
         }
 
         public void SetEconomy(IEconomyService impl) => Economy = impl;
@@ -40,6 +43,7 @@ namespace KitforgeLabs.MobileUIKit.Services
         public void SetAds(IAdsService impl) => Ads = impl;
         public void SetTime(ITimeService impl) => Time = impl;
         public void SetAudio(IUIAudioRouter impl) => Audio = impl;
+        public void SetLocalization(IUILocalizationService impl) => Localization = impl;
 
         private T Resolve<T>(MonoBehaviour reference, string slot) where T : class
         {
@@ -60,7 +64,8 @@ namespace KitforgeLabs.MobileUIKit.Services
             if (_adsServiceRef == null) { Debug.LogWarning("[UIServices] Ads service is null.", this); missing++; }
             if (_timeServiceRef == null) { Debug.LogWarning("[UIServices] Time service is null.", this); missing++; }
             if (_audioRouterRef == null) { Debug.LogWarning("[UIServices] Audio router is null.", this); missing++; }
-            Debug.Log($"[UIServices] Validation complete. Missing: {missing}/7.", this);
+            if (_localizationServiceRef == null) { Debug.LogWarning("[UIServices] Localization service is null.", this); missing++; }
+            Debug.Log($"[UIServices] Validation complete. Missing: {missing}/8.", this);
         }
     }
 }

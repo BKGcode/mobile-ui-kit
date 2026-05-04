@@ -5,6 +5,47 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 _Last updated: 2026-05-04_
 
+## [Unreleased] — Group D / M2 in progress (target `v0.7.0-alpha` BREAKING)
+
+> Targets M2 of the path to `v1.0.0-rc`. Delivers `SettingsPopup` + `IPlayerDataService` (rewritten primitive surface) + `IUILocalizationService` + DailyLogin persistence retro-fit + `RewardFlow.GrantAndShow` (single, capability-gate re-audit promoted 2026-05-04) + Game Wiring sample revival.
+
+### Breaking changes — migration guide
+
+**`IPlayerDataService` rewritten — primitive key-value surface replaces stub-era profile API:**
+
+The previous interface (`GetProfile`/`SaveProfile`/`AddXp`/`OnProfileChanged`) was a speculative stub that never reached production consumers — no popup, helper, or sample referenced it beyond the parked `Samples~/GameWiring/` stub. The new surface mirrors `PlayerPrefs` (12 primitive-typed methods) and is the canonical persistence path for all kit popups starting at M2.
+
+```diff
+- playerData.GetProfile()
+- playerData.SaveProfile(profile)
+- playerData.AddXp(50)
+- playerData.OnProfileChanged += handler
++ playerData.GetFloat("kfmui.settings.musicVolume", 1f)
++ playerData.SetFloat("kfmui.settings.musicVolume", 0.8f)
++ playerData.GetInt("kfmui.dailylogin.streak", 0)
++ playerData.Save()  // explicit flush; Unity lifecycle auto-flushes on app pause/quit
+```
+
+`PlayerProfile` DTO removed. Future profile-style data (avatar, level, XP) — if needed — composes via primitive keys (`kfmui.profile.avatarId`, `kfmui.profile.level`, etc.).
+
+**Migration impact: zero for production consumers** — the old surface was unused. Only the parked Game Wiring sample referenced it; that sample is revived later in M2 against the new contract.
+
+### Added
+
+- `IPlayerDataService` (primitive surface): `GetInt/SetInt/GetFloat/SetFloat/GetString/SetString/GetBool/SetBool/Has/Delete/Save/Reload`. Method-per-type avoids reflection and Newtonsoft dependency. Spec lockfile: `Documentation~/Specs/Services/IPlayerDataService.md`.
+- `PlayerPrefsPlayerDataService` (Runtime, default impl): `MonoBehaviour` wrapping `UnityEngine.PlayerPrefs`. `GetBool` ↔ `GetInt(0|1)` mapping. `Reload()` is no-op (PlayerPrefs has no in-memory cache distinct from disk).
+- `FakePlayerDataService` (Tests/Editor/Helpers): in-memory test seam. Dictionary-backed. Type-mismatch on read throws `InvalidCastException` (fail-loud during dev). Used by all `IPlayerDataService` tests.
+- `IPlayerDataServiceTests`: 16 EditMode tests covering surface roundtrip + edge cases (default fallback, `Has` after `Delete`, `Reload` clears, type mismatch throws, null-key throws).
+- `IUILocalizationService`: 4-member dispatch interface for active language + change events (`CurrentLanguage`, `AvailableLanguages`, `OnLanguageChanged`, `SetLanguage`). Decoupled from `IPlayerDataService` — buyer wires "PlayerData → SetLanguage" boot sync themselves. Kit does NOT translate strings (Non-goal #2 — BYO localization); the service is the dispatch hub for buyer's localization layer (Unity Localization Package, I2, custom). Spec lockfile: `Documentation~/Specs/Services/IUILocalizationService.md`.
+- `FakeLocalizationService` (Tests/Editor/Helpers): in-memory test seam. Constructor fail-loud on empty/null `availableCodes` or `currentCode` not in available. `SetLanguage` same code = no-op no event; unknown code throws `ArgumentException`.
+- `IUILocalizationServiceTests`: 10 EditMode tests covering constructor validation, surface coverage, and event subscription edge cases (same-code no-op, multi-subscriber, unsubscribe).
+- `UIServices.Localization` slot + `_localizationServiceRef` Inspector field + `SetLocalization()` setter. `Validate` ContextMenu now reports 8/8 services (was 7/7).
+
+### Removed
+
+- Old `IPlayerDataService` (`GetProfile/SaveProfile/AddXp/OnProfileChanged`) — see migration above.
+- `PlayerProfile` DTO struct (`Runtime/Services/DTO/PlayerProfile.cs`) — superseded by primitive keys.
+
 ## [0.6.0-alpha] — 2026-05-04 BREAKING
 
 > Group C — Progression catalog. Adds 5 catalog elements (DailyLogin / LevelComplete / GameOver popups + HUD-Energy / HUD-Timer), 1 of 3 planned helpers (`RewardFlow.GrantAndShowSequence` — sibling helpers deferred to Group D per capability-gate), `Build Group C Sample` builder + 5 prefabs + demo scene + 6 chain `[ContextMenu]` scenarios, 2 in-memory service stubs (`InMemoryProgressionService` + `InMemoryTimeService`), `IEconomyService` v1→v2 BREAKING migration with `CurrencyType.Energy` added, and `HUDCurrency` parameterized base replacing the `HUDCoins`/`HUDGems` sibling classes. **206 EditMode tests green** on fresh compile. Closes Milestone M1 of the path to `v1.0.0-rc`.
