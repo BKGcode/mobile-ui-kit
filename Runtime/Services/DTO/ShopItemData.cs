@@ -10,8 +10,9 @@ namespace KitforgeLabs.MobileUIKit.Services
 
     public enum CurrencyType
     {
-        Coins,
-        Gems
+        Coins  = 0,
+        Gems   = 1,
+        Energy = 2
     }
 
     [System.Serializable]

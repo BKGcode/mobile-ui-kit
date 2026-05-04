@@ -87,9 +87,9 @@ All events reset on `Bind(...)`.
 11. `Close — Back press`.
 12. `Stress — Spam Buy on unaffordable` — single `OnPurchaseInsufficient` fires, no double event.
 
-## Convenience helpers (deferred — Group C decision)
+## Convenience helpers (Group C capability-gate verdict — 2026-05-04)
 
-**Status**: OUT of Group B implementation. Spec-only sketch. Re-evaluated when Group C ships (DailyLogin, LevelComplete, GameOver — all may chain to Shop). If 3+ callsites repeat the chain wiring, helper is implemented in Group C.
+**Status**: ⏳ `ShopFlow.OpenWithPurchaseChain` — **deferred to Group D**. Capability-gate failed (1 confirmed callsite: `CatalogGroupBDemo.cs` chain trigger; GameOver does NOT use this chain — its continues are direct Ad / Currency, not Shop-routed). Spec preserved here as the contract lock — when buyer-side Group D scenarios add 2+ callsites the helper ships unchanged. See `RewardPopup.md` § Convenience helpers for sibling `RewardFlow` verdict (`GrantAndShowSequence` shipped, `GrantAndShow` single deferred).
 
 Proposed signature (NOT shipped in Group B):
 

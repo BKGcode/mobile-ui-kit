@@ -1,51 +1,42 @@
 using System;
+using System.Collections.Generic;
 using KitforgeLabs.MobileUIKit.Services;
 
 namespace KitforgeLabs.MobileUIKit.Catalog.Tests.Helpers
 {
     internal sealed class FakeEconomyService : IEconomyService
     {
-        private int _coins;
-        private int _gems;
+        private readonly Dictionary<CurrencyType, int> _values = new Dictionary<CurrencyType, int>();
 
-        public event Action<int> OnCoinsChanged;
-        public event Action<int> OnGemsChanged;
+        public event Action<CurrencyType, int> OnChanged;
 
-        public int GetCoins() => _coins;
-        public int GetGems() => _gems;
+        public int Get(CurrencyType currency) => _values.TryGetValue(currency, out var v) ? v : 0;
+        public bool CanAfford(CurrencyType currency, int amount) => Get(currency) >= amount;
 
-        public bool CanAfford(CurrencyType currency, int amount) =>
-            currency == CurrencyType.Coins ? _coins >= amount : _gems >= amount;
-
-        public void SetCoins(int value) { _coins = value; OnCoinsChanged?.Invoke(_coins); }
-        public void SetGems(int value) { _gems = value; OnGemsChanged?.Invoke(_gems); }
-
-        public bool SpendCoins(int amount)
+        public bool Spend(CurrencyType currency, int amount)
         {
-            if (_coins < amount) return false;
-            _coins -= amount;
-            OnCoinsChanged?.Invoke(_coins);
+            var current = Get(currency);
+            if (current < amount) return false;
+            _values[currency] = current - amount;
+            OnChanged?.Invoke(currency, _values[currency]);
             return true;
         }
 
-        public bool SpendGems(int amount)
+        public void Add(CurrencyType currency, int amount)
         {
-            if (_gems < amount) return false;
-            _gems -= amount;
-            OnGemsChanged?.Invoke(_gems);
-            return true;
+            _values[currency] = Get(currency) + amount;
+            OnChanged?.Invoke(currency, _values[currency]);
         }
 
-        public void AddCoins(int amount)
-        {
-            _coins += amount;
-            OnCoinsChanged?.Invoke(_coins);
-        }
+        public void SetCoins(int value) => SetCurrency(CurrencyType.Coins, value);
+        public void SetGems(int value) => SetCurrency(CurrencyType.Gems, value);
+        public void AddCoins(int amount) => Add(CurrencyType.Coins, amount);
+        public void AddGems(int amount) => Add(CurrencyType.Gems, amount);
 
-        public void AddGems(int amount)
+        public void SetCurrency(CurrencyType currency, int value)
         {
-            _gems += amount;
-            OnGemsChanged?.Invoke(_gems);
+            _values[currency] = value;
+            OnChanged?.Invoke(currency, value);
         }
     }
 }

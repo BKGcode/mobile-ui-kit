@@ -372,30 +372,32 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             return SaveAsPrefab<NotEnoughCurrencyPopup>(root, NotEnoughPath);
         }
 
-        private static HUDCoins BuildHUDCoins()
+        private static HUDCurrency BuildHUDCoins()
         {
             var theme = AssetDatabase.LoadAssetAtPath<UIThemeConfig>(DefaultThemePath);
             var (root, icon, label, button) = BuildHUDShell("HUDCoins", theme != null ? theme.IconCoin : null, "0");
-            var hud = root.AddComponent<HUDCoins>();
+            var hud = root.AddComponent<HUDCurrency>();
             var so = new SerializedObject(hud);
+            so.FindProperty("_currency").enumValueIndex = (int)CurrencyType.Coins;
             so.FindProperty("_refs.IconImage").objectReferenceValue = icon;
             so.FindProperty("_refs.CountLabel").objectReferenceValue = label;
             so.FindProperty("_refs.ClickButton").objectReferenceValue = button;
             so.ApplyModifiedPropertiesWithoutUndo();
-            return SaveAsPrefab<HUDCoins>(root, HUDCoinsPath);
+            return SaveAsPrefab<HUDCurrency>(root, HUDCoinsPath);
         }
 
-        private static HUDGems BuildHUDGems()
+        private static HUDCurrency BuildHUDGems()
         {
             var theme = AssetDatabase.LoadAssetAtPath<UIThemeConfig>(DefaultThemePath);
             var (root, icon, label, button) = BuildHUDShell("HUDGems", theme != null ? theme.IconGem : null, "0");
-            var hud = root.AddComponent<HUDGems>();
+            var hud = root.AddComponent<HUDCurrency>();
             var so = new SerializedObject(hud);
+            so.FindProperty("_currency").enumValueIndex = (int)CurrencyType.Gems;
             so.FindProperty("_refs.IconImage").objectReferenceValue = icon;
             so.FindProperty("_refs.CountLabel").objectReferenceValue = label;
             so.FindProperty("_refs.ClickButton").objectReferenceValue = button;
             so.ApplyModifiedPropertiesWithoutUndo();
-            return SaveAsPrefab<HUDGems>(root, HUDGemsPath);
+            return SaveAsPrefab<HUDCurrency>(root, HUDGemsPath);
         }
 
         private static (GameObject root, Image icon, TMP_Text label, Button button) BuildHUDShell(string name, Sprite iconSprite, string defaultText)
@@ -488,18 +490,18 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             var services = servicesGO.AddComponent<UIServices>();
             var (economyImpl, shopImpl, adsImpl) = TryAttachStubServices(servicesGO, services);
 
-            HUDCoins hudCoinsInstance = null;
-            HUDGems hudGemsInstance = null;
+            HUDCurrency hudCoinsInstance = null;
+            HUDCurrency hudGemsInstance = null;
             if (hudCoinsPrefab != null)
             {
                 var instance = (GameObject)PrefabUtility.InstantiatePrefab(hudCoinsPrefab, hudParent.transform);
-                hudCoinsInstance = instance.GetComponent<HUDCoins>();
+                hudCoinsInstance = instance.GetComponent<HUDCurrency>();
                 if (hudCoinsInstance != null) WireHUDServices(hudCoinsInstance, services);
             }
             if (hudGemsPrefab != null)
             {
                 var instance = (GameObject)PrefabUtility.InstantiatePrefab(hudGemsPrefab, hudParent.transform);
-                hudGemsInstance = instance.GetComponent<HUDGems>();
+                hudGemsInstance = instance.GetComponent<HUDCurrency>();
                 if (hudGemsInstance != null) WireHUDServices(hudGemsInstance, services);
             }
 

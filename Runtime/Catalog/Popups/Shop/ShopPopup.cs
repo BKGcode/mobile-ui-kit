@@ -290,8 +290,7 @@ namespace KitforgeLabs.MobileUIKit.Catalog.Shop
         {
             var economy = Services?.Economy;
             if (economy == null || _economySubscribed) return;
-            economy.OnCoinsChanged += HandleCurrencyChanged;
-            economy.OnGemsChanged += HandleCurrencyChanged;
+            economy.OnChanged += HandleCurrencyChanged;
             _economySubscribed = true;
         }
 
@@ -299,11 +298,10 @@ namespace KitforgeLabs.MobileUIKit.Catalog.Shop
         {
             var economy = Services?.Economy;
             if (economy == null || !_economySubscribed) return;
-            economy.OnCoinsChanged -= HandleCurrencyChanged;
-            economy.OnGemsChanged -= HandleCurrencyChanged;
+            economy.OnChanged -= HandleCurrencyChanged;
             _economySubscribed = false;
         }
 
-        private void HandleCurrencyChanged(int _) => RefreshAffordability();
+        private void HandleCurrencyChanged(CurrencyType _, int __) => RefreshAffordability();
     }
 }

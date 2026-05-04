@@ -20,19 +20,19 @@ namespace KitforgeLabs.MobileUIKit.Samples.CatalogGroupB
         [SerializeField] private GameObject _notEnoughPrefab;
 
         [ContextMenu("HUD — Add 100 coins")]
-        private void DebugAddCoins() => _services?.Economy?.AddCoins(100);
+        private void DebugAddCoins() => _services?.Economy?.Add(CurrencyType.Coins, 100);
 
         [ContextMenu("HUD — Spend 30 coins")]
-        private void DebugSpendCoins() => _services?.Economy?.SpendCoins(30);
+        private void DebugSpendCoins() => _services?.Economy?.Spend(CurrencyType.Coins, 30);
 
         [ContextMenu("HUD — Add 999,000 coins")]
-        private void DebugAddManyCoins() => _services?.Economy?.AddCoins(999_000);
+        private void DebugAddManyCoins() => _services?.Economy?.Add(CurrencyType.Coins, 999_000);
 
         [ContextMenu("HUD — Add 5 gems")]
-        private void DebugAddGems() => _services?.Economy?.AddGems(5);
+        private void DebugAddGems() => _services?.Economy?.Add(CurrencyType.Gems, 5);
 
         [ContextMenu("HUD — Spend 2 gems")]
-        private void DebugSpendGems() => _services?.Economy?.SpendGems(2);
+        private void DebugSpendGems() => _services?.Economy?.Spend(CurrencyType.Gems, 2);
 
         [ContextMenu("Reward — Coins +100")]
         private void ShowRewardCoins() => SpawnReward(new RewardPopupData
@@ -149,7 +149,7 @@ namespace KitforgeLabs.MobileUIKit.Samples.CatalogGroupB
         private int ResolveMissingAmount(ShopItemData item)
         {
             if (_services == null || _services.Economy == null) return item.PriceAmount;
-            var current = item.PriceCurrency == CurrencyType.Coins ? _services.Economy.GetCoins() : _services.Economy.GetGems();
+            var current = _services.Economy.Get(item.PriceCurrency);
             return Mathf.Max(0, item.PriceAmount - current);
         }
 
@@ -231,9 +231,7 @@ namespace KitforgeLabs.MobileUIKit.Samples.CatalogGroupB
         private void HandleShopInsufficient(ShopItemData item)
         {
             var economy = _services?.Economy;
-            var owned = economy != null
-                ? (item.PriceCurrency == CurrencyType.Coins ? economy.GetCoins() : economy.GetGems())
-                : 0;
+            var owned = economy != null ? economy.Get(item.PriceCurrency) : 0;
             var missing = Mathf.Max(item.PriceAmount - owned, 0);
             SpawnNotEnough(new NotEnoughCurrencyPopupData
             {
@@ -273,8 +271,7 @@ namespace KitforgeLabs.MobileUIKit.Samples.CatalogGroupB
         {
             if (_services == null || _services.Economy == null) return;
             if ((int)currency == RewardPopup.ItemCurrencySentinel) return;
-            if (currency == CurrencyType.Coins) _services.Economy.AddCoins(amount);
-            else if (currency == CurrencyType.Gems) _services.Economy.AddGems(amount);
+            _services.Economy.Add(currency, amount);
         }
 
         private T SpawnPopup<T>(GameObject prefab, string name) where T : UIModuleBase

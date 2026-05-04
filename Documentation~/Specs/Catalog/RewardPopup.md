@@ -85,9 +85,12 @@ Triggered from a Demo scene host MonoBehaviour via `[ContextMenu]`:
 9. `Stress — Spam claim 10x` (only first dismisses, single `OnClaimed`).
 10. `Stress — Back press during hide` (no NRE, no double dismiss).
 
-## Convenience helpers (deferred — Group C decision)
+## Convenience helpers (Group C capability-gate verdict — 2026-05-04)
 
-**Status**: OUT of Group B implementation. Spec-only sketch. Re-evaluated when Group C lands (Daily / LevelComplete / GameOver — three more reward-granting popups). If 4-of-4 reward callsites repeat the same 4-line wiring, helpers are implemented in Group C with capability-gate justification ("removes N lines of buyer boilerplate per reward callsite").
+**Status**:
+- ✅ `RewardFlow.GrantAndShowSequence` — **SHIPPED in Group C** (`Runtime/Catalog/Popups/Reward/RewardFlow.cs`, 7 EditMode tests + 1 integration test in `LevelCompletePopupTests`). Capability-gate proof: 2 callsites — `DailyLoginPopup.OnDayClaimed` (D8 multi-reward day) + `LevelCompletePopup.OnNextRequested` (L3 reward sequence).
+- ⏳ `RewardFlow.GrantAndShow` (single) — **deferred to Group D**. Capability-gate failed (1 confirmed callsite: DailyLogin OnWatchAdRequested 2× amount; the host can use `GrantAndShowSequence` with a single-element collection in the meantime).
+- See `ShopPopup.md` § Convenience helpers for `ShopFlow.OpenWithPurchaseChain` verdict (also deferred to Group D — 1 callsite).
 
 Proposed signatures (NOT shipped in Group B):
 

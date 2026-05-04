@@ -61,9 +61,7 @@ namespace KitforgeLabs.MobileUIKit.Samples.CatalogGroupB
             if (item.Category == ShopCategory.Cosmetic && _ownedCosmetics.Contains(item.Id)) return PurchaseResult.AlreadyOwned;
             if (!_economy.CanAfford(item.PriceCurrency, item.PriceAmount)) return PurchaseResult.InsufficientFunds;
 
-            var spent = item.PriceCurrency == CurrencyType.Coins
-                ? _economy.SpendCoins(item.PriceAmount)
-                : _economy.SpendGems(item.PriceAmount);
+            var spent = _economy.Spend(item.PriceCurrency, item.PriceAmount);
             if (!spent) return PurchaseResult.Failed;
 
             GrantItem(item);
@@ -75,8 +73,8 @@ namespace KitforgeLabs.MobileUIKit.Samples.CatalogGroupB
             switch (item.Category)
             {
                 case ShopCategory.Currency:
-                    if (item.Id == "coins_small") _economy.AddCoins(100);
-                    else if (item.Id == "coins_big") _economy.AddCoins(1000);
+                    if (item.Id == "coins_small") _economy.Add(CurrencyType.Coins, 100);
+                    else if (item.Id == "coins_big") _economy.Add(CurrencyType.Coins, 1000);
                     break;
                 case ShopCategory.Cosmetic:
                     _ownedCosmetics.Add(item.Id);

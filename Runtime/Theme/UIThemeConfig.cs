@@ -18,6 +18,7 @@ namespace KitforgeLabs.MobileUIKit.Theme
         [SerializeField] private Color _successColor = new Color(0.30f, 0.78f, 0.45f, 1f);
         [SerializeField] private Color _warningColor = new Color(1.00f, 0.60f, 0.15f, 1f);
         [SerializeField] private Color _dangerColor = new Color(0.92f, 0.30f, 0.30f, 1f);
+        [SerializeField] private Color _failureColor = new Color(0.898f, 0.224f, 0.208f, 1f);
 
         [Header("Typography")]
         [SerializeField] private TMP_FontAsset _fontHeading;
@@ -50,6 +51,10 @@ namespace KitforgeLabs.MobileUIKit.Theme
         [SerializeField] private Sprite _iconError;
         [SerializeField] private Sprite _iconCoin;
         [SerializeField] private Sprite _iconGem;
+        [SerializeField] private Sprite _iconEnergy;
+        [SerializeField] private Sprite _iconClock;
+        [SerializeField] private Sprite _starFilledSprite;
+        [SerializeField] private Sprite _starEmptySprite;
 
         [Header("Audio")]
         [SerializeField] private AudioClip _audioButtonClick;
@@ -73,6 +78,7 @@ namespace KitforgeLabs.MobileUIKit.Theme
         public Color SuccessColor => _successColor;
         public Color WarningColor => _warningColor;
         public Color DangerColor => _dangerColor;
+        public Color FailureColor => _failureColor;
 
         public TMP_FontAsset FontHeading => _fontHeading;
         public TMP_FontAsset FontBody => _fontBody;
@@ -101,6 +107,10 @@ namespace KitforgeLabs.MobileUIKit.Theme
         public Sprite IconError => _iconError;
         public Sprite IconCoin => _iconCoin;
         public Sprite IconGem => _iconGem;
+        public Sprite IconEnergy => _iconEnergy;
+        public Sprite IconClock => _iconClock;
+        public Sprite StarFilledSprite => _starFilledSprite;
+        public Sprite StarEmptySprite => _starEmptySprite;
 
         public AudioClip AudioButtonClick => _audioButtonClick;
         public AudioClip AudioPopupShow => _audioPopupShow;

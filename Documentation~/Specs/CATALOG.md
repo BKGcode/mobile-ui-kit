@@ -1,9 +1,9 @@
 # Catalog Specification — Phase 2
 
-> **Status**: Pre-alignment draft (2026-05-01). Subject to change before any element is built.
-> **Source of truth** for what ships under `Runtime/Catalog/` and `Samples~/Catalog/` once Phase 2 begins.
+> **Status**: Phase 2 in progress (2026-05-04). Group 0 + A + B shipped. Group C **5/5 elements landed** (DailyLogin + LevelComplete + GameOver + HUD-Energy + HUD-Timer) + **1/3 helpers landed** (`RewardFlow.GrantAndShowSequence`; `GrantAndShow` single + `ShopFlow.OpenWithPurchaseChain` deferred to Group D — capability-gate failed) + B.4.0 sample stub (`InMemoryProgressionService`) shipped. Pending B.4.1-B.4.6 (`CatalogGroupCBuilder` + chain demo) before tag `v0.6.0-alpha` BREAKING. Path to `v1.0.0-rc` locked — see § 9 below.
+> **Source of truth** for what ships under `Runtime/Catalog/` and `Samples~/Catalog/`.
 
-This document defines **what** the kit catalog will contain and **the contracts** every element must honor so they integrate without coupling. The roadmap and stress tests live in the planner workbook (`~/.claude/memory/kitforge_mobile_ui_kit_roadmap.md`).
+This document defines **what** the kit catalog contains and **the contracts** every element honors so they integrate without coupling. Per-element specs live under `Documentation~/Specs/Catalog/`. Cross-cutting deltas per group live alongside (e.g. `Documentation~/Specs/Catalog/CATALOG_GroupC_DELTA.md`).
 
 ---
 
@@ -116,16 +116,19 @@ VContainer/Zenject users wrap their container resolution into `UIServices` sette
 
 ## 5. Build groups (priority order)
 
-| Group | Members | Acceptance |
-|---|---|---|
-| **0 — Foundation** | F1-F8 | Hello-Toast + Hello-HUD-Coin demo works |
-| **A — Pure UI** | Confirm, Tutorial, Pause, Toast | 4 elements coexist; back button traverses correctly |
-| **B — Currency** | Reward, Shop, NotEnough, HUD-Coins, HUD-Gems | Buy → spend → HUD updates → unaffordable → NotEnough → ad → reward. Specs: [Reward](Catalog/RewardPopup.md), [Shop](Catalog/ShopPopup.md), [NotEnough](Catalog/NotEnoughCurrencyPopup.md), [HUD-Coins](Catalog/HUD-Coins.md), [HUD-Gems](Catalog/HUD-Gems.md). |
-| **C — Progression / Time** | DailyLogin, LevelComplete, GameOver, HUD-Energy, HUD-Timer | Full level loop with Continue (ad) |
-| **D — Player Data** | Settings | Persists across sessions |
-| **E — Screens** | Loading, MainMenu | Full app boot demo end-to-end |
+| Group | Members | Status | Tag | Acceptance |
+|---|---|---|---|---|
+| **0 — Foundation** | F1-F8 | ✅ shipped | `v0.3.0-alpha` | Hello-Toast + Hello-HUD-Coin demo works |
+| **A — Pure UI** | Confirm, Tutorial, Pause, Toast | ✅ shipped | `v0.4.0-alpha` (+ hotfix `v0.4.1-alpha`) | 4 elements coexist; back button traverses correctly |
+| **B — Currency** | Reward, Shop, NotEnough, HUD-Coins → `HUDCurrency`, HUD-Gems → `HUDCurrency` | ✅ shipped | `v0.5.0-alpha` | Buy → spend → HUD updates → unaffordable → NotEnough → ad → reward. Chain demo playable in-Editor. |
+| **C — Progression / Time** | DailyLogin ✅, LevelComplete ✅, GameOver ⏳, HUD-Energy ⏳, HUD-Timer ⏳ | 🟡 in progress (2/5) | `v0.6.0-alpha` BREAKING (target) | Full level loop with Continue (ad) + DailyLogin auto-trigger + Energy regen across UTC midnight |
+| **D — Player Data** | Settings + Game Wiring sample revival | ⏳ | `v0.7.0-alpha` | Settings persist across sessions; Game Wiring sample re-imports + plays |
+| **E — Screens** | Loading, MainMenu | ⏳ | `v0.8.0-alpha` BREAKING (bundles OnUpdate infra dispatch fix) | Full app boot demo: Loading → MainMenu → Daily auto → Play → Pause → GameOver → MainMenu |
+| **Hardening + Docs final** | Theme presets, severity icons, perf bench, hero screenshots, MIGRATION.md, API freeze | ⏳ | `v1.0.0-rc` | Buyer-facing docs final; API stable |
 
-Each closed group = `package.json` minor bump (e.g. `0.3.0`, `0.4.0`, ...).
+Each closed group = `package.json` minor bump. Tag detail and per-milestone "Done when…" criteria: see roadmap `Path to v1.0.0-rc` § F4.
+
+**Per-element specs**: Catalog elements ship with a markdown spec under `Documentation~/Specs/Catalog/`. Group C specs additionally cite the cross-cutting null-service policy in `CATALOG_GroupC_DELTA.md` § 4.5.
 
 ---
 
@@ -163,18 +166,20 @@ List of [ContextMenu] triggers in the Demo scene.
 
 ---
 
-## 7. Open questions (block Phase 2 kickoff)
+## 7. Open questions — RESOLVED 2026-05-01 / 2026-05-03
 
-1. Group order confirmation (Group 0 first or jump to a visible group?).
-2. Service binding pattern confirmed (Option B = `UIServices` container)?
-3. Animation moodboard (vibey / snappy / punchy / elegant) before generating first `UIAnim_<X>`?
-4. Theme depth: extend slots in Group 0 or on-demand in Group A?
-5. DOTween Pro: hard requirement or `#if DOTWEEN` guards?
-6. Visual reference target (Royal Match, Coin Master, Gardenscapes, ...)?
-7. Sample structure (single `Samples~/Catalog/` or per-group)?
-8. Versioning policy (per-group bump or single Phase 2 bump)?
+All Phase 2 kickoff questions answered (locked in roadmap Decisions Log + planner workbook):
 
-These get answered in chat before any code is written.
+| # | Question | Answer |
+|---|---|---|
+| 1 | Group order | ✅ Group 0 → A → B → C → D → E |
+| 2 | Service binding | ✅ Option B — `UIServices` MonoBehaviour container |
+| 3 | Animation moodboard | ✅ Style dropdown (10 styles) + `UIAnimPreset` SO; default = Playful (Disney Getaway Blast vibe) |
+| 4 | Theme depth | ✅ Group 0 covers all fundamentals; per-element slots added on-demand at group kickoff (e.g. Group C added `IconEnergy`/`IconClock`/`StarFilledSprite`/`StarEmptySprite`/`FailureColor`) |
+| 5 | DOTween Pro | ✅ Hard requirement (assumed). Catalog asmdef references DOTween directly. Runtime asmdef DOTween-free per Non-goal #5. |
+| 6 | Visual reference | ✅ Disney Getaway Blast (bright cartoon mid-core, snappy + playful) |
+| 7 | Sample structure | ✅ One sample per group: `Samples~/Catalog_Group{Letter}_{Theme}/` |
+| 8 | Versioning policy | ✅ Per-group minor bump; single `v1.0.0-rc` tag at end of hardening + docs final |
 
 ---
 
@@ -188,3 +193,18 @@ The following are explicitly NOT delivered by Phase 2 catalog:
 - Editor authoring window (visual screen graph).
 - UI Toolkit equivalents — UGUI only.
 - Multi-orientation auto-handling — portrait first; landscape requires re-anchoring per element.
+
+---
+
+## 9. Path to `v1.0.0-rc`
+
+The catalog reaches buyer-ready release-candidate state via 4 milestones (locked 2026-05-03):
+
+| # | Milestone | Tag |
+|---|---|---|
+| M1 | Group C close (3 popups + 2 HUDs + 3 helpers + builder + sample + chain demo) | `v0.6.0-alpha` BREAKING |
+| M2 | Group D (SettingsPopup + `IPlayerDataService`) + Game Wiring sample revival | `v0.7.0-alpha` |
+| M3 | Group E (Loading + MainMenu) + OnUpdate infra dispatch fix | `v0.8.0-alpha` BREAKING |
+| M4 | Hardening polish (Theme presets, severity icons, performance benchmarks, hero screenshots) + docs final (README + CATALOG + QUICKSTART + MIGRATION) + API freeze | `v1.0.0-rc` |
+
+Asset Store submission (store page text, marketing-quality screenshots, demo video, pricing lock) is **explicitly deferred** to a post-`v1.0.0-rc` session — not part of finishing plan scope.

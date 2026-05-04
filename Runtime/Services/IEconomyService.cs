@@ -4,15 +4,11 @@ namespace KitforgeLabs.MobileUIKit.Services
 {
     public interface IEconomyService
     {
-        int GetCoins();
-        int GetGems();
+        int Get(CurrencyType currency);
+        bool Spend(CurrencyType currency, int amount);
+        void Add(CurrencyType currency, int amount);
         bool CanAfford(CurrencyType currency, int amount);
-        bool SpendCoins(int amount);
-        bool SpendGems(int amount);
-        void AddCoins(int amount);
-        void AddGems(int amount);
 
-        event Action<int> OnCoinsChanged;
-        event Action<int> OnGemsChanged;
+        event Action<CurrencyType, int> OnChanged;
     }
 }
