@@ -68,7 +68,7 @@ Every catalog element MUST satisfy these contracts so combinations work without 
 1. **Single Theme source** — read all visual tokens from `UIManager.Theme` (or via `IUIThemeProvider` indirection). No hardcoded colors/fonts/sprites in prefabs.
 2. **Single service source** — access economy / ads / time / progression via `UIServices` container only. Never resolve services manually.
 3. **Typed payload** — derive `UIModule<TData>` with serializable `<Element>Data` DTO. No `object` payloads.
-4. **Animation per element** — ship `UIAnim_<Element>.cs` (generated via `_tween`) as a separate component on the prefab. Hook from `OnShow` / `OnHide`.
+4. **Animation per element** — ship `UIAnim_<Element>.cs` (generated via `_tween`) as a separate component on the prefab. Hook from `OnShow` / `OnHide`. Animator classes are `sealed by design` — buyers extend animations via two canonical paths only: (a) override the `UIAnimPreset` SO assigned to `AnimPresetOverride` (data-driven, no code), or (b) replace the script entirely (remove the kit component, add a new MonoBehaviour implementing `IUIAnimator`). Inheritance is intentionally blocked to keep the extension surface binary and reviewable; the kit owns the animator class, the buyer owns the preset OR the replacement.
 5. **Demo asset** — every element appears in at least one Demo scene under `Samples~/Catalog/` with `[ContextMenu]` triggers. The scene MUST open in Play mode and reach the happy-path state without manual fixup — `Main Camera`, `EventSystem`, services, theme, and required prefab refs all wired by the builder.
 6. **Portrait 1080×1920 first** — primary CanvasScaler reference. Landscape is secondary, not denied.
 7. **Safe-area respect** — every full-canvas element uses `SafeAreaFitter`.
