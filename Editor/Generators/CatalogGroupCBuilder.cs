@@ -98,8 +98,6 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             cellLayout.constraintCount = 4;
             cellLayout.childAlignment = TextAnchor.UpperCenter;
 
-            BuildDailyLoginDemoCells(dayCellContainer.transform, 7);
-
             var countdown = CreateText(card.transform, "CountdownLabel", "00:00:00", 32, FontStyles.Bold);
             var countdownRT = countdown.GetComponent<RectTransform>();
             countdownRT.anchorMin = new Vector2(0.5f, 0f);
@@ -141,10 +139,6 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             var popup = root.AddComponent<DailyLoginPopup>();
             WireAnimatorCard(animator, card.GetComponent<RectTransform>());
 
-            var animSO = new SerializedObject(animator);
-            animSO.FindProperty("_cellContainer").objectReferenceValue = cellRT;
-            animSO.ApplyModifiedPropertiesWithoutUndo();
-
             var so = new SerializedObject(popup);
             so.FindProperty("_refs.TitleLabel").objectReferenceValue = title;
             so.FindProperty("_refs.ClaimButton").objectReferenceValue = claimButton;
@@ -157,40 +151,6 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             so.ApplyModifiedPropertiesWithoutUndo();
 
             return SaveAsPrefab<DailyLoginPopup>(root, DailyLoginPath);
-        }
-
-        private static void BuildDailyLoginDemoCells(Transform parent, int count)
-        {
-            var cellTint = new Color(0.85f, 0.92f, 1f, 1f);
-            for (var i = 1; i <= count; i++)
-            {
-                var cellGO = CreateChild(parent, $"DayCell{i}");
-                AddImage(cellGO, cellTint);
-                var dayLabel = CreateText(cellGO.transform, "DayLabel", $"Day {i}", 22, FontStyles.Bold);
-                dayLabel.color = TextDarkColor;
-                dayLabel.alignment = TextAlignmentOptions.Center;
-                StretchTopHalf(dayLabel.GetComponent<RectTransform>());
-                var rewardLabel = CreateText(cellGO.transform, "RewardLabel", "+50", 26, FontStyles.Bold);
-                rewardLabel.color = SuccessTintColor;
-                rewardLabel.alignment = TextAlignmentOptions.Center;
-                StretchBottomHalf(rewardLabel.GetComponent<RectTransform>());
-            }
-        }
-
-        private static void StretchTopHalf(RectTransform rt)
-        {
-            rt.anchorMin = new Vector2(0f, 0.5f);
-            rt.anchorMax = new Vector2(1f, 1f);
-            rt.offsetMin = Vector2.zero;
-            rt.offsetMax = Vector2.zero;
-        }
-
-        private static void StretchBottomHalf(RectTransform rt)
-        {
-            rt.anchorMin = new Vector2(0f, 0f);
-            rt.anchorMax = new Vector2(1f, 0.5f);
-            rt.offsetMin = Vector2.zero;
-            rt.offsetMax = Vector2.zero;
         }
 
         private static LevelCompletePopup BuildLevelCompletePopup()
