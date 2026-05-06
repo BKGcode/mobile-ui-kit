@@ -249,7 +249,7 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             stepImageRT.pivot = new Vector2(0.5f, 1f);
             stepImageRT.anchoredPosition = new Vector2(0f, -110f);
             stepImageRT.sizeDelta = new Vector2(280f, 280f);
-            var stepImage = AddImage(stepImageGO, new Color(0.85f, 0.86f, 0.90f, 1f));
+            var stepImage = AddThemedImage(stepImageGO, new Color(0.85f, 0.86f, 0.90f, 1f), ThemeSpriteSlot.None, ThemeColorSlot.BackgroundLight);
 
             var body = CreateText(card.transform, "Body", "Step body goes here.", 24, FontStyles.Normal);
             var bodyRT = body.GetComponent<RectTransform>();
@@ -476,8 +476,7 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             rt.pivot = new Vector2(0.5f, 0.5f);
             rt.anchoredPosition = Vector2.zero;
             rt.sizeDelta = size;
-            AddImage(go, CardColor);
-            AddThemedImage(go, ThemeSpriteSlot.PanelBackground, ThemeColorSlot.BackgroundLight);
+            AddThemedImage(go, CardColor, ThemeSpriteSlot.PanelBackground, ThemeColorSlot.BackgroundLight);
             return go;
         }
 
@@ -519,15 +518,13 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
         private static (GameObject go, Button btn, Image img) CreatePrimaryButton(Transform parent, string name)
         {
             var (go, btn, img) = CreateButton(parent, name, ButtonPrimaryColor);
-            AddThemedImage(go, ThemeSpriteSlot.ButtonPrimary, ThemeColorSlot.PrimaryColor);
+            AddThemedImage(go, ButtonPrimaryColor, ThemeSpriteSlot.ButtonPrimary, ThemeColorSlot.PrimaryColor);
             return (go, btn, img);
         }
 
         private static (GameObject go, Button btn, Image img) CreateSecondaryButton(Transform parent, string name)
         {
-            var (go, btn, img) = CreateButton(parent, name, ButtonSecondaryColor);
-            AddThemedImage(go, ThemeSpriteSlot.ButtonSecondary, ThemeColorSlot.SecondaryColor);
-            return (go, btn, img);
+            return CreateButton(parent, name, ButtonSecondaryColor);
         }
 
         private static (GameObject go, Button btn, Image img) CreateLabelledButton(Transform parent, string name, string label, Color buttonColor, Color textColor)
@@ -543,19 +540,24 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
         private static (GameObject go, Button btn, Image img) CreateThemedLabelledButton(Transform parent, string name, string label, Color buttonColor, Color textColor, ThemeSpriteSlot spriteSlot, ThemeColorSlot bgColorSlot, ThemeColorSlot textColorSlot)
         {
             var (go, btn, img) = CreateLabelledButton(parent, name, label, buttonColor, textColor);
-            AddThemedImage(go, spriteSlot, bgColorSlot);
+            AddThemedImage(go, buttonColor, spriteSlot, bgColorSlot);
             var label_tmp = go.GetComponentInChildren<TextMeshProUGUI>();
             if (label_tmp != null) AddThemedText(label_tmp.gameObject, ThemeFontSlot.FontBody, textColorSlot, ThemeFontSizeSlot.None);
             return (go, btn, img);
         }
 
-        private static void AddThemedImage(GameObject go, ThemeSpriteSlot spriteSlot, ThemeColorSlot colorSlot)
+        private static Image AddThemedImage(GameObject go, Color fallbackColor, ThemeSpriteSlot spriteSlot, ThemeColorSlot colorSlot)
         {
+            var img = go.GetComponent<Image>();
+            if (img == null) img = AddImage(go, fallbackColor);
+            else img.color = fallbackColor;
             var themed = go.AddComponent<ThemedImage>();
             var so = new SerializedObject(themed);
+            so.FindProperty("_image").objectReferenceValue = img;
             so.FindProperty("_spriteSlot").enumValueIndex = (int)spriteSlot;
             so.FindProperty("_colorSlot").enumValueIndex = (int)colorSlot;
             so.ApplyModifiedPropertiesWithoutUndo();
+            return img;
         }
 
         private static void AddThemedText(GameObject go, ThemeFontSlot fontSlot, ThemeColorSlot colorSlot, ThemeFontSizeSlot sizeSlot)

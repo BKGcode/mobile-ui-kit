@@ -221,7 +221,7 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             bannerRT.pivot = new Vector2(0.5f, 1f);
             bannerRT.anchoredPosition = new Vector2(0f, -610f);
             bannerRT.sizeDelta = new Vector2(-100f, 64f);
-            AddThemedImage(banner, SuccessTintColor, ThemeColorSlot.SuccessColor);
+            AddThemedImage(banner, SuccessTintColor, ThemeSpriteSlot.None, ThemeColorSlot.SuccessColor);
             var bannerLabel = CreateText(banner.transform, "Label", "NEW BEST!", 30, FontStyles.Bold);
             bannerLabel.color = TextLightColor;
             bannerLabel.alignment = TextAlignmentOptions.Center;
@@ -303,7 +303,7 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             headerRT.pivot = new Vector2(0.5f, 1f);
             headerRT.anchoredPosition = Vector2.zero;
             headerRT.sizeDelta = new Vector2(0f, 14f);
-            var headerTint = AddThemedImage(headerTintGO, FailureColor, ThemeColorSlot.FailureColor);
+            var headerTint = AddThemedImage(headerTintGO, FailureColor, ThemeSpriteSlot.None, ThemeColorSlot.FailureColor);
 
             var title = CreateText(card.transform, "Title", "Game Over", 48, FontStyles.Bold);
             AnchorTopOfCard(title.GetComponent<RectTransform>(), -40f, 80f);
@@ -461,7 +461,7 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             barRT.pivot = new Vector2(0.5f, 0f);
             barRT.anchoredPosition = new Vector2(45f, 8f);
             barRT.sizeDelta = new Vector2(-100f, 8f);
-            var barFill = AddThemedImage(barFillGO, SuccessTintColor, ThemeColorSlot.SuccessColor);
+            var barFill = AddThemedImage(barFillGO, SuccessTintColor, ThemeSpriteSlot.None, ThemeColorSlot.SuccessColor);
             barFill.type = Image.Type.Filled;
             barFill.fillMethod = Image.FillMethod.Horizontal;
             barFill.fillAmount = 0.6f;
@@ -698,7 +698,7 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             rt.pivot = new Vector2(0.5f, 0.5f);
             rt.anchoredPosition = Vector2.zero;
             rt.sizeDelta = size;
-            AddThemedImage(go, CardColor, ThemeColorSlot.BackgroundLight);
+            AddThemedImage(go, CardColor, ThemeSpriteSlot.None, ThemeColorSlot.BackgroundLight);
             return go;
         }
 
@@ -717,13 +717,16 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             return img;
         }
 
-        private static Image AddThemedImage(GameObject go, Color color, ThemeColorSlot slot)
+        private static Image AddThemedImage(GameObject go, Color fallbackColor, ThemeSpriteSlot spriteSlot, ThemeColorSlot colorSlot)
         {
-            var img = AddImage(go, color);
+            var img = go.GetComponent<Image>();
+            if (img == null) img = AddImage(go, fallbackColor);
+            else img.color = fallbackColor;
             var themed = go.AddComponent<ThemedImage>();
             var so = new SerializedObject(themed);
             so.FindProperty("_image").objectReferenceValue = img;
-            so.FindProperty("_colorSlot").enumValueIndex = (int)slot;
+            so.FindProperty("_spriteSlot").enumValueIndex = (int)spriteSlot;
+            so.FindProperty("_colorSlot").enumValueIndex = (int)colorSlot;
             so.ApplyModifiedPropertiesWithoutUndo();
             return img;
         }
@@ -751,7 +754,7 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
         private static (GameObject go, Button btn, Image img) CreateButton(Transform parent, string name, Color color, ThemeColorSlot slot)
         {
             var go = CreateChild(parent, name);
-            var img = slot == ThemeColorSlot.None ? AddImage(go, color) : AddThemedImage(go, color, slot);
+            var img = slot == ThemeColorSlot.None ? AddImage(go, color) : AddThemedImage(go, color, ThemeSpriteSlot.None, slot);
             var btn = go.AddComponent<Button>();
             btn.targetGraphic = img;
             return (go, btn, img);
