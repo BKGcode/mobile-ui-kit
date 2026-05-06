@@ -22,7 +22,13 @@ namespace KitforgeLabs.MobileUIKit.Theme
         TextSecondary,
         SuccessColor,
         WarningColor,
-        DangerColor
+        DangerColor,
+        FailureColor,
+        LoadingBarColor,
+        TertiaryColor,
+        MutedColor,
+        TextOnPrimary,
+        TextOnAccent
     }
 
     public enum ThemeFontSlot

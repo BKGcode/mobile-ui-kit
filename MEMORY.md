@@ -45,6 +45,53 @@ Limitation: builder writes to `Assets/`, not `Packages/.../Samples~/`. Juan's pr
 
 ---
 
+## ThemedImage helper pattern — `AddThemedImage` + `OverrideThemedImageSlot` (M4.7)
+
+`CatalogGroupCBuilder.cs` (2026-05-06) introduced the canonical helper pair for migrating Image sites to runtime-themable. M4.7-bis sweep across A / B / D / E builders should extract these to `CatalogBuilderBase` (5 consumers post-sweep validates composability per ecosystem philosophy §5).
+
+```csharp
+private static Image AddThemedImage(GameObject go, Color color, ThemeColorSlot slot)
+{
+    var img = AddImage(go, color);                 // sets img.color = color (Editor preview)
+    var themed = go.AddComponent<ThemedImage>();   // [RequireComponent(Image)] satisfied by AddImage above
+    var so = new SerializedObject(themed);
+    so.FindProperty("_image").objectReferenceValue = img;
+    so.FindProperty("_colorSlot").enumValueIndex = (int)slot;
+    so.ApplyModifiedPropertiesWithoutUndo();
+    return img;
+}
+
+private static void OverrideThemedImageSlot(GameObject go, ThemeColorSlot slot)
+{
+    var themed = go.GetComponent<ThemedImage>();
+    if (themed == null) return;
+    var so = new SerializedObject(themed);
+    so.FindProperty("_colorSlot").enumValueIndex = (int)slot;
+    so.ApplyModifiedPropertiesWithoutUndo();
+}
+```
+
+**Use case for `OverrideThemedImageSlot`:** when a button base (e.g. `CreatePrimaryButton`) wires `PrimaryColor` slot via `AddThemedImage` and a downstream call needs to change the slot (e.g. DailyLogin claim button → `SuccessColor`) without removing/re-adding the component.
+
+**Slot-vs-hardcoded decision matrix (validated for Group C):**
+
+| Site | Builder constant | Theme slot | Decision |
+|---|---|---|---|
+| Card backgrounds | `CardColor (0.97, 0.98, 1)` | `BackgroundLight (0.96, 0.97, 0.98)` | Migrate (close enough match) |
+| Primary buttons | `ButtonPrimaryColor (0.20, 0.55, 0.95)` | `PrimaryColor` exact | Migrate |
+| Success accents (banners, claim btn override, fill bars) | `SuccessTintColor (0.30, 0.78, 0.45)` | `SuccessColor` exact | Migrate |
+| Failure accents (header tint, danger banners) | `FailureColor (0.898, 0.22, 0.21)` | `FailureColor` exact | Migrate |
+| Secondary buttons | `ButtonSecondaryColor (0.85, 0.86, 0.90)` | `SecondaryColor (0.35, 0.40, 0.50)` Δ 0.5 | KEEP HARDCODED — palette mismatch, defer M4.7-bis |
+| Backdrop | `BackdropColor (0, 0, 0, 0.55)` | none semantic | KEEP HARDCODED |
+| HUD backgrounds | `HUDBackgroundColor (0, 0, 0, 0.45)` | none semantic | KEEP HARDCODED |
+| Sprite-driven icons | `Color.white` passthrough | n/a (sprite resolves color) | KEEP HARDCODED |
+
+Apply same matrix to each builder in M4.7-bis. New mismatches (Secondary buttons, future palette additions) need cross-theme palette decision before migrating.
+
+**Critical companion rule:** post-migration, runtime override audit is mandatory. `image.color = X` in popup `Bind` / `OnShow` post-`ApplyTheme` will silently kill the theme value (validated 2026-05-06 — `GameOverPopup.ApplyButtonAlpha`). Before declaring a builder migration complete, grep popup runtime for `\.image\.color\s*=` patterns. See `feedback_workflow.md` → "Runtime overrides silently kill theme/contract values".
+
+---
+
 ## Hierarchy stability — buyer-facing disclosure for catalog prefab variants
 
 Catalog elements expose `private struct Refs` with direct child references (TitleLabel, BackdropButton, ConfirmTint, etc.). Re-parenting or deleting a referenced child in a prefab variant **silently breaks** the references at runtime — Unity does not warn at edit time.

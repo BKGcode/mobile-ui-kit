@@ -47,9 +47,6 @@ namespace KitforgeLabs.MobileUIKit.Catalog.GameOver
             public Image HeaderTint;
         }
 
-        private static readonly Color GrayedColor = new Color(1f, 1f, 1f, 0.5f);
-        private static readonly Color FullColor = Color.white;
-
         [SerializeField] private Refs _refs;
 
         public event Action OnContinueWithAdRequested;
@@ -319,7 +316,9 @@ namespace KitforgeLabs.MobileUIKit.Catalog.GameOver
         private static void ApplyButtonAlpha(Button button, bool full)
         {
             if (button == null || button.image == null) return;
-            button.image.color = full ? FullColor : GrayedColor;
+            var c = button.image.color;
+            c.a = full ? 1f : 0.5f;
+            button.image.color = c;
         }
     }
 }

@@ -35,11 +35,11 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             if (!CheckDependencies()) return;
             EnsureFolders();
             var defaultTheme = AssetDatabase.LoadAssetAtPath<UIThemeConfig>(DefaultThemePath);
-            var casual = BuildThemeAsset(defaultTheme, CasualPath, CasualPalette);
-            var premium = BuildThemeAsset(defaultTheme, PremiumPath, PremiumPalette);
+            BuildThemeAsset(defaultTheme, CasualPath, CasualPalette);
+            BuildThemeAsset(defaultTheme, PremiumPath, PremiumPalette);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
-            BuildDemoScene(defaultTheme, casual, premium);
+            BuildDemoScene();
             EditorUtility.DisplayDialog(
                 "Kitforge UI Kit — M4.1 Theme Presets",
                 $"Generated under {OutputRoot}:\n• Theme_Casual.asset (bright/saturated)\n• Theme_Premium.asset (dark/desaturated)\n• ThemePresetsDemo.unity\n\nOpen the scene → Play → use the Theme dropdown + buttons to validate the skin-it-once contract.",
@@ -107,9 +107,12 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
 
         // ── Demo scene ──────────────────────────────────────────────────────
 
-        private static void BuildDemoScene(UIThemeConfig defaultTheme, UIThemeConfig casual, UIThemeConfig premium)
+        private static void BuildDemoScene()
         {
             var scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
+            var defaultTheme = AssetDatabase.LoadAssetAtPath<UIThemeConfig>(DefaultThemePath);
+            var casual = AssetDatabase.LoadAssetAtPath<UIThemeConfig>(CasualPath);
+            var premium = AssetDatabase.LoadAssetAtPath<UIThemeConfig>(PremiumPath);
             EditorSceneFactory.CreateMainCamera(scene);
             BuildEventSystem(scene);
             var (canvas, popupRoot, dropdown, gameOverButton, levelCompleteButton) = BuildUICanvas(scene);
