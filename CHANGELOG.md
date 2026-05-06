@@ -3,11 +3,20 @@
 All notable changes to this package will be documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-_Last updated: 2026-05-06 (M3b kickoff — `[0.8.1-alpha]` block opened)_
+_Last updated: 2026-05-06 (M3b session 1 — DailyLogin polish item 1/8 landed; spawn-frame race workaround locked as convention)_
 
 ## [0.8.1-alpha] — Unreleased (M3b — additive UIAnim polish)
 
 > M3b — UIAnim per-element polish for Groups B + C (cell cascade DailyLogin, star cascade + score rollup LevelComplete, CTA cascade GameOver, regen juice HUDEnergy, Group B catch-ups). Additive tag — no API change, no BREAKING. Buyer migration cost is paid only at M3a; this tag adds visual polish to existing prefabs only. Polish lands inside the existing `sealed UIAnim*Popup` classes (no inheritance, no new public surface).
+
+### Added
+
+- **DailyLoginPopup cell cascade** (M3b polish item 1/8) — 7 cells stagger entry with `Ease.OutBack` after card show, ~1s total cascade. Params Inspector-tunable on `UIAnimDailyLoginPopup`: `_cellStaggerDelay` (default 0.10s, range 0.05-0.25), `_cellEntryEase` (default OutBack), `_cellEntryDuration` (default 0.40s, range 0.20-0.80). Standalone DOTween tweens with `.SetDelay() + .SetLink(KillOnDisable) + .SetUpdate(true)` for spawn-frame race resilience and pool/dispose safety. CanvasGroup auto-added per cell at runtime. Cells animate `transform.localScale` + `CanvasGroup.alpha`; `Image.color` forbidden during cascade per SRP Batcher discipline.
+- **`CatalogGroupCBuilder` baked DailyLogin demo cells** — 7 sample DayCell GameObjects (Day 1-7 labels + "+50" reward placeholder) generated as children of `DayCellContainer` to make the cascade visible in the sample. Closes a latent v0.8.0-alpha gap where the DailyLogin sample shipped with empty grid (cells were buyer/builder concern, demo never visualized them). Re-run `Tools → Kitforge → UI Kit → Build Group C Sample` to regenerate.
+
+### Changed
+
+- **`UIAnimPopupBase` polish hook surface** — added 3 `protected virtual` extension hooks for sealed canonical UIAnim*: `PlayPolishShow(float baseTime)` (post-card cascade entry point), `ResetPolishToStart()` (called inside `ResetToShowStart`), `SnapPolish(bool visible)` (called inside `Snap`). Hooks default to no-op; cascade items override to fire standalone tweens. New `protected const float SpawnFrameWarmup = 1.0f` exposed to derived classes for the spawn-frame fast-forward workaround (see convention block in `UIAnimPopupBase.cs` for the WHY). Convention block at top of file documents the canonical pattern for items 2-8 implementations: standalone `target.DOX(...).SetDelay(baseTime + SpawnFrameWarmup + i * staggerDelay).SetLink(gameObject, LinkBehaviour.KillOnDisable).SetUpdate(true)`.
 
 ### Migration
 
