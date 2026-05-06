@@ -19,6 +19,10 @@ namespace KitforgeLabs.MobileUIKit.Theme
         [SerializeField] private Color _warningColor = new Color(1.00f, 0.60f, 0.15f, 1f);
         [SerializeField] private Color _dangerColor = new Color(0.92f, 0.30f, 0.30f, 1f);
         [SerializeField] private Color _failureColor = new Color(0.898f, 0.224f, 0.208f, 1f);
+        [SerializeField] private Color _tertiaryColor = new Color(0.45f, 0.55f, 0.75f, 1f);
+        [SerializeField] private Color _mutedColor = new Color(0.42f, 0.46f, 0.55f, 1f);
+        [SerializeField] private Color _textOnPrimary = new Color(1.00f, 1.00f, 1.00f, 1f);
+        [SerializeField] private Color _textOnAccent = new Color(0.10f, 0.10f, 0.12f, 1f);
         [SerializeField] private Color _loadingBarColor = new Color(0.20f, 0.55f, 0.95f, 1f);
 
         [Header("Typography")]
@@ -87,6 +91,10 @@ namespace KitforgeLabs.MobileUIKit.Theme
         public Color WarningColor => _warningColor;
         public Color DangerColor => _dangerColor;
         public Color FailureColor => _failureColor;
+        public Color TertiaryColor => _tertiaryColor;
+        public Color MutedColor => _mutedColor;
+        public Color TextOnPrimary => _textOnPrimary;
+        public Color TextOnAccent => _textOnAccent;
 
         public TMP_FontAsset FontHeading => _fontHeading;
         public TMP_FontAsset FontBody => _fontBody;

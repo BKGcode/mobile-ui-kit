@@ -1,0 +1,18 @@
+{
+    "name": "KitforgeLabs.MobileUIKit.Samples.CatalogM41ThemePresets",
+    "rootNamespace": "KitforgeLabs.MobileUIKit.Samples.CatalogM41ThemePresets",
+    "references": [
+        "KitforgeLabs.MobileUIKit",
+        "KitforgeLabs.MobileUIKit.Catalog",
+        "Unity.TextMeshPro"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

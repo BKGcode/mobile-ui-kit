@@ -198,13 +198,16 @@ The following are explicitly NOT delivered by Phase 2 catalog:
 
 ## 9. Path to `v1.0.0-rc`
 
-The catalog reaches buyer-ready release-candidate state via 4 milestones (locked 2026-05-03):
+The catalog reaches buyer-ready release-candidate state via 7 milestones (re-sequenced 2026-05-06 per the rule "complete core packaging BEFORE auditing UX" — auditing on incomplete packaging forces re-audit):
 
 | # | Milestone | Tag |
 |---|---|---|
-| M1 | Group C close (3 popups + 2 HUDs + 3 helpers + builder + sample + chain demo) | `v0.6.0-alpha` BREAKING |
-| M2 | Group D (SettingsPopup + `IPlayerDataService`) + Game Wiring sample revival | `v0.7.0-alpha` |
-| M3 | Group E (Loading + MainMenu) + OnUpdate infra dispatch fix | `v0.8.0-alpha` BREAKING |
-| M4 | Hardening polish (Theme presets, severity icons, performance benchmarks, hero screenshots) + docs final (README + CATALOG + QUICKSTART + MIGRATION) + API freeze | `v1.0.0-rc` |
+| M1 | Group C close (3 popups + 2 HUDs + helpers + builder + sample + chain demo) | `v0.6.0-alpha` BREAKING ✅ |
+| M2 | Group D (SettingsPopup + `IPlayerDataService` + `IUILocalizationService`) + Game Wiring revival | `v0.7.0-alpha` BREAKING ✅ |
+| M3a | Group E (Loading + MainMenu) + OnUpdate infra dispatch fix + `_backdrop` sibling-order fix | `v0.8.0-alpha` BREAKING ✅ |
+| M3b | UIAnim per-element polish (cell cascade, score rollup, juice) | **DEFERRED post-`v1.0.0-rc`** (wrong-premise revert 2026-05-06; foundational review pending) |
+| M4 | Hardening core packaging — Theme presets, severity icons, `CatalogBuilderBase` extraction, ThemedImage runtime, master demo, MIGRATION.md, README + CATALOG + QUICKSTART final, perf bench, hero screenshots, buyer fresh-import smoke test, API freeze | `v0.9.0-alpha` (last alpha pre-rc) |
+| M3c | Deep UX audit del kit completo (post-M4 core packaging) — `as user` + `as ta` + `as pm` cross-group · output = `kitforge_ux_audit_2026-05.md` findings file with P0 / P1 / P2 disposition. Orientation portrait/landscape decision absorbed here | (no tag — feeds M5/RC) |
+| M5 / RC-tag | Disposition M3c findings (apply P0; defer P1+P2 post-1.0) + verify-all-docs + verify-all-samples + verify-all-tests on fresh compile | `v1.0.0-rc` |
 
 Asset Store submission (store page text, marketing-quality screenshots, demo video, pricing lock) is **explicitly deferred** to a post-`v1.0.0-rc` session — not part of finishing plan scope.

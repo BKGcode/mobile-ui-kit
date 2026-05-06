@@ -51,6 +51,11 @@
       "path": "Samples~/Catalog_GroupE_Screens"
     },
     {
+      "displayName": "Catalog — M4.1 — Theme Presets",
+      "description": "Reskin demo for the kit's 'skin it once' contract. Ships Theme_Casual.asset (bright/saturated, Royal Match vibe) + Theme_Premium.asset (dark/desaturated, Hades vibe) + a runtime dropdown that re-skins GameOver + LevelComplete popups across 3 themes (Default / Casual / Premium). Casual + Premium clone the Default theme's sprites/fonts/audio at build time — only colors differ, validating the contract that swapping a single ScriptableObject re-skins the kit. Requires Group B (Economy / Ads stubs) + Group C samples (GameOver / LevelComplete prefabs + Time / Progression stubs). After importing, run Tools/Kitforge/UI Kit/Build M4.1 — Theme Presets.",
+      "path": "Samples~/Catalog_M4_ThemePresets"
+    },
+    {
       "displayName": "Game Wiring (VContainer)",
       "description": "VContainer LifetimeScope + 8 in-memory Stub* implementations of the kit service interfaces (Economy / PlayerData / Progression / ShopData / Ads / Time / Audio / Localization). Reference for VContainer-first host projects — replace each Stub* registration with your real implementation. Includes a UIServicesBinder pattern (in README) that bridges VContainer-resolved services to the kit's UIServices MonoBehaviour container.",
       "path": "Samples~/GameWiring"
