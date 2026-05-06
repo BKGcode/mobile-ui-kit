@@ -190,6 +190,12 @@ namespace KitforgeLabs.MobileUIKit.Core
             if (_backdrop != null) _backdrop.SetActive(_activeStack.Count > 0);
         }
 
+        private void Update()
+        {
+            for (var i = 0; i < _activeStack.Count; i++)
+                _activeStack[i].Module?.OnUpdate();
+        }
+
         private void OnDestroy()
         {
             for (var i = 0; i < _activeStack.Count; i++)

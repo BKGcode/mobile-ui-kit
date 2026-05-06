@@ -396,6 +396,8 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
                 Debug.LogError($"[CatalogGroupABuilder] Failed to load one or more prefab GameObjects. confirm={confirmPrefab != null} pause={pausePrefab != null} tutorial={tutorialPrefab != null} toast={toastPrefab != null}");
             }
 
+            EditorSceneFactory.CreateMainCamera(scene);
+
             var canvasGO = new GameObject("UICanvas");
             SceneManager.MoveGameObjectToScene(canvasGO, scene);
             var canvas = canvasGO.AddComponent<Canvas>();

@@ -1,7 +1,7 @@
 {
   "name": "com.kitforgelabs.mobile-ui-kit",
   "displayName": "Kitforge Mobile UI Kit",
-  "version": "0.7.0-alpha",
+  "version": "0.8.0-alpha",
   "unity": "6000.1",
   "description": "Opinionated UGUI router, popup queue, theme contract AND a catalog of mid-core mobile UI elements (Confirm / Pause / Tutorial / Toast in v0.4; Shop / Reward / Settings / DailyLogin / GameOver / LevelComplete / HUD / Screens shipping group-by-group). Stack-based screens, priority-aware popups, one ScriptableObject theme — wire it in five minutes, skin it once, ship it.",
   "keywords": [
@@ -44,6 +44,11 @@
       "displayName": "Catalog — Group D — Player Data",
       "description": "SettingsPopup (5 controls: music / sfx volume sliders + language picker + notifications / haptics toggles) backed by IPlayerDataService for cross-session persistence + IUILocalizationService for live re-skin trigger. Includes 2 in-memory sample stubs (Player Data / Localization). After importing, run Tools → Kitforge → UI Kit → Build Group D Sample to materialize the SettingsPopup prefab and a Demo scene with [ContextMenu] triggers — try 'Settings — Show all', then 'PlayerData — Print all kfmui.settings.* values' to verify persistence across Play sessions.",
       "path": "Samples~/Catalog_GroupD_PlayerData"
+    },
+    {
+      "displayName": "Catalog — Group E — Screens",
+      "description": "LoadingScreen + MainMenuScreen — the two entry-point screens of the boot flow. GroupEDemoHost drives the full chain: Loading (simulated progress) → Replace to MainMenu → DailyLogin auto-trigger after MainMenu show animation completes (via OnShown event). Requires Group C sample for InMemoryProgressionService (daily dot + auto-trigger) and DailyLoginPopup prefab. After importing, run Tools → Kitforge → UI Kit → Build Group E Sample to materialize the 2 prefabs and GroupE_BootDemo.unity — right-click GroupEDemoHost in Hierarchy → Boot Demo to see the full boot chain. MainMenu Settings/Shop/Play/Back buttons log to Console with guidance — register Group D's SettingsPopup or Group B's ShopPopup prefabs in PopupManager to wire them to visible popups in your own host.",
+      "path": "Samples~/Catalog_GroupE_Screens"
     },
     {
       "displayName": "Game Wiring (VContainer)",

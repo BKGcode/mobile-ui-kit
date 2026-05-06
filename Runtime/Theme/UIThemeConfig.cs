@@ -19,6 +19,7 @@ namespace KitforgeLabs.MobileUIKit.Theme
         [SerializeField] private Color _warningColor = new Color(1.00f, 0.60f, 0.15f, 1f);
         [SerializeField] private Color _dangerColor = new Color(0.92f, 0.30f, 0.30f, 1f);
         [SerializeField] private Color _failureColor = new Color(0.898f, 0.224f, 0.208f, 1f);
+        [SerializeField] private Color _loadingBarColor = new Color(0.20f, 0.55f, 0.95f, 1f);
 
         [Header("Typography")]
         [SerializeField] private TMP_FontAsset _fontHeading;
@@ -55,6 +56,13 @@ namespace KitforgeLabs.MobileUIKit.Theme
         [SerializeField] private Sprite _iconClock;
         [SerializeField] private Sprite _starFilledSprite;
         [SerializeField] private Sprite _starEmptySprite;
+        [SerializeField] private Sprite _backgroundMainMenu;
+        [SerializeField] private Sprite _logoMainMenu;
+        [SerializeField] private Sprite _iconPlay;
+        [SerializeField] private Sprite _iconShop;
+        [SerializeField] private Sprite _iconSettings;
+        [SerializeField] private Sprite _iconDaily;
+        [SerializeField] private Sprite _iconLoading;
 
         [Header("Audio")]
         [SerializeField] private AudioClip _audioButtonClick;
@@ -111,6 +119,15 @@ namespace KitforgeLabs.MobileUIKit.Theme
         public Sprite IconClock => _iconClock;
         public Sprite StarFilledSprite => _starFilledSprite;
         public Sprite StarEmptySprite => _starEmptySprite;
+        public Sprite BackgroundMainMenu => _backgroundMainMenu;
+        public Sprite LogoMainMenu => _logoMainMenu;
+        public Sprite IconPlay => _iconPlay;
+        public Sprite IconShop => _iconShop;
+        public Sprite IconSettings => _iconSettings;
+        public Sprite IconDaily => _iconDaily;
+        public Sprite IconLoading => _iconLoading;
+
+        public Color LoadingBarColor => _loadingBarColor;
 
         public AudioClip AudioButtonClick => _audioButtonClick;
         public AudioClip AudioPopupShow => _audioPopupShow;

@@ -1,6 +1,6 @@
 # Catalog Specification — Phase 2
 
-> **Status**: Phase 2 in progress (2026-05-04). Group 0 + A + B shipped. Group C **5/5 elements landed** (DailyLogin + LevelComplete + GameOver + HUD-Energy + HUD-Timer) + **1/3 helpers landed** (`RewardFlow.GrantAndShowSequence`; `GrantAndShow` single + `ShopFlow.OpenWithPurchaseChain` deferred to Group D — capability-gate failed) + B.4.0 sample stub (`InMemoryProgressionService`) shipped. Pending B.4.1-B.4.6 (`CatalogGroupCBuilder` + chain demo) before tag `v0.6.0-alpha` BREAKING. Path to `v1.0.0-rc` locked — see § 9 below.
+> **Status**: Phase 2 in progress (2026-05-06). Group 0 + A + B + C + D + E shipped. M3 closed at `v0.8.0-alpha` BREAKING (OnUpdate infra dispatch fix + Group E catalog) — **292 EditMode tests green** on fresh compile. Path to `v1.0.0-rc` locked — see § 9 below. Next: M4 hardening + docs final.
 > **Source of truth** for what ships under `Runtime/Catalog/` and `Samples~/Catalog/`.
 
 This document defines **what** the kit catalog contains and **the contracts** every element honors so they integrate without coupling. Per-element specs live under `Documentation~/Specs/Catalog/`. Cross-cutting deltas per group live alongside (e.g. `Documentation~/Specs/Catalog/CATALOG_GroupC_DELTA.md`).
@@ -69,7 +69,7 @@ Every catalog element MUST satisfy these contracts so combinations work without 
 2. **Single service source** — access economy / ads / time / progression via `UIServices` container only. Never resolve services manually.
 3. **Typed payload** — derive `UIModule<TData>` with serializable `<Element>Data` DTO. No `object` payloads.
 4. **Animation per element** — ship `UIAnim_<Element>.cs` (generated via `_tween`) as a separate component on the prefab. Hook from `OnShow` / `OnHide`.
-5. **Demo asset** — every element appears in at least one Demo scene under `Samples~/Catalog/` with `[ContextMenu]` triggers.
+5. **Demo asset** — every element appears in at least one Demo scene under `Samples~/Catalog/` with `[ContextMenu]` triggers. The scene MUST open in Play mode and reach the happy-path state without manual fixup — `Main Camera`, `EventSystem`, services, theme, and required prefab refs all wired by the builder.
 6. **Portrait 1080×1920 first** — primary CanvasScaler reference. Landscape is secondary, not denied.
 7. **Safe-area respect** — every full-canvas element uses `SafeAreaFitter`.
 8. **Self-contained back behavior** — every popup overrides `OnBackPressed` explicitly.
@@ -121,9 +121,9 @@ VContainer/Zenject users wrap their container resolution into `UIServices` sette
 | **0 — Foundation** | F1-F8 | ✅ shipped | `v0.3.0-alpha` | Hello-Toast + Hello-HUD-Coin demo works |
 | **A — Pure UI** | Confirm, Tutorial, Pause, Toast | ✅ shipped | `v0.4.0-alpha` (+ hotfix `v0.4.1-alpha`) | 4 elements coexist; back button traverses correctly |
 | **B — Currency** | Reward, Shop, NotEnough, HUD-Coins → `HUDCurrency`, HUD-Gems → `HUDCurrency` | ✅ shipped | `v0.5.0-alpha` | Buy → spend → HUD updates → unaffordable → NotEnough → ad → reward. Chain demo playable in-Editor. |
-| **C — Progression / Time** | DailyLogin ✅, LevelComplete ✅, GameOver ⏳, HUD-Energy ⏳, HUD-Timer ⏳ | 🟡 in progress (2/5) | `v0.6.0-alpha` BREAKING (target) | Full level loop with Continue (ad) + DailyLogin auto-trigger + Energy regen across UTC midnight |
-| **D — Player Data** | Settings + Game Wiring sample revival | ⏳ | `v0.7.0-alpha` | Settings persist across sessions; Game Wiring sample re-imports + plays |
-| **E — Screens** | Loading, MainMenu | ⏳ | `v0.8.0-alpha` BREAKING (bundles OnUpdate infra dispatch fix) | Full app boot demo: Loading → MainMenu → Daily auto → Play → Pause → GameOver → MainMenu |
+| **C — Progression / Time** | DailyLogin, LevelComplete, GameOver, HUD-Energy, HUD-Timer | ✅ shipped | `v0.6.0-alpha` BREAKING | Full level loop with Continue (ad) + DailyLogin auto-trigger + Energy regen across UTC midnight |
+| **D — Player Data** | Settings + Game Wiring sample revival | ✅ shipped | `v0.7.0-alpha` BREAKING | Settings persist across sessions; Game Wiring sample re-imports + plays |
+| **E — Screens** | Loading, MainMenu | ✅ shipped (closes M3 — bundles OnUpdate infra dispatch fix) | `v0.8.0-alpha` BREAKING | Demo scene plays happy path on Play without manual fixup (Loading → MainMenu → DailyLogin auto-trigger); zero LogErrors in Console |
 | **Hardening + Docs final** | Theme presets, severity icons, perf bench, hero screenshots, MIGRATION.md, API freeze | ⏳ | `v1.0.0-rc` | Buyer-facing docs final; API stable |
 
 Each closed group = `package.json` minor bump. Tag detail and per-milestone "Done when…" criteria: see roadmap `Path to v1.0.0-rc` § F4.

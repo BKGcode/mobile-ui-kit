@@ -14,9 +14,7 @@ namespace KitforgeLabs.MobileUIKit.Catalog.HUD
     /// with a regen-tick countdown label, a max-cap suffix label, an energy bar fill image,
     /// and a 1Hz <see cref="IProgressionService.GetEnergyRegenState"/> poll. Null-progression
     /// behavior follows CATALOG_GroupC_DELTA § 4.5 (silent degrade — regen UI hidden, base HUD
-    /// counter remains functional). The local <c>Update()</c> shim is a temporary workaround
-    /// for the <c>UIModuleBase.OnUpdate()</c> infra dispatch gap; M3 sweep removes it
-    /// (anchor comment grep).
+    /// counter remains functional).
     /// </summary>
     [DisallowMultipleComponent]
     public sealed class HUDEnergy : HUDCurrency
@@ -89,13 +87,7 @@ namespace KitforgeLabs.MobileUIKit.Catalog.HUD
             KillCapFlashTween();
         }
 
-        // OnUpdate-workaround-M3-sweep
         private void Update()
-        {
-            OnUpdate();
-        }
-
-        private void OnUpdate()
         {
             TickRegenPoll();
         }

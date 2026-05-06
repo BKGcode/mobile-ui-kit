@@ -544,6 +544,8 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
                 Debug.LogWarning($"[CatalogGroupCBuilder] RewardPopup prefab not found at {GroupBRewardPath}. The 'LevelComplete → Reward sequence' chain demo requires it. Run 'Tools/Kitforge/UI Kit/Build Group B Sample' first to generate it.");
             }
 
+            EditorSceneFactory.CreateMainCamera(scene);
+
             var canvasGO = new GameObject("UICanvas");
             SceneManager.MoveGameObjectToScene(canvasGO, scene);
             var canvas = canvasGO.AddComponent<Canvas>();

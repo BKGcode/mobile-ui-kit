@@ -16,8 +16,6 @@ namespace KitforgeLabs.MobileUIKit.Catalog.HUD
     /// immutable post-OnEnable per FQ6 — buyers swap modes via disable→set→enable cycle. Null
     /// service behavior follows CATALOG_GroupC_DELTA § 4.5 (HUD = silent degrade — UTC modes
     /// without an <see cref="ITimeService"/> render <c>"--:--"</c> with no LogError). Local
-    /// <c>Update()</c> shim is a temporary workaround for <c>UIModuleBase.OnUpdate()</c> infra
-    /// dispatch gap; M3 sweep removes it (anchor comment grep).
     /// </summary>
     [DisallowMultipleComponent]
     public sealed class HUDTimer : UIHUDBase
@@ -149,13 +147,7 @@ namespace KitforgeLabs.MobileUIKit.Catalog.HUD
             KillAllTweens();
         }
 
-        // OnUpdate-workaround-M3-sweep
         private void Update()
-        {
-            OnUpdate();
-        }
-
-        private void OnUpdate()
         {
             var now = CurrentRealTime();
             var minInterval = 1f / Mathf.Max(_tickRateHz, 0.001f);

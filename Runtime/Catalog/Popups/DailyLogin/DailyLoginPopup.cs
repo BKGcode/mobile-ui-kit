@@ -113,11 +113,6 @@ namespace KitforgeLabs.MobileUIKit.Catalog.DailyLogin
             AdvanceCountdown(Time.unscaledDeltaTime);
         }
 
-        private void Update()
-        {
-            OnUpdate();
-        }
-
         internal void AdvanceCountdown(float deltaTime)
         {
             if (_data == null || !_data.AlreadyClaimedToday || IsDismissing) return;

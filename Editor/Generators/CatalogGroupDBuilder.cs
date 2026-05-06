@@ -316,6 +316,8 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
                 Debug.LogError($"[CatalogGroupDBuilder] Failed to load Settings prefab at {SettingsPath}.");
             }
 
+            EditorSceneFactory.CreateMainCamera(scene);
+
             var canvasGO = new GameObject("UICanvas");
             SceneManager.MoveGameObjectToScene(canvasGO, scene);
             var canvas = canvasGO.AddComponent<Canvas>();
