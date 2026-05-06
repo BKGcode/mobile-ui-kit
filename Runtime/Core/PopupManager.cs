@@ -105,6 +105,7 @@ namespace KitforgeLabs.MobileUIKit.Core
             {
                 _activeStack[i].Module.transform.SetSiblingIndex(i);
             }
+            if (_backdrop != null) _backdrop.transform.SetAsFirstSibling();
         }
 
         private bool TryEvictLowerPriority(PopupPriority incoming)

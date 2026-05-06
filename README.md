@@ -14,8 +14,6 @@ Everything else (router app states, service interfaces) is optional and lives be
 
 ## Status
 
-> **🚧 `v0.8.0-alpha` is in-flight on `main` — NOT yet tagged.** Phase C of M3 close-out paused: a structural bug in `PopupManager._backdrop` sibling-order blocks demo interactivity (see [`CHANGELOG.md`](./CHANGELOG.md) § Known issues). For installs, pin to `#v0.7.0-alpha` until the corrective milestone (M3.1ter / promote to M4 kickoff) lands. The Status table and "Latest tag" line below describe the in-flight state of `main`, not a published tag.
-
 **Phase 2 in progress — alpha.** Phase 1 framework (UIManager / PopupManager / UIRouter / Theme) shipped at `v0.2.1-alpha` with 33 EditMode tests. Phase 2 adds the catalog of ready-to-use mid-core mobile UI elements promised by the kit name — 15 elements grouped by contract similarity, delivered group-by-group.
 
 | Group | Elements | Status |
