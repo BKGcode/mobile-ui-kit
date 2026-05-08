@@ -7,6 +7,7 @@ using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using static KitforgeLabs.MobileUIKit.Editor.Generators.CatalogGroupBuilderShared;
 
 namespace KitforgeLabs.MobileUIKit.Editor.Generators
 {
@@ -21,23 +22,17 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
         private const string LocalizationServiceTypeName = "KitforgeLabs.MobileUIKit.Samples.CatalogGroupD.InMemoryLocalizationService, KitforgeLabs.MobileUIKit.Samples.CatalogGroupD";
         private const string DemoMonoBehaviourTypeName = "KitforgeLabs.MobileUIKit.Samples.CatalogGroupD.CatalogGroupDDemo, KitforgeLabs.MobileUIKit.Samples.CatalogGroupD";
 
-        private static readonly Color BackdropColor = new Color(0f, 0f, 0f, 0.55f);
-        private static readonly Color CardColor = new Color(0.97f, 0.98f, 1f, 1f);
-        private static readonly Color RowDividerColor = new Color(0.90f, 0.91f, 0.94f, 1f);
-        private static readonly Color ButtonPrimaryColor = new Color(0.20f, 0.55f, 0.95f, 1f);
         private static readonly Color SliderTrackColor = new Color(0.85f, 0.86f, 0.90f, 1f);
         private static readonly Color SliderFillColor = new Color(0.20f, 0.55f, 0.95f, 1f);
         private static readonly Color SliderHandleColor = Color.white;
         private static readonly Color ToggleBgColor = new Color(0.85f, 0.86f, 0.90f, 1f);
         private static readonly Color ToggleCheckColor = new Color(0.20f, 0.55f, 0.95f, 1f);
         private static readonly Color DropdownBgColor = new Color(0.93f, 0.94f, 0.96f, 1f);
-        private static readonly Color TextDarkColor = new Color(0.10f, 0.10f, 0.12f, 1f);
-        private static readonly Color TextLightColor = Color.white;
 
         [MenuItem("Tools/Kitforge/UI Kit/Build Group D Sample")]
         public static void BuildAll()
         {
-            EnsureFolders();
+            EnsureFolders("Catalog_GroupD_Demo");
             if (AssetDatabase.LoadAssetAtPath<UIThemeConfig>(DefaultThemePath) == null)
             {
                 if (!EditorUtility.DisplayDialog(
@@ -53,12 +48,6 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
                 "Kitforge UI Kit",
                 $"Group D built at {OutputRoot}.\n\n1 prefab + 1 scene generated. Open the scene, press Play, right-click the Demo GameObject and pick a Context Menu scenario. Try 'Settings — Show all', then 'PlayerData — Print all kfmui.settings.* values' to see the persisted state.",
                 "OK");
-        }
-
-        private static void EnsureFolders()
-        {
-            if (!AssetDatabase.IsValidFolder(OutputRoot)) AssetDatabase.CreateFolder("Assets", "Catalog_GroupD_Demo");
-            if (!AssetDatabase.IsValidFolder(PrefabsFolder)) AssetDatabase.CreateFolder(OutputRoot, "Prefabs");
         }
 
         private static SettingsPopup BuildSettingsPopup()
@@ -98,7 +87,6 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             closeRT.pivot = new Vector2(0.5f, 0f);
             closeRT.anchoredPosition = new Vector2(0f, 50f);
             closeRT.sizeDelta = new Vector2(420f, 88f);
-            closeImg.color = ButtonPrimaryColor;
             var closeLabel = CreateText(closeGO.transform, "Label", "Close", 30, FontStyles.Bold);
             closeLabel.color = TextLightColor;
             closeLabel.alignment = TextAlignmentOptions.Center;
@@ -147,7 +135,7 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             bgRT.anchorMax = new Vector2(1f, 0.6f);
             bgRT.offsetMin = Vector2.zero;
             bgRT.offsetMax = Vector2.zero;
-            AddImage(bg, SliderTrackColor);
+            AddThemedImage(bg, SliderTrackColor, ThemeSpriteSlot.None, ThemeColorSlot.MutedColor);
 
             var fillArea = CreateChild(sliderGO.transform, "Fill Area");
             var fillAreaRT = fillArea.GetComponent<RectTransform>();
@@ -162,7 +150,7 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             fillRT.anchorMax = Vector2.one;
             fillRT.offsetMin = Vector2.zero;
             fillRT.offsetMax = Vector2.zero;
-            AddImage(fill, SliderFillColor);
+            AddThemedImage(fill, SliderFillColor, ThemeSpriteSlot.None, ThemeColorSlot.PrimaryColor);
 
             var handleArea = CreateChild(sliderGO.transform, "Handle Slide Area");
             var handleAreaRT = handleArea.GetComponent<RectTransform>();
@@ -196,7 +184,7 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             var bg = CreateChild(toggleGO.transform, "Background");
             var bgRT = bg.GetComponent<RectTransform>();
             StretchInside(bgRT);
-            var bgImg = AddImage(bg, ToggleBgColor);
+            var bgImg = AddThemedImage(bg, ToggleBgColor, ThemeSpriteSlot.None, ThemeColorSlot.MutedColor);
 
             var checkGO = CreateChild(bg.transform, "Checkmark");
             var checkRT = checkGO.GetComponent<RectTransform>();
@@ -204,7 +192,7 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             checkRT.anchorMax = new Vector2(0.5f, 0.5f);
             checkRT.pivot = new Vector2(0.5f, 0.5f);
             checkRT.sizeDelta = new Vector2(28f, 28f);
-            var checkImg = AddImage(checkGO, ToggleCheckColor);
+            var checkImg = AddThemedImage(checkGO, ToggleCheckColor, ThemeSpriteSlot.None, ThemeColorSlot.PrimaryColor);
 
             var toggle = toggleGO.AddComponent<Toggle>();
             toggle.targetGraphic = bgImg;
@@ -220,7 +208,7 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             var dropdownLE = dropdownGO.AddComponent<LayoutElement>();
             dropdownLE.preferredWidth = 280f;
             dropdownLE.preferredHeight = 56f;
-            var bgImg = AddImage(dropdownGO, DropdownBgColor);
+            var bgImg = AddThemedImage(dropdownGO, DropdownBgColor, ThemeSpriteSlot.None, ThemeColorSlot.MutedColor);
 
             var label = CreateText(dropdownGO.transform, "Label", "English", 24, FontStyles.Normal);
             label.alignment = TextAlignmentOptions.Left;
@@ -249,7 +237,7 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             templateRT.pivot = new Vector2(0.5f, 1f);
             templateRT.anchoredPosition = new Vector2(0f, 0f);
             templateRT.sizeDelta = new Vector2(0f, 200f);
-            AddImage(template, DropdownBgColor);
+            AddThemedImage(template, DropdownBgColor, ThemeSpriteSlot.None, ThemeColorSlot.MutedColor);
             template.AddComponent<ScrollRect>();
 
             var viewport = CreateChild(template.transform, "Viewport");
@@ -274,7 +262,7 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             item.AddComponent<Toggle>();
             var itemBg = CreateChild(item.transform, "Item Background");
             StretchInside(itemBg.GetComponent<RectTransform>());
-            AddImage(itemBg, DropdownBgColor);
+            AddThemedImage(itemBg, DropdownBgColor, ThemeSpriteSlot.None, ThemeColorSlot.MutedColor);
             itemLabel = CreateText(item.transform, "Item Label", "Option", 24, FontStyles.Normal);
             itemLabel.alignment = TextAlignmentOptions.Left;
             var itemLabelRT = itemLabel.GetComponent<RectTransform>();
@@ -378,107 +366,5 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             so.ApplyModifiedPropertiesWithoutUndo();
         }
 
-        private static GameObject CreateRoot(string name)
-        {
-            var go = new GameObject(name);
-            var rt = go.AddComponent<RectTransform>();
-            StretchInside(rt);
-            go.AddComponent<CanvasGroup>();
-            return go;
-        }
-
-        private static Button CreateBackdrop(Transform parent)
-        {
-            var go = CreateChild(parent, "Backdrop");
-            var img = AddImage(go, BackdropColor);
-            img.raycastTarget = true;
-            var btn = go.AddComponent<Button>();
-            btn.targetGraphic = img;
-            return btn;
-        }
-
-        private static GameObject CreateCard(Transform parent, Vector2 size)
-        {
-            var go = CreateChild(parent, "Card");
-            var rt = go.GetComponent<RectTransform>();
-            rt.anchorMin = new Vector2(0.5f, 0.5f);
-            rt.anchorMax = new Vector2(0.5f, 0.5f);
-            rt.pivot = new Vector2(0.5f, 0.5f);
-            rt.anchoredPosition = Vector2.zero;
-            rt.sizeDelta = size;
-            AddImage(go, CardColor);
-            return go;
-        }
-
-        private static GameObject CreateChild(Transform parent, string name)
-        {
-            var go = new GameObject(name);
-            go.AddComponent<RectTransform>();
-            go.transform.SetParent(parent, false);
-            return go;
-        }
-
-        private static Image AddImage(GameObject go, Color color)
-        {
-            var img = go.AddComponent<Image>();
-            img.color = color;
-            return img;
-        }
-
-        private static TextMeshProUGUI CreateText(Transform parent, string name, string text, int size, FontStyles style)
-        {
-            var go = CreateChild(parent, name);
-            var tmp = go.AddComponent<TextMeshProUGUI>();
-            tmp.text = text;
-            tmp.fontSize = size;
-            tmp.fontStyle = style;
-            tmp.color = TextDarkColor;
-            return tmp;
-        }
-
-        private static (GameObject go, Button btn, Image img) CreatePrimaryButton(Transform parent, string name)
-        {
-            var go = CreateChild(parent, name);
-            var img = AddImage(go, ButtonPrimaryColor);
-            var btn = go.AddComponent<Button>();
-            btn.targetGraphic = img;
-            return (go, btn, img);
-        }
-
-        private static void StretchInside(RectTransform rt)
-        {
-            rt.anchorMin = Vector2.zero;
-            rt.anchorMax = Vector2.one;
-            rt.pivot = new Vector2(0.5f, 0.5f);
-            rt.offsetMin = Vector2.zero;
-            rt.offsetMax = Vector2.zero;
-        }
-
-        private static void AnchorTopOfCard(RectTransform rt, float y, float height)
-        {
-            rt.anchorMin = new Vector2(0f, 1f);
-            rt.anchorMax = new Vector2(1f, 1f);
-            rt.pivot = new Vector2(0.5f, 1f);
-            rt.anchoredPosition = new Vector2(0f, y);
-            rt.sizeDelta = new Vector2(-40f, height);
-        }
-
-        private static void WireAnimatorCard(MonoBehaviour animator, RectTransform card)
-        {
-            var so = new SerializedObject(animator);
-            var prop = so.FindProperty("_card");
-            if (prop != null)
-            {
-                prop.objectReferenceValue = card;
-                so.ApplyModifiedPropertiesWithoutUndo();
-            }
-        }
-
-        private static T SaveAsPrefab<T>(GameObject root, string path) where T : Component
-        {
-            var prefab = PrefabUtility.SaveAsPrefabAsset(root, path);
-            Object.DestroyImmediate(root);
-            return prefab.GetComponent<T>();
-        }
     }
 }
