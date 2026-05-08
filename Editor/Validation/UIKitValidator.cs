@@ -115,6 +115,8 @@ namespace KitforgeLabs.MobileUIKit.Editor.Validation
         public int ErrorCount => _errors.Count;
         public int WarningCount => _warnings.Count;
         public bool HasErrors => _errors.Count > 0;
+        public IReadOnlyList<string> Errors => _errors;
+        public IReadOnlyList<string> Warnings => _warnings;
 
         public void AddError(string message) => _errors.Add(message);
         public void AddWarning(string message) => _warnings.Add(message);
