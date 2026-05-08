@@ -9,6 +9,7 @@ using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using static KitforgeLabs.MobileUIKit.Editor.Generators.CatalogGroupBuilderShared;
 
 namespace KitforgeLabs.MobileUIKit.Editor.Generators
 {
@@ -33,13 +34,11 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
         private static readonly Color BtnPlay = new Color(0.20f, 0.55f, 0.95f, 1f);
         private static readonly Color BtnSecondary = new Color(0.22f, 0.26f, 0.36f, 1f);
         private static readonly Color DotRed = new Color(0.92f, 0.30f, 0.30f, 1f);
-        private static readonly Color TextLight = Color.white;
-        private static readonly Color BackdropColor = new Color(0f, 0f, 0f, 0.55f);
 
         [MenuItem("Tools/Kitforge/UI Kit/Build Group E Sample")]
         public static void BuildAll()
         {
-            EnsureFolders();
+            EnsureFolders("Catalog_GroupE_Demo");
             if (!CheckTheme()) return;
             if (!CheckGroupCBuilt()) return;
             BuildLoadingScreen();
@@ -71,18 +70,12 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             return false;
         }
 
-        private static void EnsureFolders()
-        {
-            if (!AssetDatabase.IsValidFolder(OutputRoot)) AssetDatabase.CreateFolder("Assets", "Catalog_GroupE_Demo");
-            if (!AssetDatabase.IsValidFolder(PrefabsFolder)) AssetDatabase.CreateFolder(OutputRoot, "Prefabs");
-        }
-
         // ── Prefab builders ─────────────────────────────────────────────────
 
         private static LoadingScreen BuildLoadingScreen()
         {
             var root = CreateRoot("LoadingScreen");
-            AddImage(root, BgDark);
+            AddThemedImage(root, BgDark, ThemeSpriteSlot.None, ThemeColorSlot.BackgroundDark);
             BuildLoadingContent(root.transform, out var title, out var subtitle, out var spinner);
             var (track, fill) = BuildProgressBar(root.transform);
             root.AddComponent<UIAnim_LoadingScreen>();
@@ -107,7 +100,7 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             var le = go.AddComponent<LayoutElement>();
             le.preferredWidth = 80f;
             le.preferredHeight = 80f;
-            var img = AddImage(go, TextLight);
+            var img = AddImage(go, TextLightColor);
             img.raycastTarget = false;
             return img;
         }
@@ -121,7 +114,7 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             rt.pivot = new Vector2(0.5f, 0f);
             rt.anchoredPosition = new Vector2(0f, 100f);
             rt.sizeDelta = new Vector2(0f, 20f);
-            var track = AddImage(bar, BarTrack);
+            var track = AddThemedImage(bar, BarTrack, ThemeSpriteSlot.None, ThemeColorSlot.MutedColor);
             track.raycastTarget = false;
             return (track, BuildProgressFill(bar.transform));
         }
@@ -130,7 +123,7 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
         {
             var go = CreateChild(parent, "ProgressFill");
             StretchInside(go.GetComponent<RectTransform>());
-            var img = AddImage(go, BarFill);
+            var img = AddThemedImage(go, BarFill, ThemeSpriteSlot.None, ThemeColorSlot.LoadingBarColor);
             img.type = Image.Type.Filled;
             img.fillMethod = Image.FillMethod.Horizontal;
             img.fillAmount = 0f;
@@ -152,7 +145,7 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
         private static MainMenuScreen BuildMainMenuScreen()
         {
             var root = CreateRoot("MainMenuScreen");
-            AddImage(root, BgMainMenu);
+            AddThemedImage(root, BgMainMenu, ThemeSpriteSlot.None, ThemeColorSlot.BackgroundDark);
             var panel = CreatePanel(root.transform, "Panel", 800f, 1400f);
             var title = CreateText(panel.transform, "TitleLabel", "", 48, FontStyles.Bold);
             AnchorTopStretch(title.GetComponent<RectTransform>(), -60f, 60f);
@@ -179,10 +172,10 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
         private static (Button play, Button settings, Button shop, Button daily) BuildMainMenuButtons(Transform panel)
         {
             var group = CreateButtonGroup(panel);
-            var play = BuildMenuButton(group.transform, "PlayButton", "Play", BtnPlay);
-            var settings = BuildMenuButton(group.transform, "SettingsButton", "Settings", BtnSecondary);
-            var shop = BuildMenuButton(group.transform, "ShopButton", "Shop", BtnSecondary);
-            var daily = BuildMenuButton(group.transform, "DailyButton", "Daily Login", BtnSecondary);
+            var play = BuildMenuButton(group.transform, "PlayButton", "Play", BtnPlay, ThemeColorSlot.PrimaryColor);
+            var settings = BuildMenuButton(group.transform, "SettingsButton", "Settings", BtnSecondary, ThemeColorSlot.MutedColor);
+            var shop = BuildMenuButton(group.transform, "ShopButton", "Shop", BtnSecondary, ThemeColorSlot.MutedColor);
+            var daily = BuildMenuButton(group.transform, "DailyButton", "Daily Login", BtnSecondary, ThemeColorSlot.MutedColor);
             return (play, settings, shop, daily);
         }
 
@@ -194,20 +187,20 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             return go;
         }
 
-        private static Button BuildMenuButton(Transform parent, string name, string label, Color bg)
+        private static Button BuildMenuButton(Transform parent, string name, string label, Color bg, ThemeColorSlot bgSlot)
         {
             var go = CreateChild(parent, name);
             var le = go.AddComponent<LayoutElement>();
             le.preferredWidth = 680f;
             le.preferredHeight = 100f;
             le.minHeight = 88f;
-            var img = AddImage(go, bg);
+            var img = AddThemedImage(go, bg, ThemeSpriteSlot.None, bgSlot);
             var btn = go.AddComponent<Button>();
             btn.targetGraphic = img;
             var text = CreateText(go.transform, "Label", label, 32, FontStyles.Bold);
             StretchInside(text.GetComponent<RectTransform>());
             text.alignment = TextAlignmentOptions.Center;
-            text.color = TextLight;
+            text.color = TextLightColor;
             return btn;
         }
 
@@ -220,7 +213,7 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             rt.pivot = new Vector2(0.5f, 0.5f);
             rt.anchoredPosition = new Vector2(-10f, -10f);
             rt.sizeDelta = new Vector2(24f, 24f);
-            AddImage(go, DotRed);
+            AddThemedImage(go, DotRed, ThemeSpriteSlot.None, ThemeColorSlot.DangerColor);
             return go;
         }
 
@@ -449,14 +442,6 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
 
         // ── Helpers ─────────────────────────────────────────────────────────
 
-        private static GameObject CreateRoot(string name)
-        {
-            var go = new GameObject(name);
-            StretchInside(go.AddComponent<RectTransform>());
-            go.AddComponent<CanvasGroup>();
-            return go;
-        }
-
         private static GameObject CreatePanel(Transform parent, string name, float width, float height)
         {
             var go = CreateChild(parent, name);
@@ -471,21 +456,6 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             return go.transform;
         }
 
-        private static GameObject CreateChild(Transform parent, string name)
-        {
-            var go = new GameObject(name);
-            go.AddComponent<RectTransform>();
-            go.transform.SetParent(parent, false);
-            return go;
-        }
-
-        private static Image AddImage(GameObject go, Color color)
-        {
-            var img = go.AddComponent<Image>();
-            img.color = color;
-            return img;
-        }
-
         private static TextMeshProUGUI CreateText(Transform parent, string name, string text, int size, FontStyles style)
         {
             var go = CreateChild(parent, name);
@@ -493,7 +463,7 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             tmp.text = text;
             tmp.fontSize = size;
             tmp.fontStyle = style;
-            tmp.color = TextLight;
+            tmp.color = TextLightColor;
             return tmp;
         }
 
@@ -517,15 +487,6 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             layout.childControlHeight = false;
         }
 
-        private static void StretchInside(RectTransform rt)
-        {
-            rt.anchorMin = Vector2.zero;
-            rt.anchorMax = Vector2.one;
-            rt.pivot = new Vector2(0.5f, 0.5f);
-            rt.offsetMin = Vector2.zero;
-            rt.offsetMax = Vector2.zero;
-        }
-
         private static void PositionCentered(RectTransform rt, float x, float y, float w, float h)
         {
             rt.anchorMin = new Vector2(0.5f, 0.5f);
@@ -544,11 +505,5 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             rt.sizeDelta = new Vector2(-40f, height);
         }
 
-        private static T SaveAsPrefab<T>(GameObject root, string path) where T : Component
-        {
-            var prefab = PrefabUtility.SaveAsPrefabAsset(root, path);
-            Object.DestroyImmediate(root);
-            return prefab.GetComponent<T>();
-        }
     }
 }
