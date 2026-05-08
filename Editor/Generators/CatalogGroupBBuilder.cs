@@ -10,6 +10,7 @@ using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using static KitforgeLabs.MobileUIKit.Editor.Generators.CatalogGroupBuilderShared;
 
 namespace KitforgeLabs.MobileUIKit.Editor.Generators
 {
@@ -25,21 +26,15 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
         private const string HUDGemsPath = PrefabsFolder + "/HUDGems.prefab";
         private const string DefaultThemePath = "Assets/Settings/UI/UIThemeConfig_Default.asset";
 
-        private static readonly Color BackdropColor = new Color(0f, 0f, 0f, 0.55f);
-        private static readonly Color CardColor = new Color(0.97f, 0.98f, 1f, 1f);
         private static readonly Color CellColor = new Color(0.94f, 0.95f, 0.98f, 1f);
         private static readonly Color HeaderTintColor = new Color(1.00f, 0.60f, 0.15f, 1f);
-        private static readonly Color ButtonPrimaryColor = new Color(0.20f, 0.55f, 0.95f, 1f);
-        private static readonly Color ButtonSecondaryColor = new Color(0.85f, 0.86f, 0.90f, 1f);
         private static readonly Color SuccessTintColor = new Color(0.30f, 0.78f, 0.45f, 1f);
         private static readonly Color HUDBackgroundColor = new Color(0f, 0f, 0f, 0.45f);
-        private static readonly Color TextDarkColor = new Color(0.10f, 0.10f, 0.12f, 1f);
-        private static readonly Color TextLightColor = Color.white;
 
         [MenuItem("Tools/Kitforge/UI Kit/Build Group B Sample")]
         public static void BuildAll()
         {
-            EnsureFolders();
+            EnsureFolders("Catalog_GroupB_Demo");
             if (AssetDatabase.LoadAssetAtPath<UIThemeConfig>(DefaultThemePath) == null)
             {
                 if (!EditorUtility.DisplayDialog(
@@ -59,12 +54,6 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
                 "Kitforge UI Kit",
                 $"Group B built at {OutputRoot}.\n\n5 prefabs + 1 scene generated. Open the scene, press Play, right-click the Demo GameObject and pick a Context Menu scenario (try 'Chain — Shop → NotEnough → Ad → Reward' to see the full monetization loop).",
                 "OK");
-        }
-
-        private static void EnsureFolders()
-        {
-            if (!AssetDatabase.IsValidFolder(OutputRoot)) AssetDatabase.CreateFolder("Assets", "Catalog_GroupB_Demo");
-            if (!AssetDatabase.IsValidFolder(PrefabsFolder)) AssetDatabase.CreateFolder(OutputRoot, "Prefabs");
         }
 
         private static RewardPopup BuildRewardPopup()
@@ -107,7 +96,7 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             item.alignment = TextAlignmentOptions.Center;
             item.gameObject.SetActive(false);
 
-            var (claimGO, claimButton, claimImg) = CreatePrimaryButton(card.transform, "ClaimButton");
+            var (claimGO, claimButton, claimImg) = CreateButton(card.transform, "ClaimButton", ButtonPrimaryColor, ThemeSpriteSlot.ButtonPrimary, ThemeColorSlot.None);
             var claimRT = claimGO.GetComponent<RectTransform>();
             claimRT.anchorMin = new Vector2(0.5f, 0f);
             claimRT.anchorMax = new Vector2(0.5f, 0f);
@@ -290,7 +279,7 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             headerRT.pivot = new Vector2(0.5f, 1f);
             headerRT.anchoredPosition = Vector2.zero;
             headerRT.sizeDelta = new Vector2(0f, 12f);
-            var headerTint = AddImage(headerGO, HeaderTintColor);
+            var headerTint = AddThemedImage(headerGO, HeaderTintColor, ThemeSpriteSlot.None, ThemeColorSlot.WarningColor);
 
             var title = CreateText(card.transform, "Title", "Not enough!", 40, FontStyles.Bold);
             AnchorTopOfCard(title.GetComponent<RectTransform>(), -40f, 64f);
@@ -559,126 +548,6 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             var so = new SerializedObject(hud);
             var prop = so.FindProperty("_services");
             if (prop != null) { prop.objectReferenceValue = services; so.ApplyModifiedPropertiesWithoutUndo(); }
-        }
-
-        private static GameObject CreateRoot(string name)
-        {
-            var go = new GameObject(name);
-            var rt = go.AddComponent<RectTransform>();
-            StretchInside(rt);
-            go.AddComponent<CanvasGroup>();
-            return go;
-        }
-
-        private static Button CreateBackdrop(Transform parent)
-        {
-            var go = CreateChild(parent, "Backdrop");
-            var img = AddImage(go, BackdropColor);
-            img.raycastTarget = true;
-            var btn = go.AddComponent<Button>();
-            btn.targetGraphic = img;
-            return btn;
-        }
-
-        private static GameObject CreateCard(Transform parent, Vector2 size)
-        {
-            var go = CreateChild(parent, "Card");
-            var rt = go.GetComponent<RectTransform>();
-            rt.anchorMin = new Vector2(0.5f, 0.5f);
-            rt.anchorMax = new Vector2(0.5f, 0.5f);
-            rt.pivot = new Vector2(0.5f, 0.5f);
-            rt.anchoredPosition = Vector2.zero;
-            rt.sizeDelta = size;
-            AddImage(go, CardColor);
-            return go;
-        }
-
-        private static GameObject CreateChild(Transform parent, string name)
-        {
-            var go = new GameObject(name);
-            go.AddComponent<RectTransform>();
-            go.transform.SetParent(parent, false);
-            return go;
-        }
-
-        private static Image AddImage(GameObject go, Color color)
-        {
-            var img = go.AddComponent<Image>();
-            img.color = color;
-            return img;
-        }
-
-        private static TextMeshProUGUI CreateText(Transform parent, string name, string text, int size, FontStyles style)
-        {
-            var go = CreateChild(parent, name);
-            var tmp = go.AddComponent<TextMeshProUGUI>();
-            tmp.text = text;
-            tmp.fontSize = size;
-            tmp.fontStyle = style;
-            tmp.color = TextDarkColor;
-            return tmp;
-        }
-
-        private static (GameObject go, Button btn, Image img) CreateButton(Transform parent, string name, Color color)
-        {
-            var go = CreateChild(parent, name);
-            var img = AddImage(go, color);
-            var btn = go.AddComponent<Button>();
-            btn.targetGraphic = img;
-            return (go, btn, img);
-        }
-
-        private static (GameObject go, Button btn, Image img) CreatePrimaryButton(Transform parent, string name)
-        {
-            return CreateButton(parent, name, ButtonPrimaryColor);
-        }
-
-        private static (GameObject go, Button btn, Image img) CreateSecondaryButton(Transform parent, string name)
-        {
-            return CreateButton(parent, name, ButtonSecondaryColor);
-        }
-
-        private static void StretchInside(RectTransform rt)
-        {
-            rt.anchorMin = Vector2.zero;
-            rt.anchorMax = Vector2.one;
-            rt.pivot = new Vector2(0.5f, 0.5f);
-            rt.offsetMin = Vector2.zero;
-            rt.offsetMax = Vector2.zero;
-        }
-
-        private static void AnchorTopOfCard(RectTransform rt, float y, float height)
-        {
-            rt.anchorMin = new Vector2(0f, 1f);
-            rt.anchorMax = new Vector2(1f, 1f);
-            rt.pivot = new Vector2(0.5f, 1f);
-            rt.anchoredPosition = new Vector2(0f, y);
-            rt.sizeDelta = new Vector2(-40f, height);
-        }
-
-        private static void ForceButtonHeight(GameObject buttonGO, float height)
-        {
-            var le = buttonGO.AddComponent<LayoutElement>();
-            le.preferredHeight = height;
-            le.minHeight = height;
-        }
-
-        private static void WireAnimatorCard(MonoBehaviour animator, RectTransform card)
-        {
-            var so = new SerializedObject(animator);
-            var prop = so.FindProperty("_card");
-            if (prop != null)
-            {
-                prop.objectReferenceValue = card;
-                so.ApplyModifiedPropertiesWithoutUndo();
-            }
-        }
-
-        private static T SaveAsPrefab<T>(GameObject root, string path) where T : Component
-        {
-            var prefab = PrefabUtility.SaveAsPrefabAsset(root, path);
-            Object.DestroyImmediate(root);
-            return prefab.GetComponent<T>();
         }
     }
 }

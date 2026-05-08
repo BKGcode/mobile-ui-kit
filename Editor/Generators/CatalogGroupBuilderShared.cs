@@ -122,7 +122,7 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
 
         internal static (GameObject go, Button btn, Image img) CreateSecondaryButton(Transform parent, string name)
         {
-            return CreateButton(parent, name, ButtonSecondaryColor, ThemeSpriteSlot.None, ThemeColorSlot.None);
+            return CreateButton(parent, name, ButtonSecondaryColor, ThemeSpriteSlot.ButtonSecondary, ThemeColorSlot.SecondaryColor);
         }
 
         internal static void StretchInside(RectTransform rt)
