@@ -243,7 +243,7 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             var viewport = CreateChild(template.transform, "Viewport");
             var viewportRT = viewport.GetComponent<RectTransform>();
             StretchInside(viewportRT);
-            AddImage(viewport, Color.white).color = new Color(1f, 1f, 1f, 0.01f);
+            AddImage(viewport, new Color(1f, 1f, 1f, 0.01f));
             viewport.AddComponent<Mask>().showMaskGraphic = false;
 
             var content = CreateChild(viewport.transform, "Content");
