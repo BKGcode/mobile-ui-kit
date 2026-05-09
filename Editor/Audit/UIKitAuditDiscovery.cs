@@ -84,10 +84,16 @@ namespace KitforgeLabs.MobileUIKit.Editor.Audit
         {
             if (type.IsAbstract) return;
             if (Attribute.IsDefined(type, typeof(UIKitAuditIgnoreAttribute), false)) return;
-            var prefabPath = FindCatalogPrefabFor(type);
-            if (string.IsNullOrEmpty(prefabPath)) return;
+            var prefabPaths = FindCatalogPrefabsFor(type);
+            if (prefabPaths.Count == 0) return;
+            var disambiguate = prefabPaths.Count > 1;
+            for (var i = 0; i < prefabPaths.Count; i++) AppendCatalogTarget(type, prefabPaths[i], disambiguate, targets);
+        }
+
+        private static void AppendCatalogTarget(Type type, string prefabPath, bool disambiguate, List<UIKitAuditTarget> targets)
+        {
             if (TargetAlreadyTracked(targets, prefabPath)) return;
-            targets.Add(BuildCatalogTarget(type, prefabPath));
+            targets.Add(BuildCatalogTarget(type, prefabPath, disambiguate));
         }
 
         private static bool TargetAlreadyTracked(List<UIKitAuditTarget> targets, string prefabPath)
@@ -96,16 +102,18 @@ namespace KitforgeLabs.MobileUIKit.Editor.Audit
             return false;
         }
 
-        private static string FindCatalogPrefabFor(Type type)
+        private static List<string> FindCatalogPrefabsFor(Type type)
         {
+            var paths = new List<string>();
             var guids = AssetDatabase.FindAssets("t:Prefab", new[] { "Assets" });
             for (var i = 0; i < guids.Length; i++)
             {
                 var path = AssetDatabase.GUIDToAssetPath(guids[i]);
                 if (!path.StartsWith(CatalogPathPrefix)) continue;
-                if (PrefabHasComponent(path, type)) return path;
+                if (PrefabHasComponent(path, type)) paths.Add(path);
             }
-            return null;
+            paths.Sort(StringComparer.OrdinalIgnoreCase);
+            return paths;
         }
 
         private static bool PrefabHasComponent(string path, Type type)
@@ -115,13 +123,14 @@ namespace KitforgeLabs.MobileUIKit.Editor.Audit
             return asset.GetComponent(type) != null;
         }
 
-        private static UIKitAuditTarget BuildCatalogTarget(Type type, string prefabPath)
+        private static UIKitAuditTarget BuildCatalogTarget(Type type, string prefabPath, bool disambiguate)
         {
+            var label = disambiguate ? Path.GetFileNameWithoutExtension(prefabPath) : type.Name;
             return new UIKitAuditTarget
             {
                 Kind = UIKitAuditTargetKind.Prefab,
                 AssetPath = prefabPath,
-                Label = type.Name,
+                Label = label,
                 Group = ExtractGroup(prefabPath),
                 TypeFullName = type.FullName,
                 TypeShortName = type.Name,

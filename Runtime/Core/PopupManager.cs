@@ -75,6 +75,15 @@ namespace KitforgeLabs.MobileUIKit.Core
             return true;
         }
 
+        public void SetTheme(UIThemeConfig theme)
+        {
+            _themeConfig = theme;
+            foreach (var popup in _popupCache.Values)
+            {
+                if (popup != null) popup.Initialize(theme, _services);
+            }
+        }
+
         private UIModuleBase ShowInternal(PopupRecord request)
         {
             var popup = ResolvePopup(request.Type);

@@ -21,10 +21,13 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
         private const string MainMenuPath = PrefabsFolder + "/MainMenuScreen.prefab";
         private const string ScenePath = OutputRoot + "/GroupE_BootDemo.unity";
         private const string DefaultThemePath = "Assets/Settings/UI/UIThemeConfig_Default.asset";
+        private const string CasualThemePath = "Assets/Catalog_M4_ThemePresets_Demo/Themes/Theme_Casual.asset";
+        private const string PremiumThemePath = "Assets/Catalog_M4_ThemePresets_Demo/Themes/Theme_Premium.asset";
         private const string GroupCDailyLoginPath = "Assets/Catalog_GroupC_Demo/Prefabs/DailyLoginPopup.prefab";
         private const string ProgressionTypeName = "KitforgeLabs.MobileUIKit.Samples.CatalogGroupC.InMemoryProgressionService, KitforgeLabs.MobileUIKit.Samples.CatalogGroupC";
         private const string TimeServiceTypeName = "KitforgeLabs.MobileUIKit.Samples.CatalogGroupC.InMemoryTimeService, KitforgeLabs.MobileUIKit.Samples.CatalogGroupC";
         private const string DemoHostTypeName = "KitforgeLabs.MobileUIKit.Samples.CatalogGroupE.GroupEDemoHost, KitforgeLabs.MobileUIKit.Samples.CatalogGroupE";
+        private const string ThemeSwitcherTypeName = "KitforgeLabs.MobileUIKit.Samples.CatalogGroupE.ThemeSwitcherEScreens, KitforgeLabs.MobileUIKit.Samples.CatalogGroupE";
         private const string InstructionsText = "DEMO: Right-click GroupEDemoHost in Hierarchy → ContextMenu (Boot Demo / Show MainMenu / Trigger DailyLogin). Button clicks log to Console (Window → General → Console).";
 
         private static readonly Color BgDark = new Color(0.10f, 0.12f, 0.16f, 1f);
@@ -255,16 +258,17 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             var scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
             var theme = AssetDatabase.LoadAssetAtPath<UIThemeConfig>(DefaultThemePath);
             EditorSceneFactory.CreateMainCamera(scene);
-            var (screenRoot, popupRoot, toastRoot, backdropGO) = BuildUICanvas(scene);
+            var (canvasRoot, screenRoot, popupRoot, toastRoot, backdropGO) = BuildUICanvas(scene);
             BuildEventSystem(scene);
             var (uiManager, popupManager, router, toastManager) = BuildManagers(scene);
             var services = BuildServicesGO(scene);
             WireAllManagers(uiManager, popupManager, router, toastManager, services, theme, screenRoot, popupRoot, toastRoot, backdropGO);
             BuildDemoHost(scene, uiManager, popupManager, services);
+            BuildThemeSwitcher(scene, canvasRoot, uiManager, popupManager, toastManager);
             EditorSceneManager.SaveScene(scene, ScenePath);
         }
 
-        private static (Transform screenRoot, Transform popupRoot, Transform toastRoot, GameObject backdrop) BuildUICanvas(Scene scene)
+        private static (Transform canvasRoot, Transform screenRoot, Transform popupRoot, Transform toastRoot, GameObject backdrop) BuildUICanvas(Scene scene)
         {
             var canvasGO = new GameObject("UICanvas");
             SceneManager.MoveGameObjectToScene(canvasGO, scene);
@@ -280,7 +284,7 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             var backdrop = CreateBackdropIn(popupRoot);
             var toastRoot = CreateStretchChild(canvasGO.transform, "Toasts");
             BuildInstructionsPanel(canvasGO.transform);
-            return (screenRoot, popupRoot, toastRoot, backdrop);
+            return (canvasGO.transform, screenRoot, popupRoot, toastRoot, backdrop);
         }
 
         private static void BuildInstructionsPanel(Transform parent)
@@ -444,6 +448,72 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             so.FindProperty("_popupManager").objectReferenceValue = pm;
             so.FindProperty("_services").objectReferenceValue = services;
             so.ApplyModifiedPropertiesWithoutUndo();
+        }
+
+        // ── Theme switcher (M4.X — manual swap E2E for screens) ─────────────
+
+        private static void BuildThemeSwitcher(Scene scene, Transform canvasRoot, UIManager ui, PopupManager pm, ToastManager toast)
+        {
+            var go = new GameObject("ThemeSwitcher");
+            SceneManager.MoveGameObjectToScene(go, scene);
+            var dropdown = BuildThemeDropdown(canvasRoot);
+            var switcherType = System.Type.GetType(ThemeSwitcherTypeName);
+            if (switcherType == null)
+            {
+                Debug.LogWarning("[CatalogGroupEBuilder] ThemeSwitcherEScreens type not found. Make sure the Group E sample is imported (Package Manager → Samples → Catalog — Group E — Screens).");
+                return;
+            }
+            var switcher = go.AddComponent(switcherType);
+            WireThemeSwitcher(switcher, dropdown, ui, pm, toast);
+        }
+
+        private static TMP_Dropdown BuildThemeDropdown(Transform canvasRoot)
+        {
+            var resources = new TMP_DefaultControls.Resources();
+            var dropdownGO = TMP_DefaultControls.CreateDropdown(resources);
+            dropdownGO.name = "ThemeDropdown";
+            dropdownGO.transform.SetParent(canvasRoot, false);
+            var rt = dropdownGO.GetComponent<RectTransform>();
+            rt.anchorMin = new Vector2(1f, 1f);
+            rt.anchorMax = new Vector2(1f, 1f);
+            rt.pivot = new Vector2(1f, 1f);
+            rt.anchoredPosition = new Vector2(-24f, -200f);
+            rt.sizeDelta = new Vector2(360f, 80f);
+            return dropdownGO.GetComponent<TMP_Dropdown>();
+        }
+
+        private static void WireThemeSwitcher(Component switcher, TMP_Dropdown dropdown, UIManager ui, PopupManager pm, ToastManager toast)
+        {
+            var defaultTheme = AssetDatabase.LoadAssetAtPath<UIThemeConfig>(DefaultThemePath);
+            var casual = AssetDatabase.LoadAssetAtPath<UIThemeConfig>(CasualThemePath);
+            var premium = AssetDatabase.LoadAssetAtPath<UIThemeConfig>(PremiumThemePath);
+            var so = new SerializedObject(switcher);
+            so.FindProperty("_uiManager").objectReferenceValue = ui;
+            so.FindProperty("_popupManager").objectReferenceValue = pm;
+            so.FindProperty("_toastManager").objectReferenceValue = toast;
+            so.FindProperty("_themeDropdown").objectReferenceValue = dropdown;
+            WireThemeOptions(so.FindProperty("_themes"), defaultTheme, casual, premium);
+            so.ApplyModifiedPropertiesWithoutUndo();
+        }
+
+        private static void WireThemeOptions(SerializedProperty themesProp, UIThemeConfig defaultTheme, UIThemeConfig casual, UIThemeConfig premium)
+        {
+            var hasPair = casual != null && premium != null;
+            themesProp.arraySize = hasPair ? 3 : 1;
+            WireThemeOption(themesProp.GetArrayElementAtIndex(0), "Default", defaultTheme);
+            if (hasPair)
+            {
+                WireThemeOption(themesProp.GetArrayElementAtIndex(1), "Casual", casual);
+                WireThemeOption(themesProp.GetArrayElementAtIndex(2), "Premium", premium);
+                return;
+            }
+            Debug.LogWarning("[CatalogGroupEBuilder] Theme_Casual.asset / Theme_Premium.asset not found at Assets/Catalog_M4_ThemePresets_Demo/Themes/. Run 'Tools/Kitforge/UI Kit/Build M4.1 — Theme Presets' first for full theme swap coverage. Falling back to Default-only dropdown.");
+        }
+
+        private static void WireThemeOption(SerializedProperty option, string name, UIThemeConfig theme)
+        {
+            option.FindPropertyRelative("Name").stringValue = name;
+            option.FindPropertyRelative("Theme").objectReferenceValue = theme;
         }
 
         // ── Helpers ─────────────────────────────────────────────────────────

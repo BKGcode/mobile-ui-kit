@@ -30,9 +30,13 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
         private static readonly Color UIBgColor = new Color(0.10f, 0.12f, 0.16f, 1f);
 
         [MenuItem("Tools/Kitforge/UI Kit/Build M4.1 — Theme Presets")]
-        public static void BuildAll()
+        public static void BuildAll() => BuildAllInternal(true);
+
+        public static bool BuildAllForAudit() => BuildAllInternal(false);
+
+        private static bool BuildAllInternal(bool interactive)
         {
-            if (!CheckDependencies()) return;
+            if (!CheckDependencies(interactive)) return false;
             EnsureFolders();
             var defaultTheme = AssetDatabase.LoadAssetAtPath<UIThemeConfig>(DefaultThemePath);
             BuildThemeAsset(defaultTheme, CasualPath, CasualPalette);
@@ -40,22 +44,25 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
             BuildDemoScene();
-            EditorUtility.DisplayDialog(
+            if (interactive) EditorUtility.DisplayDialog(
                 "Kitforge UI Kit — M4.1 Theme Presets",
                 $"Generated under {OutputRoot}:\n• Theme_Casual.asset (bright/saturated)\n• Theme_Premium.asset (dark/desaturated)\n• ThemePresetsDemo.unity\n\nOpen the scene → Play → use the Theme dropdown + buttons to validate the skin-it-once contract.",
                 "OK");
+            return true;
         }
 
-        private static bool CheckDependencies()
+        private static bool CheckDependencies(bool interactive)
         {
             if (AssetDatabase.LoadAssetAtPath<UIThemeConfig>(DefaultThemePath) == null)
             {
+                if (!interactive) { Debug.LogError($"[CatalogM41ThemeBuilder] Theme missing at {DefaultThemePath}. Run 'Tools/Kitforge/UI Kit/Bootstrap Defaults' first."); return false; }
                 EditorUtility.DisplayDialog("Bootstrap Defaults missing", $"No Theme found at {DefaultThemePath}.\n\nRun 'Tools/Kitforge/UI Kit/Bootstrap Defaults' first.", "OK");
                 return false;
             }
             if (AssetDatabase.LoadAssetAtPath<GameObject>(GameOverPrefabPath) == null
                 || AssetDatabase.LoadAssetAtPath<GameObject>(LevelCompletePrefabPath) == null)
             {
+                if (!interactive) { Debug.LogError($"[CatalogM41ThemeBuilder] Group C prefabs missing under Assets/Catalog_GroupC_Demo/Prefabs/. Run Build Group C Sample first."); return false; }
                 EditorUtility.DisplayDialog(
                     "Group C not built",
                     $"GameOver / LevelComplete prefabs missing under Assets/Catalog_GroupC_Demo/Prefabs/.\n\nImport 'Catalog — Group C — Progression' via Package Manager, then run Tools/Kitforge/UI Kit/Build Group C Sample first.",

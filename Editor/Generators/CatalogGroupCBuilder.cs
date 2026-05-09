@@ -33,7 +33,6 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
         private const string DemoMonoBehaviourTypeName = "KitforgeLabs.MobileUIKit.Samples.CatalogGroupC.CatalogGroupCDemo, KitforgeLabs.MobileUIKit.Samples.CatalogGroupC";
 
         private static readonly Color SuccessTintColor = new Color(0.30f, 0.78f, 0.45f, 1f);
-        private static readonly Color WarningColor = new Color(0.95f, 0.62f, 0.10f, 1f);
         private static readonly Color FailureColor = new Color(0.898f, 0.224f, 0.208f, 1f);
         private static readonly Color HUDBackgroundColor = new Color(0f, 0f, 0f, 0.45f);
         private static readonly Color HUDCapLabelColor = new Color(0.85f, 0.85f, 0.90f, 1f);
@@ -96,7 +95,7 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             cellLayout.constraintCount = 4;
             cellLayout.childAlignment = TextAnchor.UpperCenter;
 
-            var countdown = CreateText(card.transform, "CountdownLabel", "00:00:00", 32, FontStyles.Bold);
+            var countdown = CreateThemedText(card.transform, "CountdownLabel", "00:00:00", 32, FontStyles.Bold, ThemeBuilderSlots.WarningBody);
             var countdownRT = countdown.GetComponent<RectTransform>();
             countdownRT.anchorMin = new Vector2(0.5f, 0f);
             countdownRT.anchorMax = new Vector2(0.5f, 0f);
@@ -104,7 +103,6 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             countdownRT.anchoredPosition = new Vector2(0f, 240f);
             countdownRT.sizeDelta = new Vector2(420f, 60f);
             countdown.alignment = TextAlignmentOptions.Center;
-            countdown.color = WarningColor;
             countdown.gameObject.SetActive(false);
 
             var (claimGO, claimButton, claimImg) = CreatePrimaryButton(card.transform, "ClaimButton");
@@ -430,8 +428,7 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             capRT.sizeDelta = new Vector2(60f, 36f);
             capLabel.alignment = TextAlignmentOptions.Left;
 
-            var regenLabel = CreateText(root.transform, "RegenCountdownLabel", "+1 in 04:30", 16, FontStyles.Normal);
-            regenLabel.color = WarningColor;
+            var regenLabel = CreateThemedText(root.transform, "RegenCountdownLabel", "+1 in 04:30", 16, FontStyles.Normal, ThemeBuilderSlots.WarningBody);
             var regenRT = regenLabel.GetComponent<RectTransform>();
             regenRT.anchorMin = new Vector2(0f, 0f);
             regenRT.anchorMax = new Vector2(1f, 0f);

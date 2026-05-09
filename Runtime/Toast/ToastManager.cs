@@ -40,6 +40,11 @@ namespace KitforgeLabs.MobileUIKit.Toast
             _pending.Clear();
         }
 
+        public void SetTheme(UIThemeConfig theme)
+        {
+            _themeConfig = theme;
+        }
+
         private UIToastBase ShowInternal(PendingToast request)
         {
             var prefab = FindPrefab(request.Type);

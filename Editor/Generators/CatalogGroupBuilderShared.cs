@@ -14,6 +14,7 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
         internal static readonly Color ButtonSecondaryColor = new Color(0.85f, 0.86f, 0.90f, 1f);
         internal static readonly Color TextDarkColor = new Color(0.10f, 0.10f, 0.12f, 1f);
         internal static readonly Color TextLightColor = Color.white;
+        internal static readonly Color WarningColor = new Color(1.00f, 0.60f, 0.15f, 1f);
 
         internal static void EnsureFolders(string demoFolder)
         {
@@ -110,6 +111,7 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
         {
             var tmp = CreateText(parent, name, text, size, style);
             if (slot.Color == ThemeColorSlot.TextOnPrimary || slot.Color == ThemeColorSlot.TextOnAccent) tmp.color = TextLightColor;
+            else if (slot.Color == ThemeColorSlot.WarningColor) tmp.color = WarningColor;
             AddThemedText(tmp.gameObject, slot.Font, slot.Color, slot.Size);
             return tmp;
         }
@@ -203,5 +205,6 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
         public static readonly TextThemeSlot BannerLabel = new(ThemeFontSlot.FontBody, ThemeColorSlot.TextOnAccent, ThemeFontSizeSlot.None);
         public static readonly TextThemeSlot DarkBgHeading = new(ThemeFontSlot.FontHeading, ThemeColorSlot.TextOnPrimary, ThemeFontSizeSlot.None);
         public static readonly TextThemeSlot DarkBgBody = new(ThemeFontSlot.FontBody, ThemeColorSlot.TextOnPrimary, ThemeFontSizeSlot.None);
+        public static readonly TextThemeSlot WarningBody = new(ThemeFontSlot.FontBody, ThemeColorSlot.WarningColor, ThemeFontSizeSlot.None);
     }
 }

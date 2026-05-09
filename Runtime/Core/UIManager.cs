@@ -67,6 +67,15 @@ namespace KitforgeLabs.MobileUIKit.Core
             while (_screenStack.Count > 1) Pop();
         }
 
+        public void SetTheme(UIThemeConfig theme)
+        {
+            _themeConfig = theme;
+            foreach (var screen in _screenCache.Values)
+            {
+                if (screen != null) screen.Initialize(theme, _services);
+            }
+        }
+
         private T ResolveScreen<T>() where T : UIModuleBase
         {
             var type = typeof(T);

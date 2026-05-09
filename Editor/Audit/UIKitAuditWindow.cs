@@ -199,13 +199,15 @@ namespace KitforgeLabs.MobileUIKit.Editor.Audit
         {
             EditorUtility.DisplayProgressBar("Regenerate Samples", "Group A...", 0f);
             if (!CatalogGroupABuilder.BuildAllForAudit()) return false;
-            EditorUtility.DisplayProgressBar("Regenerate Samples", "Group B...", 0.2f);
+            EditorUtility.DisplayProgressBar("Regenerate Samples", "Group B...", 0.16f);
             if (!CatalogGroupBBuilder.BuildAllForAudit()) return false;
-            EditorUtility.DisplayProgressBar("Regenerate Samples", "Group C...", 0.4f);
+            EditorUtility.DisplayProgressBar("Regenerate Samples", "Group C...", 0.33f);
             if (!CatalogGroupCBuilder.BuildAllForAudit()) return false;
-            EditorUtility.DisplayProgressBar("Regenerate Samples", "Group D...", 0.6f);
+            EditorUtility.DisplayProgressBar("Regenerate Samples", "Group D...", 0.5f);
             if (!CatalogGroupDBuilder.BuildAllForAudit()) return false;
-            EditorUtility.DisplayProgressBar("Regenerate Samples", "Group E...", 0.8f);
+            EditorUtility.DisplayProgressBar("Regenerate Samples", "M4.1 Theme Presets...", 0.66f);
+            if (!CatalogM41ThemeBuilder.BuildAllForAudit()) return false;
+            EditorUtility.DisplayProgressBar("Regenerate Samples", "Group E...", 0.83f);
             if (!CatalogGroupEBuilder.BuildAllForAudit()) return false;
             return true;
         }
