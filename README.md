@@ -87,11 +87,11 @@ In Package Manager, select **Kitforge Mobile UI Kit → Samples** and import:
 
 ## Quickstart (5 steps)
 
-1. **Bootstrap the defaults**: top menu → **Tools → Kitforge → UI Kit → Bootstrap Defaults**. Generates 10 `UIAnimPreset` SOs at `Assets/Settings/UIAnimPresets/` and a pre-wired `UIThemeConfig_Default.asset` at `Assets/Settings/UI/`. The Theme is auto-selected and pinged when the dialog closes.
-2. **Import the `Quickstart` sample** from Package Manager. Files land under `Assets/Samples/Kitforge Mobile UI Kit/<version>/Quickstart/`.
-3. **Set up the scene**: open the `Quickstart` README and follow scene-setup — one `Canvas`, two empty `RectTransform` roots (`ScreenRoot`, `PopupRoot`), drop the `QuickstartBootstrap` prefab.
-4. **Wire the Theme**: drag `UIThemeConfig_Default` into `UIManager._themeConfig` and `PopupManager._themeConfig`. Create one screen prefab and one popup prefab (deriving from `UIModule<TData>` or `UIModuleBase`) and assign them to the bootstrap arrays.
-5. **Press Play**, then right-click `QuickstartBootstrap` in the Hierarchy → run `Push Quickstart Screen`, `Show Quickstart Popup`, `Pop Screen`. Watch the stack and popup queue react.
+1. **Bootstrap the defaults**: top menu → **Tools → Kitforge → UI Kit → Bootstrap Defaults**. Generates 10 `UIAnimPreset` SOs at `Assets/Settings/UIAnimPresets/`. The package itself ships `Theme_Default.asset` at `Packages/com.kitforgelabs.mobile-ui-kit/Runtime/Theme/Presets/Theme_Default.asset` — no buyer-side Theme generation required.
+2. **Drop `KitforgeRoot.prefab` into your scene**: drag `Packages/com.kitforgelabs.mobile-ui-kit/Runtime/Bootstrap/KitforgeRoot.prefab` into the Hierarchy. The prefab ships pre-wired with `UIManager` + `PopupManager` + `ToastManager` + `UIServices` + `Canvas` + 3 RectTransform roots + `EventSystem` + a global `PopupBackdrop`. The `KitforgeThemeBinder` component on the root distributes `Theme_Default` to all 3 managers in `Awake` via a single Inspector field — swap themes by changing `_theme`, never touch the manager fields.
+3. **Import the `Quickstart` sample** from Package Manager. Files land under `Assets/Samples/Kitforge Mobile UI Kit/<version>/Quickstart/`.
+4. **Register your prefabs**: select the `UIManager` / `PopupManager` GameObjects under `KitforgeRoot` and assign your screen / popup prefabs (deriving from `UIModule<TData>` or `UIModuleBase`) to the `_screenPrefabs` / `_popupPrefabs` arrays.
+5. **Press Play**, then right-click your bootstrap host in the Hierarchy → run `Push <YourScreen>`, `Show <YourPopup>`, `Pop`. Watch the stack and popup queue react.
 
 ---
 

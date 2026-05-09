@@ -25,7 +25,7 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
         private const string PausePath = PrefabsFolder + "/PausePopup.prefab";
         private const string TutorialPath = PrefabsFolder + "/TutorialPopup.prefab";
         private const string ToastPath = PrefabsFolder + "/NotificationToast.prefab";
-        private const string DefaultThemePath = "Assets/Settings/UI/UIThemeConfig_Default.asset";
+        private const string DefaultThemePath = "Packages/com.kitforgelabs.mobile-ui-kit/Runtime/Theme/Presets/Theme_Default.asset";
 
         private static readonly Color ToastBackgroundColor = new Color(0.18f, 0.20f, 0.24f, 0.95f);
 

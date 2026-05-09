@@ -25,7 +25,7 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
         private const string HUDTimerPath = PrefabsFolder + "/HUDTimer.prefab";
         private const string ScenePath = OutputRoot + "/Catalog_GroupC_Demo.unity";
         private const string GroupBRewardPath = "Assets/Catalog_GroupB_Demo/Prefabs/RewardPopup.prefab";
-        private const string DefaultThemePath = "Assets/Settings/UI/UIThemeConfig_Default.asset";
+        private const string DefaultThemePath = "Packages/com.kitforgelabs.mobile-ui-kit/Runtime/Theme/Presets/Theme_Default.asset";
         private const string GroupBStubAsmdef = "KitforgeLabs.MobileUIKit.Samples.CatalogGroupB";
         private const string GroupCStubAsmdef = "KitforgeLabs.MobileUIKit.Samples.CatalogGroupC";
         private const string ProgressionServiceTypeName = "KitforgeLabs.MobileUIKit.Samples.CatalogGroupC.InMemoryProgressionService, KitforgeLabs.MobileUIKit.Samples.CatalogGroupC";

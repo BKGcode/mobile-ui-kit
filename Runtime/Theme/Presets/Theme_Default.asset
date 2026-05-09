@@ -1,0 +1,72 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83aeee7ba0594b742a2f20cf17793bec, type: 3}
+  m_Name: Theme_Default
+  m_EditorClassIdentifier: KitforgeLabs.MobileUIKit::KitforgeLabs.MobileUIKit.Theme.UIThemeConfig
+  _primaryColor: {r: 0.2, g: 0.55, b: 0.95, a: 1}
+  _secondaryColor: {r: 0.35, g: 0.4, b: 0.5, a: 1}
+  _accentColor: {r: 1, g: 0.75, b: 0.2, a: 1}
+  _backgroundDark: {r: 0.1, g: 0.12, b: 0.16, a: 1}
+  _backgroundLight: {r: 0.96, g: 0.97, b: 0.98, a: 1}
+  _textPrimary: {r: 0.1, g: 0.1, b: 0.12, a: 1}
+  _textSecondary: {r: 0.45, g: 0.48, b: 0.55, a: 1}
+  _successColor: {r: 0.3, g: 0.78, b: 0.45, a: 1}
+  _warningColor: {r: 1, g: 0.6, b: 0.15, a: 1}
+  _dangerColor: {r: 0.92, g: 0.3, b: 0.3, a: 1}
+  _failureColor: {r: 0.898, g: 0.224, b: 0.208, a: 1}
+  _tertiaryColor: {r: 0.45, g: 0.55, b: 0.75, a: 1}
+  _mutedColor: {r: 0.42, g: 0.46, b: 0.55, a: 1}
+  _textOnPrimary: {r: 1, g: 1, b: 1, a: 1}
+  _textOnAccent: {r: 0.1, g: 0.1, b: 0.12, a: 1}
+  _loadingBarColor: {r: 0.2, g: 0.55, b: 0.95, a: 1}
+  _fontHeading: {fileID: 0}
+  _fontBody: {fileID: 0}
+  _fontCaption: {fileID: 0}
+  _sizeHeading: 36
+  _sizeBody: 24
+  _sizeCaption: 18
+  _spacingS: 8
+  _spacingM: 16
+  _spacingL: 32
+  _cornerRadius: 16
+  _minTouchTarget: 88
+  _panelBackground: {fileID: 0}
+  _buttonPrimary: {fileID: 0}
+  _buttonSecondary: {fileID: 0}
+  _backdrop: {fileID: 0}
+  _divider: {fileID: 0}
+  _iconClose: {fileID: 0}
+  _iconBack: {fileID: 0}
+  _iconCheck: {fileID: 0}
+  _iconInfo: {fileID: 0}
+  _iconWarning: {fileID: 0}
+  _iconError: {fileID: 0}
+  _iconCoin: {fileID: 0}
+  _iconGem: {fileID: 0}
+  _iconEnergy: {fileID: 0}
+  _iconClock: {fileID: 0}
+  _starFilledSprite: {fileID: 0}
+  _starEmptySprite: {fileID: 0}
+  _backgroundMainMenu: {fileID: 0}
+  _logoMainMenu: {fileID: 0}
+  _iconPlay: {fileID: 0}
+  _iconShop: {fileID: 0}
+  _iconSettings: {fileID: 0}
+  _iconDaily: {fileID: 0}
+  _iconLoading: {fileID: 0}
+  _audioButtonClick: {fileID: 0}
+  _audioPopupShow: {fileID: 0}
+  _audioPopupHide: {fileID: 0}
+  _audioSuccess: {fileID: 0}
+  _audioError: {fileID: 0}
+  _audioNotification: {fileID: 0}
+  _defaultAnimPreset: {fileID: 0}

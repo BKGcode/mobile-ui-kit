@@ -17,7 +17,7 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
         private const string PrefabsFolder = OutputRoot + "/Prefabs";
         private const string SettingsPath = PrefabsFolder + "/SettingsPopup.prefab";
         private const string ScenePath = OutputRoot + "/Catalog_GroupD_Demo.unity";
-        private const string DefaultThemePath = "Assets/Settings/UI/UIThemeConfig_Default.asset";
+        private const string DefaultThemePath = "Packages/com.kitforgelabs.mobile-ui-kit/Runtime/Theme/Presets/Theme_Default.asset";
         private const string GroupDStubAsmdef = "KitforgeLabs.MobileUIKit.Samples.CatalogGroupD";
         private const string LocalizationServiceTypeName = "KitforgeLabs.MobileUIKit.Samples.CatalogGroupD.InMemoryLocalizationService, KitforgeLabs.MobileUIKit.Samples.CatalogGroupD";
         private const string DemoMonoBehaviourTypeName = "KitforgeLabs.MobileUIKit.Samples.CatalogGroupD.CatalogGroupDDemo, KitforgeLabs.MobileUIKit.Samples.CatalogGroupD";

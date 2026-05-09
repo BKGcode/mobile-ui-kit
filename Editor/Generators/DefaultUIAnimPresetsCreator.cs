@@ -11,10 +11,9 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
         private const string FolderSettings = "Settings";
         private const string FolderPresetsName = "UIAnimPresets";
         private const string FolderPresets = "Assets/Settings/UIAnimPresets";
-        private const string FolderUIName = "UI";
-        private const string FolderUI = "Assets/Settings/UI";
-        private const string DefaultPresetName = "Playful";
-        private const string DefaultThemePath = "Assets/Settings/UI/UIThemeConfig_Default.asset";
+        private const string PackageThemeFolder = "Packages/com.kitforgelabs.mobile-ui-kit/Runtime/Theme";
+        private const string PackagePresetsFolder = PackageThemeFolder + "/Presets";
+        private const string DefaultThemePath = PackagePresetsFolder + "/Theme_Default.asset";
 
         [MenuItem("Tools/Kitforge/UI Kit/Bootstrap Defaults")]
         public static void CreateAll()
@@ -28,7 +27,7 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             EditorGUIUtility.PingObject(theme);
             EditorUtility.DisplayDialog(
                 "Kitforge UI Kit",
-                $"10 presets at {FolderPresets}.\n1 default Theme at {DefaultThemePath} (Playful preset wired).\n\nAssign this Theme to your UIManager / PopupManager / ToastManager.",
+                $"10 UIAnimPreset SOs created at {FolderPresets}.\nDefault Theme shipped with the package at {DefaultThemePath}.\n\nDrop KitforgeRoot.prefab in your scene — Theme is wired via KitforgeThemeBinder. To use one of the 10 presets, drag it onto Theme._defaultAnimPreset (or create your own Theme variant).",
                 "OK");
         }
 
@@ -37,7 +36,7 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             var settings = $"{FolderAssets}/{FolderSettings}";
             if (!AssetDatabase.IsValidFolder(settings)) AssetDatabase.CreateFolder(FolderAssets, FolderSettings);
             if (!AssetDatabase.IsValidFolder(FolderPresets)) AssetDatabase.CreateFolder(settings, FolderPresetsName);
-            if (!AssetDatabase.IsValidFolder(FolderUI)) AssetDatabase.CreateFolder(settings, FolderUIName);
+            if (!AssetDatabase.IsValidFolder(PackagePresetsFolder)) AssetDatabase.CreateFolder(PackageThemeFolder, "Presets");
         }
 
         private static void CreatePresets()
@@ -85,25 +84,10 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
         private static UIThemeConfig EnsureDefaultTheme()
         {
             var theme = AssetDatabase.LoadAssetAtPath<UIThemeConfig>(DefaultThemePath);
-            if (theme == null)
-            {
-                theme = ScriptableObject.CreateInstance<UIThemeConfig>();
-                AssetDatabase.CreateAsset(theme, DefaultThemePath);
-            }
-            WireDefaultPreset(theme);
+            if (theme != null) return theme;
+            theme = ScriptableObject.CreateInstance<UIThemeConfig>();
+            AssetDatabase.CreateAsset(theme, DefaultThemePath);
             return theme;
-        }
-
-        private static void WireDefaultPreset(UIThemeConfig theme)
-        {
-            var presetPath = $"{FolderPresets}/UIAnimPreset_{DefaultPresetName}.asset";
-            var preset = AssetDatabase.LoadAssetAtPath<UIAnimPreset>(presetPath);
-            if (preset == null) return;
-            var so = new SerializedObject(theme);
-            var prop = so.FindProperty("_defaultAnimPreset");
-            if (prop == null || prop.objectReferenceValue == preset) return;
-            prop.objectReferenceValue = preset;
-            so.ApplyModifiedPropertiesWithoutUndo();
         }
     }
 }

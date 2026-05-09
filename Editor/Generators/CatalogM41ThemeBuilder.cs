@@ -17,7 +17,7 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
         private const string CasualPath = ThemesFolder + "/Theme_Casual.asset";
         private const string PremiumPath = ThemesFolder + "/Theme_Premium.asset";
         private const string ScenePath = OutputRoot + "/ThemePresetsDemo.unity";
-        private const string DefaultThemePath = "Assets/Settings/UI/UIThemeConfig_Default.asset";
+        private const string DefaultThemePath = "Packages/com.kitforgelabs.mobile-ui-kit/Runtime/Theme/Presets/Theme_Default.asset";
         private const string GameOverPrefabPath = "Assets/Catalog_GroupC_Demo/Prefabs/GameOverPopup.prefab";
         private const string LevelCompletePrefabPath = "Assets/Catalog_GroupC_Demo/Prefabs/LevelCompletePopup.prefab";
         private const string GroupBStubAsmdef = "KitforgeLabs.MobileUIKit.Samples.CatalogGroupB";

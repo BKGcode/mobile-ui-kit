@@ -4,7 +4,7 @@ Validates the kit's "skin it once" claim by reskinning **GameOver** + **LevelCom
 
 ## Prerequisites
 
-- Bootstrap Defaults run (`Tools → Kitforge → UI Kit → Bootstrap Defaults` — generates `Assets/Settings/UI/UIThemeConfig_Default.asset`).
+- `Theme_Default` shipped in the package at `Packages/com.kitforgelabs.mobile-ui-kit/Runtime/Theme/Presets/Theme_Default.asset` (no Bootstrap Defaults required — it ships pre-wired).
 - Group B sample imported + built (`Build Group B Sample` — provides `InMemoryEconomyService` / `InMemoryAdsService` stubs).
 - Group C sample imported + built (`Build Group C Sample` — provides `GameOverPopup.prefab` + `LevelCompletePopup.prefab` + `InMemoryProgressionService` / `InMemoryTimeService`).
 

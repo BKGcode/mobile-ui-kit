@@ -20,7 +20,7 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
         private const string LoadingPath = PrefabsFolder + "/LoadingScreen.prefab";
         private const string MainMenuPath = PrefabsFolder + "/MainMenuScreen.prefab";
         private const string ScenePath = OutputRoot + "/GroupE_BootDemo.unity";
-        private const string DefaultThemePath = "Assets/Settings/UI/UIThemeConfig_Default.asset";
+        private const string DefaultThemePath = "Packages/com.kitforgelabs.mobile-ui-kit/Runtime/Theme/Presets/Theme_Default.asset";
         private const string CasualThemePath = "Assets/Catalog_M4_ThemePresets_Demo/Themes/Theme_Casual.asset";
         private const string PremiumThemePath = "Assets/Catalog_M4_ThemePresets_Demo/Themes/Theme_Premium.asset";
         private const string GroupCDailyLoginPath = "Assets/Catalog_GroupC_Demo/Prefabs/DailyLoginPopup.prefab";

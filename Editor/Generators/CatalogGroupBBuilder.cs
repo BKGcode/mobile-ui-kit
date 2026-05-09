@@ -24,7 +24,7 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
         private const string NotEnoughPath = PrefabsFolder + "/NotEnoughCurrencyPopup.prefab";
         private const string HUDCoinsPath = PrefabsFolder + "/HUDCoins.prefab";
         private const string HUDGemsPath = PrefabsFolder + "/HUDGems.prefab";
-        private const string DefaultThemePath = "Assets/Settings/UI/UIThemeConfig_Default.asset";
+        private const string DefaultThemePath = "Packages/com.kitforgelabs.mobile-ui-kit/Runtime/Theme/Presets/Theme_Default.asset";
 
         private static readonly Color CellColor = new Color(0.94f, 0.95f, 0.98f, 1f);
         private static readonly Color HeaderTintColor = new Color(1.00f, 0.60f, 0.15f, 1f);
