@@ -92,6 +92,28 @@ Apply same matrix to each builder in M4.7-bis. New mismatches (Secondary buttons
 
 ---
 
+## ThemedX symmetric backing-field rule + audit lock (M4.X — 2026-05-09)
+
+Stage 2 text-theming sweep across Groups B/C/D/E surfaced asymmetry: `AddThemedImage` wired `_image` SerializedProperty since M4.7-bis but `AddThemedText` did NOT wire `_text` — silent `ApplyTheme` no-op invisible to visual inspection (Group A pre-fix had 4 prefabs with broken `ThemedText` wiring; the underlying TMP_Text rendered with design-time color so the bug was masked). Locked by `Editor/Audit/Checks/ThemedFieldsWiredCheck.cs` — fails Error if any `ThemedImage._image` / `ThemedText._text` is null in any catalog prefab. Runs in `Run Everything` / `Regenerate + Audit`. Future regressions surface as `[UIKitAudit] FAIL`, not silent visual drift.
+
+**New helpers in `CatalogGroupBuilderShared.cs`:**
+
+- `TextThemeSlot` readonly struct + `ThemeBuilderSlots` static class (9 named tuples: `Heading`, `Body`, `BodyPrimary`, `Caption`, `PrimaryButtonLabel`, `SecondaryButtonLabel`, `BannerLabel`, `DarkBgHeading`, `DarkBgBody`). Replaces 36+ duplicated `(font, color, size)` triples in builders with named constants.
+- `CreateThemedText(parent, name, text, size, style, slot)` — combines `CreateText` + `AddThemedText` + design-time fallback color (sets `TextLightColor` for `TextOnPrimary` / `TextOnAccent` slots, `TextDarkColor` otherwise — matches what `ThemedText.ApplyTheme` will produce at runtime, eliminates editor-vs-runtime visual delta).
+- `AddThemedText` now wires `_text` SerializedProperty (was the missing piece).
+- `BuildAllForAudit()` exposed on each `CatalogGroup{A,B,C,D,E}Builder` — silent variant of `BuildAll()` returns `bool`, used by audit / CI tools to invoke builders without `EditorUtility.DisplayDialog` blocking. Validated end-to-end via `UIKitAuditWindow.RegenerateAndRunEverything()` one-click button.
+
+**Invariant for new Themed* components (e.g. future `ThemedSlider`, `ThemedToggle`):**
+
+1. Helper `AddThemedX` MUST wire ALL non-slot fields via `SerializedObject.FindProperty(...).objectReferenceValue = component` before applying slot enums.
+2. Add a check arm to `ThemedFieldsWiredCheck.cs` validating the new backing field. Pattern is parametric — see `ValidateBackingField(Component, fieldName, componentTypeName, report)` helper.
+
+Skip either step → silent-no-op bug class re-opens. Audit cannot enforce contracts it doesn't know about.
+
+**Audit tool:** `Tools → Kitforge → UI Kit → Audit` (`Editor/Audit/`) — replaces legacy `Editor/QA/` (QA Suite) + v1 `Editor/QA/Catalog/` (Catalog Audit prototype) deleted Path-A clean 2026-05-09. 7 pluggable `IUIKitCheck` impls via `TypeCache.GetTypesDerivedFrom`. `Regenerate + Audit` toolbar button = A→E rebuild + Run Everything in 1 click (replaces 5-click ritual). Reports under `Library/UIKitAudit/Reports/` (gitignored ephemeral) + opt-in mirror `Assets/Editor/QAReports/` (versioned for release evidence). Snapshots `Assets/Editor/QASnapshots/` (always versioned, vision-readable 1080×1920 PNG SHA256-hashed). Headless mode `[MenuItem("Tools/Kitforge/UI Kit/Audit (Run Headless)")]` returns exit `0`/`1`/`2` for CI integration.
+
+---
+
 ## Hierarchy stability — buyer-facing disclosure for catalog prefab variants
 
 Catalog elements expose `private struct Refs` with direct child references (TitleLabel, BackdropButton, ConfirmTint, etc.). Re-parenting or deleting a referenced child in a prefab variant **silently breaks** the references at runtime — Unity does not warn at edit time.
