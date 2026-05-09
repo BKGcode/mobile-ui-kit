@@ -36,33 +36,40 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
         private static readonly Color DotRed = new Color(0.92f, 0.30f, 0.30f, 1f);
 
         [MenuItem("Tools/Kitforge/UI Kit/Build Group E Sample")]
-        public static void BuildAll()
+        public static void BuildAll() => BuildAllInternal(true);
+
+        public static bool BuildAllForAudit() => BuildAllInternal(false);
+
+        private static bool BuildAllInternal(bool interactive)
         {
             EnsureFolders("Catalog_GroupE_Demo");
-            if (!CheckTheme()) return;
-            if (!CheckGroupCBuilt()) return;
+            if (!CheckTheme(interactive)) return false;
+            if (!CheckGroupCBuilt(interactive)) return false;
             BuildLoadingScreen();
             BuildMainMenuScreen();
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
             BuildDemoScene();
-            EditorUtility.DisplayDialog("Kitforge UI Kit",
+            if (interactive) EditorUtility.DisplayDialog("Kitforge UI Kit",
                 $"Group E built at {OutputRoot}.\n\n2 prefabs + 1 scene generated.\nOpen GroupE_BootDemo.unity → Play → right-click Demo → Boot Demo.",
                 "OK");
+            return true;
         }
 
-        private static bool CheckTheme()
+        private static bool CheckTheme(bool interactive)
         {
             if (AssetDatabase.LoadAssetAtPath<UIThemeConfig>(DefaultThemePath) != null) return true;
+            if (!interactive) { Debug.LogError($"[CatalogGroupEBuilder] Theme missing at {DefaultThemePath}. Run 'Tools/Kitforge/UI Kit/Bootstrap Defaults' first."); return false; }
             return EditorUtility.DisplayDialog(
                 "Bootstrap Defaults missing",
                 $"No Theme found at {DefaultThemePath}.\n\nRun 'Tools/Kitforge/UI Kit/Bootstrap Defaults' first, or proceed without a Theme reference.",
                 "Proceed", "Cancel");
         }
 
-        private static bool CheckGroupCBuilt()
+        private static bool CheckGroupCBuilt(bool interactive)
         {
             if (AssetDatabase.LoadAssetAtPath<GameObject>(GroupCDailyLoginPath) != null) return true;
+            if (!interactive) { Debug.LogError($"[CatalogGroupEBuilder] Group C not built. DailyLoginPopup missing at {GroupCDailyLoginPath}. Run Build Group C Sample first."); return false; }
             EditorUtility.DisplayDialog(
                 "Group C not built",
                 $"DailyLoginPopup.prefab not found at:\n{GroupCDailyLoginPath}\n\nImport 'Catalog — Group C — Progression' via Package Manager, then run Tools/Kitforge/UI Kit/Build Group C Sample first.",
@@ -89,8 +96,8 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             var content = CreateChild(parent, "Content");
             PositionCentered(content.GetComponent<RectTransform>(), 0f, 60f, 800f, 280f);
             ApplyVerticalLayout(content, 16f);
-            title = CreateLabel(content.transform, "TitleLabel", "Loading...", 40, FontStyles.Bold, 800f, 56f);
-            subtitle = CreateLabel(content.transform, "SubtitleLabel", "", 28, FontStyles.Normal, 800f, 40f);
+            title = CreateLabel(content.transform, "TitleLabel", "Loading...", 40, FontStyles.Bold, 800f, 56f, ThemeBuilderSlots.DarkBgHeading);
+            subtitle = CreateLabel(content.transform, "SubtitleLabel", "", 28, FontStyles.Normal, 800f, 40f, ThemeBuilderSlots.DarkBgBody);
             spinner = CreateSpinner(content.transform);
         }
 
@@ -147,7 +154,7 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             var root = CreateRoot("MainMenuScreen");
             AddThemedImage(root, BgMainMenu, ThemeSpriteSlot.None, ThemeColorSlot.BackgroundDark);
             var panel = CreatePanel(root.transform, "Panel", 800f, 1400f);
-            var title = CreateText(panel.transform, "TitleLabel", "", 48, FontStyles.Bold);
+            var title = CreateThemedText(panel.transform, "TitleLabel", "", 48, FontStyles.Bold, ThemeBuilderSlots.DarkBgHeading);
             AnchorTopStretch(title.GetComponent<RectTransform>(), -60f, 60f);
             title.alignment = TextAlignmentOptions.Center;
             var logo = CreateLogoSlot(panel.transform);
@@ -197,10 +204,9 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             var img = AddThemedImage(go, bg, ThemeSpriteSlot.None, bgSlot);
             var btn = go.AddComponent<Button>();
             btn.targetGraphic = img;
-            var text = CreateText(go.transform, "Label", label, 32, FontStyles.Bold);
+            var text = CreateThemedText(go.transform, "Label", label, 32, FontStyles.Bold, ThemeBuilderSlots.DarkBgBody);
             StretchInside(text.GetComponent<RectTransform>());
             text.alignment = TextAlignmentOptions.Center;
-            text.color = TextLightColor;
             return btn;
         }
 
@@ -288,7 +294,7 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             rt.sizeDelta = new Vector2(-32f, 160f);
             var bg = AddImage(go, new Color(0f, 0f, 0f, 0.55f));
             bg.raycastTarget = false;
-            var text = CreateText(go.transform, "InstructionsText", InstructionsText, 26, FontStyles.Normal);
+            var text = CreateThemedText(go.transform, "InstructionsText", InstructionsText, 26, FontStyles.Normal, ThemeBuilderSlots.DarkBgBody);
             StretchInside(text.GetComponent<RectTransform>());
             text.alignment = TextAlignmentOptions.Center;
             text.raycastTarget = false;
@@ -456,20 +462,9 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             return go.transform;
         }
 
-        private static TextMeshProUGUI CreateText(Transform parent, string name, string text, int size, FontStyles style)
+        private static TextMeshProUGUI CreateLabel(Transform parent, string name, string text, int size, FontStyles style, float width, float height, TextThemeSlot slot)
         {
-            var go = CreateChild(parent, name);
-            var tmp = go.AddComponent<TextMeshProUGUI>();
-            tmp.text = text;
-            tmp.fontSize = size;
-            tmp.fontStyle = style;
-            tmp.color = TextLightColor;
-            return tmp;
-        }
-
-        private static TextMeshProUGUI CreateLabel(Transform parent, string name, string text, int size, FontStyles style, float width, float height)
-        {
-            var label = CreateText(parent, name, text, size, style);
+            var label = CreateThemedText(parent, name, text, size, style, slot);
             var le = label.gameObject.AddComponent<LayoutElement>();
             le.preferredWidth = width;
             le.preferredHeight = height;

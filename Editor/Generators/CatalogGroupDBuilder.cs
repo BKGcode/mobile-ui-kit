@@ -30,24 +30,33 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
         private static readonly Color DropdownBgColor = new Color(0.93f, 0.94f, 0.96f, 1f);
 
         [MenuItem("Tools/Kitforge/UI Kit/Build Group D Sample")]
-        public static void BuildAll()
+        public static void BuildAll() => BuildAllInternal(true);
+
+        public static bool BuildAllForAudit() => BuildAllInternal(false);
+
+        private static bool BuildAllInternal(bool interactive)
         {
             EnsureFolders("Catalog_GroupD_Demo");
-            if (AssetDatabase.LoadAssetAtPath<UIThemeConfig>(DefaultThemePath) == null)
-            {
-                if (!EditorUtility.DisplayDialog(
-                    "Bootstrap Defaults missing",
-                    $"No Theme found at {DefaultThemePath}.\n\nRun 'Tools/Kitforge/UI Kit/Bootstrap Defaults' first, or proceed without a Theme reference.",
-                    "Proceed", "Cancel")) return;
-            }
+            if (!EnsureThemeAvailable(interactive)) return false;
             BuildSettingsPopup();
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
             BuildDemoScene();
-            EditorUtility.DisplayDialog(
+            if (interactive) EditorUtility.DisplayDialog(
                 "Kitforge UI Kit",
                 $"Group D built at {OutputRoot}.\n\n1 prefab + 1 scene generated. Open the scene, press Play, right-click the Demo GameObject and pick a Context Menu scenario. Try 'Settings — Show all', then 'PlayerData — Print all kfmui.settings.* values' to see the persisted state.",
                 "OK");
+            return true;
+        }
+
+        private static bool EnsureThemeAvailable(bool interactive)
+        {
+            if (AssetDatabase.LoadAssetAtPath<UIThemeConfig>(DefaultThemePath) != null) return true;
+            if (!interactive) { Debug.LogError($"[CatalogGroupDBuilder] Theme missing at {DefaultThemePath}. Run 'Tools/Kitforge/UI Kit/Bootstrap Defaults' first."); return false; }
+            return EditorUtility.DisplayDialog(
+                "Bootstrap Defaults missing",
+                $"No Theme found at {DefaultThemePath}.\n\nRun 'Tools/Kitforge/UI Kit/Bootstrap Defaults' first, or proceed without a Theme reference.",
+                "Proceed", "Cancel");
         }
 
         private static SettingsPopup BuildSettingsPopup()
@@ -56,7 +65,7 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             var backdrop = CreateBackdrop(root.transform);
             var card = CreateCard(root.transform, new Vector2(720f, 1100f));
 
-            var title = CreateText(card.transform, "Title", "Settings", 44, FontStyles.Bold);
+            var title = CreateThemedText(card.transform, "Title", "Settings", 44, FontStyles.Bold, ThemeBuilderSlots.Heading);
             AnchorTopOfCard(title.GetComponent<RectTransform>(), -30f, 72f);
             title.alignment = TextAlignmentOptions.Center;
 
@@ -87,8 +96,7 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             closeRT.pivot = new Vector2(0.5f, 0f);
             closeRT.anchoredPosition = new Vector2(0f, 50f);
             closeRT.sizeDelta = new Vector2(420f, 88f);
-            var closeLabel = CreateText(closeGO.transform, "Label", "Close", 30, FontStyles.Bold);
-            closeLabel.color = TextLightColor;
+            var closeLabel = CreateThemedText(closeGO.transform, "Label", "Close", 30, FontStyles.Bold, ThemeBuilderSlots.PrimaryButtonLabel);
             closeLabel.alignment = TextAlignmentOptions.Center;
             StretchInside(closeLabel.GetComponent<RectTransform>());
 
@@ -210,7 +218,7 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             dropdownLE.preferredHeight = 56f;
             var bgImg = AddThemedImage(dropdownGO, DropdownBgColor, ThemeSpriteSlot.None, ThemeColorSlot.MutedColor);
 
-            var label = CreateText(dropdownGO.transform, "Label", "English", 24, FontStyles.Normal);
+            var label = CreateThemedText(dropdownGO.transform, "Label", "English", 24, FontStyles.Normal, ThemeBuilderSlots.BodyPrimary);
             label.alignment = TextAlignmentOptions.Left;
             var labelRT = label.GetComponent<RectTransform>();
             labelRT.anchorMin = new Vector2(0f, 0f);
@@ -263,7 +271,7 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             var itemBg = CreateChild(item.transform, "Item Background");
             StretchInside(itemBg.GetComponent<RectTransform>());
             AddThemedImage(itemBg, DropdownBgColor, ThemeSpriteSlot.None, ThemeColorSlot.MutedColor);
-            itemLabel = CreateText(item.transform, "Item Label", "Option", 24, FontStyles.Normal);
+            itemLabel = CreateThemedText(item.transform, "Item Label", "Option", 24, FontStyles.Normal, ThemeBuilderSlots.BodyPrimary);
             itemLabel.alignment = TextAlignmentOptions.Left;
             var itemLabelRT = itemLabel.GetComponent<RectTransform>();
             itemLabelRT.anchorMin = new Vector2(0f, 0f);
@@ -287,7 +295,7 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             rowLayout.childForceExpandWidth = false;
             rowLayout.childControlHeight = true;
             rowLayout.childControlWidth = false;
-            var label = CreateText(row.transform, "Label", labelText, 28, FontStyles.Normal);
+            var label = CreateThemedText(row.transform, "Label", labelText, 28, FontStyles.Normal, ThemeBuilderSlots.BodyPrimary);
             var labelLE = label.gameObject.AddComponent<LayoutElement>();
             labelLE.preferredWidth = 220f;
             label.alignment = TextAlignmentOptions.Left;

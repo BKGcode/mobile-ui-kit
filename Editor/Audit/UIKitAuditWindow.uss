@@ -1,0 +1,286 @@
+.audit-root {
+    flex-grow: 1;
+    flex-direction: column;
+}
+
+.audit-toolbar {
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding: 6px;
+    background-color: rgb(40, 40, 40);
+    border-bottom-width: 1px;
+    border-bottom-color: rgb(20, 20, 20);
+    align-items: center;
+}
+
+.audit-toolbar > Button {
+    margin-right: 4px;
+    padding-left: 8px;
+    padding-right: 8px;
+}
+
+.audit-toolbar-spacer {
+    flex-grow: 1;
+}
+
+.audit-summary {
+    -unity-text-align: middle-right;
+    color: rgb(180, 180, 180);
+    margin-left: 8px;
+}
+
+.audit-tabs {
+    flex-direction: row;
+    background-color: rgb(35, 35, 35);
+    border-bottom-width: 1px;
+    border-bottom-color: rgb(20, 20, 20);
+}
+
+.audit-tab {
+    padding: 6px 14px;
+    color: rgb(180, 180, 180);
+    background-color: rgb(40, 40, 40);
+    border-right-width: 1px;
+    border-right-color: rgb(20, 20, 20);
+    cursor: link;
+}
+
+.audit-tab--active {
+    color: rgb(255, 255, 255);
+    background-color: rgb(60, 100, 160);
+    -unity-font-style: bold;
+}
+
+.audit-content {
+    flex-grow: 1;
+}
+
+.audit-pane-header {
+    -unity-font-style: bold;
+    padding: 4px 8px;
+    background-color: rgb(35, 35, 35);
+    color: rgb(220, 220, 220);
+}
+
+.audit-row {
+    flex-direction: row;
+    align-items: center;
+    padding: 2px 6px;
+}
+
+.audit-row > .status {
+    width: 56px;
+    -unity-text-align: middle-center;
+    -unity-font-style: bold;
+    border-radius: 3px;
+    margin-right: 6px;
+    padding: 2px 4px;
+}
+
+.audit-row > .kind {
+    width: 60px;
+    color: rgb(160, 160, 160);
+}
+
+.audit-row > .group {
+    width: 130px;
+    color: rgb(160, 160, 160);
+}
+
+.audit-row > .label {
+    flex-grow: 1;
+}
+
+.audit-row > .badge {
+    width: 80px;
+    -unity-text-align: middle-right;
+    color: rgb(200, 120, 120);
+}
+
+.status--pass {
+    background-color: rgb(60, 120, 60);
+    color: rgb(255, 255, 255);
+}
+
+.status--fail {
+    background-color: rgb(160, 60, 60);
+    color: rgb(255, 255, 255);
+}
+
+.status--unknown {
+    background-color: rgb(80, 80, 80);
+    color: rgb(200, 200, 200);
+}
+
+.detail-root {
+    padding: 8px;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.detail-title {
+    -unity-font-style: bold;
+    font-size: 14px;
+    margin-bottom: 4px;
+}
+
+.detail-meta {
+    color: rgb(160, 160, 160);
+    margin-bottom: 8px;
+    white-space: normal;
+}
+
+.detail-section {
+    -unity-font-style: bold;
+    margin-top: 8px;
+    margin-bottom: 4px;
+    color: rgb(220, 220, 220);
+}
+
+.detail-finding {
+    flex-direction: row;
+    padding: 2px 4px;
+    margin-bottom: 1px;
+}
+
+.detail-finding > .pill {
+    width: 64px;
+    -unity-text-align: middle-center;
+    -unity-font-style: bold;
+    border-radius: 3px;
+    margin-right: 6px;
+    padding: 1px 3px;
+}
+
+.detail-finding > .check {
+    width: 130px;
+    color: rgb(160, 160, 160);
+}
+
+.detail-finding > .body {
+    flex-grow: 1;
+    white-space: normal;
+}
+
+.pill--error {
+    background-color: rgb(160, 60, 60);
+    color: rgb(255, 255, 255);
+}
+
+.pill--warning {
+    background-color: rgb(160, 130, 50);
+    color: rgb(255, 255, 255);
+}
+
+.pill--info {
+    background-color: rgb(70, 100, 140);
+    color: rgb(255, 255, 255);
+}
+
+.snapshot-image {
+    height: 320px;
+    background-color: rgb(20, 20, 20);
+    -unity-background-scale-mode: scale-to-fit;
+    margin-top: 4px;
+    border-radius: 2px;
+}
+
+.snapshot-grid {
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding: 8px;
+}
+
+.snapshot-card {
+    width: 200px;
+    height: 280px;
+    margin: 4px;
+    background-color: rgb(30, 30, 30);
+    flex-direction: column;
+    border-radius: 3px;
+}
+
+.snapshot-card-image {
+    height: 240px;
+    -unity-background-scale-mode: scale-to-fit;
+    background-color: rgb(15, 15, 15);
+}
+
+.snapshot-card-label {
+    padding: 4px;
+    -unity-text-align: middle-center;
+    color: rgb(220, 220, 220);
+}
+
+.snapshot-meta {
+    color: rgb(160, 160, 160);
+    margin-top: 2px;
+}
+
+.overview-grid {
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding: 12px;
+}
+
+.overview-card {
+    width: 200px;
+    padding: 12px;
+    margin: 6px;
+    background-color: rgb(40, 40, 40);
+    border-radius: 4px;
+    flex-direction: column;
+}
+
+.overview-card-label {
+    color: rgb(160, 160, 160);
+    margin-bottom: 4px;
+}
+
+.overview-card-value {
+    -unity-font-style: bold;
+    font-size: 22px;
+    color: rgb(255, 255, 255);
+}
+
+.overview-card-value--pass {
+    color: rgb(120, 200, 120);
+}
+
+.overview-card-value--fail {
+    color: rgb(220, 120, 120);
+}
+
+.reports-row {
+    flex-direction: row;
+    padding: 4px 8px;
+    align-items: center;
+}
+
+.reports-row > Label {
+    flex-grow: 1;
+    color: rgb(220, 220, 220);
+}
+
+.reports-row > Button {
+    margin-left: 4px;
+}
+
+.settings-row {
+    flex-direction: row;
+    padding: 6px 12px;
+    align-items: center;
+}
+
+.settings-row > Label {
+    width: 220px;
+    color: rgb(220, 220, 220);
+}
+
+.settings-section {
+    -unity-font-style: bold;
+    padding: 8px 12px;
+    color: rgb(255, 255, 255);
+    background-color: rgb(35, 35, 35);
+    margin-top: 4px;
+}

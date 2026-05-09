@@ -88,6 +88,7 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
         {
             var themed = go.AddComponent<ThemedText>();
             var so = new SerializedObject(themed);
+            so.FindProperty("_text").objectReferenceValue = go.GetComponent<TMP_Text>();
             so.FindProperty("_fontSlot").enumValueIndex = (int)fontSlot;
             so.FindProperty("_colorSlot").enumValueIndex = (int)colorSlot;
             so.FindProperty("_sizeSlot").enumValueIndex = (int)sizeSlot;
@@ -102,6 +103,14 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             tmp.fontSize = size;
             tmp.fontStyle = style;
             tmp.color = TextDarkColor;
+            return tmp;
+        }
+
+        internal static TextMeshProUGUI CreateThemedText(Transform parent, string name, string text, int size, FontStyles style, TextThemeSlot slot)
+        {
+            var tmp = CreateText(parent, name, text, size, style);
+            if (slot.Color == ThemeColorSlot.TextOnPrimary || slot.Color == ThemeColorSlot.TextOnAccent) tmp.color = TextLightColor;
+            AddThemedText(tmp.gameObject, slot.Font, slot.Color, slot.Size);
             return tmp;
         }
 
@@ -167,5 +176,32 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             Object.DestroyImmediate(root);
             return prefab.GetComponent<T>();
         }
+    }
+
+    internal readonly struct TextThemeSlot
+    {
+        public readonly ThemeFontSlot Font;
+        public readonly ThemeColorSlot Color;
+        public readonly ThemeFontSizeSlot Size;
+
+        public TextThemeSlot(ThemeFontSlot font, ThemeColorSlot color, ThemeFontSizeSlot size)
+        {
+            Font = font;
+            Color = color;
+            Size = size;
+        }
+    }
+
+    internal static class ThemeBuilderSlots
+    {
+        public static readonly TextThemeSlot Heading = new(ThemeFontSlot.FontHeading, ThemeColorSlot.TextPrimary, ThemeFontSizeSlot.None);
+        public static readonly TextThemeSlot Body = new(ThemeFontSlot.FontBody, ThemeColorSlot.TextSecondary, ThemeFontSizeSlot.None);
+        public static readonly TextThemeSlot BodyPrimary = new(ThemeFontSlot.FontBody, ThemeColorSlot.TextPrimary, ThemeFontSizeSlot.None);
+        public static readonly TextThemeSlot Caption = new(ThemeFontSlot.FontCaption, ThemeColorSlot.TextSecondary, ThemeFontSizeSlot.None);
+        public static readonly TextThemeSlot PrimaryButtonLabel = new(ThemeFontSlot.FontBody, ThemeColorSlot.TextOnPrimary, ThemeFontSizeSlot.None);
+        public static readonly TextThemeSlot SecondaryButtonLabel = new(ThemeFontSlot.FontBody, ThemeColorSlot.TextPrimary, ThemeFontSizeSlot.None);
+        public static readonly TextThemeSlot BannerLabel = new(ThemeFontSlot.FontBody, ThemeColorSlot.TextOnAccent, ThemeFontSizeSlot.None);
+        public static readonly TextThemeSlot DarkBgHeading = new(ThemeFontSlot.FontHeading, ThemeColorSlot.TextOnPrimary, ThemeFontSizeSlot.None);
+        public static readonly TextThemeSlot DarkBgBody = new(ThemeFontSlot.FontBody, ThemeColorSlot.TextOnPrimary, ThemeFontSizeSlot.None);
     }
 }

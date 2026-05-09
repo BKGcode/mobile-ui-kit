@@ -32,16 +32,14 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
         private static readonly Color HUDBackgroundColor = new Color(0f, 0f, 0f, 0.45f);
 
         [MenuItem("Tools/Kitforge/UI Kit/Build Group B Sample")]
-        public static void BuildAll()
+        public static void BuildAll() => BuildAllInternal(true);
+
+        public static bool BuildAllForAudit() => BuildAllInternal(false);
+
+        private static bool BuildAllInternal(bool interactive)
         {
             EnsureFolders("Catalog_GroupB_Demo");
-            if (AssetDatabase.LoadAssetAtPath<UIThemeConfig>(DefaultThemePath) == null)
-            {
-                if (!EditorUtility.DisplayDialog(
-                    "Bootstrap Defaults missing",
-                    $"No Theme found at {DefaultThemePath}.\n\nRun 'Tools/Kitforge/UI Kit/Bootstrap Defaults' first, or proceed without a Theme reference (icons will be missing at runtime).",
-                    "Proceed", "Cancel")) return;
-            }
+            if (!EnsureThemeAvailable(interactive)) return false;
             BuildRewardPopup();
             BuildShopPopup();
             BuildNotEnoughCurrencyPopup();
@@ -50,10 +48,21 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
             BuildDemoScene();
-            EditorUtility.DisplayDialog(
+            if (interactive) EditorUtility.DisplayDialog(
                 "Kitforge UI Kit",
                 $"Group B built at {OutputRoot}.\n\n5 prefabs + 1 scene generated. Open the scene, press Play, right-click the Demo GameObject and pick a Context Menu scenario (try 'Chain — Shop → NotEnough → Ad → Reward' to see the full monetization loop).",
                 "OK");
+            return true;
+        }
+
+        private static bool EnsureThemeAvailable(bool interactive)
+        {
+            if (AssetDatabase.LoadAssetAtPath<UIThemeConfig>(DefaultThemePath) != null) return true;
+            if (!interactive) { Debug.LogError($"[CatalogGroupBBuilder] Theme missing at {DefaultThemePath}. Run 'Tools/Kitforge/UI Kit/Bootstrap Defaults' first."); return false; }
+            return EditorUtility.DisplayDialog(
+                "Bootstrap Defaults missing",
+                $"No Theme found at {DefaultThemePath}.\n\nRun 'Tools/Kitforge/UI Kit/Bootstrap Defaults' first, or proceed without a Theme reference (icons will be missing at runtime).",
+                "Proceed", "Cancel");
         }
 
         private static RewardPopup BuildRewardPopup()
@@ -63,7 +72,7 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             var backdrop = CreateBackdrop(root.transform);
             var card = CreateCard(root.transform, new Vector2(720f, 720f));
 
-            var title = CreateText(card.transform, "Title", "Reward!", 40, FontStyles.Bold);
+            var title = CreateThemedText(card.transform, "Title", "Reward!", 40, FontStyles.Bold, ThemeBuilderSlots.Heading);
             AnchorTopOfCard(title.GetComponent<RectTransform>(), -30f, 64f);
             title.alignment = TextAlignmentOptions.Center;
 
@@ -77,7 +86,7 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             var icon = AddImage(iconGO, Color.white);
             if (theme != null) icon.sprite = theme.IconCoin;
 
-            var amount = CreateText(card.transform, "AmountLabel", "+100", 56, FontStyles.Bold);
+            var amount = CreateThemedText(card.transform, "AmountLabel", "+100", 56, FontStyles.Bold, ThemeBuilderSlots.Heading);
             var amountRT = amount.GetComponent<RectTransform>();
             amountRT.anchorMin = new Vector2(0.5f, 0.5f);
             amountRT.anchorMax = new Vector2(0.5f, 0.5f);
@@ -86,7 +95,7 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             amountRT.sizeDelta = new Vector2(600f, 80f);
             amount.alignment = TextAlignmentOptions.Center;
 
-            var item = CreateText(card.transform, "ItemLabel", "", 32, FontStyles.Italic);
+            var item = CreateThemedText(card.transform, "ItemLabel", "", 32, FontStyles.Italic, ThemeBuilderSlots.Body);
             var itemRT = item.GetComponent<RectTransform>();
             itemRT.anchorMin = new Vector2(0.5f, 0.5f);
             itemRT.anchorMax = new Vector2(0.5f, 0.5f);
@@ -104,8 +113,7 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             claimRT.anchoredPosition = new Vector2(0f, 40f);
             claimRT.sizeDelta = new Vector2(360f, 96f);
             claimImg.color = SuccessTintColor;
-            var claimLabel = CreateText(claimGO.transform, "Label", "Claim", 30, FontStyles.Bold);
-            claimLabel.color = TextLightColor;
+            var claimLabel = CreateThemedText(claimGO.transform, "Label", "Claim", 30, FontStyles.Bold, ThemeBuilderSlots.PrimaryButtonLabel);
             claimLabel.alignment = TextAlignmentOptions.Center;
             StretchInside(claimLabel.GetComponent<RectTransform>());
 
@@ -134,7 +142,7 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             var backdrop = CreateBackdrop(root.transform);
             var card = CreateCard(root.transform, new Vector2(900f, 1500f));
 
-            var title = CreateText(card.transform, "Title", "Shop", 44, FontStyles.Bold);
+            var title = CreateThemedText(card.transform, "Title", "Shop", 44, FontStyles.Bold, ThemeBuilderSlots.Heading);
             AnchorTopOfCard(title.GetComponent<RectTransform>(), -30f, 72f);
             title.alignment = TextAlignmentOptions.Center;
 
@@ -164,10 +172,9 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             var emptyGO = CreateChild(card.transform, "EmptyPlaceholder");
             var emptyRT = emptyGO.GetComponent<RectTransform>();
             StretchInside(emptyRT);
-            var emptyText = CreateText(emptyGO.transform, "Label", "Shop is empty.", 28, FontStyles.Italic);
+            var emptyText = CreateThemedText(emptyGO.transform, "Label", "Shop is empty.", 28, FontStyles.Italic, ThemeBuilderSlots.Body);
             StretchInside(emptyText.GetComponent<RectTransform>());
             emptyText.alignment = TextAlignmentOptions.Center;
-            emptyText.color = new Color(0.5f, 0.5f, 0.55f, 1f);
             emptyGO.SetActive(false);
 
             var animator = root.AddComponent<UIAnimShopPopup>();
@@ -193,7 +200,7 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             cellRT.sizeDelta = new Vector2(200f, 260f);
             AddImage(cellGO, CellColor);
 
-            var nameText = CreateText(cellGO.transform, "DisplayName", "Item", 22, FontStyles.Bold);
+            var nameText = CreateThemedText(cellGO.transform, "DisplayName", "Item", 22, FontStyles.Bold, ThemeBuilderSlots.BodyPrimary);
             var nameRT = nameText.GetComponent<RectTransform>();
             nameRT.anchorMin = new Vector2(0f, 1f);
             nameRT.anchorMax = new Vector2(1f, 1f);
@@ -201,7 +208,6 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             nameRT.anchoredPosition = new Vector2(0f, -10f);
             nameRT.sizeDelta = new Vector2(-12f, 50f);
             nameText.alignment = TextAlignmentOptions.Center;
-            nameText.color = TextDarkColor;
 
             var iconGO = CreateChild(cellGO.transform, "ItemIcon");
             var iconRT = iconGO.GetComponent<RectTransform>();
@@ -234,8 +240,7 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             var currencyLE = currencyIconGO.AddComponent<LayoutElement>();
             currencyLE.preferredWidth = 28f;
 
-            var priceText = CreateText(priceRow.transform, "Price", "100", 24, FontStyles.Bold);
-            priceText.color = TextDarkColor;
+            var priceText = CreateThemedText(priceRow.transform, "Price", "100", 24, FontStyles.Bold, ThemeBuilderSlots.BodyPrimary);
             priceText.alignment = TextAlignmentOptions.Left;
             var priceLE = priceText.gameObject.AddComponent<LayoutElement>();
             priceLE.preferredWidth = 80f;
@@ -247,8 +252,7 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             buyRT.pivot = new Vector2(0.5f, 0f);
             buyRT.anchoredPosition = new Vector2(0f, 16f);
             buyRT.sizeDelta = new Vector2(160f, 48f);
-            var buyLabel = CreateText(buyGO.transform, "Label", "Buy", 22, FontStyles.Bold);
-            buyLabel.color = TextLightColor;
+            var buyLabel = CreateThemedText(buyGO.transform, "Label", "Buy", 22, FontStyles.Bold, ThemeBuilderSlots.PrimaryButtonLabel);
             buyLabel.alignment = TextAlignmentOptions.Center;
             StretchInside(buyLabel.GetComponent<RectTransform>());
 
@@ -281,7 +285,7 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             headerRT.sizeDelta = new Vector2(0f, 12f);
             var headerTint = AddThemedImage(headerGO, HeaderTintColor, ThemeSpriteSlot.None, ThemeColorSlot.WarningColor);
 
-            var title = CreateText(card.transform, "Title", "Not enough!", 40, FontStyles.Bold);
+            var title = CreateThemedText(card.transform, "Title", "Not enough!", 40, FontStyles.Bold, ThemeBuilderSlots.Heading);
             AnchorTopOfCard(title.GetComponent<RectTransform>(), -40f, 64f);
             title.alignment = TextAlignmentOptions.Center;
 
@@ -295,7 +299,7 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             var icon = AddImage(iconGO, Color.white);
             if (theme != null) icon.sprite = theme.IconCoin;
 
-            var message = CreateText(card.transform, "Message", "You need 50 more Coins.", 26, FontStyles.Normal);
+            var message = CreateThemedText(card.transform, "Message", "You need 50 more Coins.", 26, FontStyles.Normal, ThemeBuilderSlots.Body);
             var messageRT = message.GetComponent<RectTransform>();
             messageRT.anchorMin = new Vector2(0f, 1f);
             messageRT.anchorMax = new Vector2(1f, 1f);
@@ -319,22 +323,19 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             btnLayout.childControlHeight = true;
 
             var (watchGO, watchButton, _) = CreatePrimaryButton(buttons.transform, "WatchAdButton");
-            var watchLabel = CreateText(watchGO.transform, "Label", "Watch ad", 26, FontStyles.Bold);
-            watchLabel.color = TextLightColor;
+            var watchLabel = CreateThemedText(watchGO.transform, "Label", "Watch ad", 26, FontStyles.Bold, ThemeBuilderSlots.PrimaryButtonLabel);
             watchLabel.alignment = TextAlignmentOptions.Center;
             StretchInside(watchLabel.GetComponent<RectTransform>());
             ForceButtonHeight(watchGO, 72f);
 
             var (buyMoreGO, buyMoreButton, _) = CreateSecondaryButton(buttons.transform, "BuyMoreButton");
-            var buyMoreLabel = CreateText(buyMoreGO.transform, "Label", "Buy more", 26, FontStyles.Bold);
-            buyMoreLabel.color = TextDarkColor;
+            var buyMoreLabel = CreateThemedText(buyMoreGO.transform, "Label", "Buy more", 26, FontStyles.Bold, ThemeBuilderSlots.SecondaryButtonLabel);
             buyMoreLabel.alignment = TextAlignmentOptions.Center;
             StretchInside(buyMoreLabel.GetComponent<RectTransform>());
             ForceButtonHeight(buyMoreGO, 72f);
 
             var (declineGO, declineButton, _) = CreateSecondaryButton(buttons.transform, "DeclineButton");
-            var declineLabel = CreateText(declineGO.transform, "Label", "No thanks", 24, FontStyles.Normal);
-            declineLabel.color = TextDarkColor;
+            var declineLabel = CreateThemedText(declineGO.transform, "Label", "No thanks", 24, FontStyles.Normal, ThemeBuilderSlots.SecondaryButtonLabel);
             declineLabel.alignment = TextAlignmentOptions.Center;
             StretchInside(declineLabel.GetComponent<RectTransform>());
             ForceButtonHeight(declineGO, 56f);
@@ -409,8 +410,7 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             var icon = AddImage(iconGO, Color.white);
             if (iconSprite != null) icon.sprite = iconSprite;
 
-            var label = CreateText(root.transform, "CountLabel", defaultText, 32, FontStyles.Bold);
-            label.color = TextLightColor;
+            var label = CreateThemedText(root.transform, "CountLabel", defaultText, 32, FontStyles.Bold, ThemeBuilderSlots.DarkBgBody);
             var labelRT = label.GetComponent<RectTransform>();
             labelRT.anchorMin = new Vector2(0f, 0f);
             labelRT.anchorMax = new Vector2(1f, 1f);

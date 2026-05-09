@@ -30,16 +30,14 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
         private static readonly Color ToastBackgroundColor = new Color(0.18f, 0.20f, 0.24f, 0.95f);
 
         [MenuItem("Tools/Kitforge/UI Kit/Build Group A Sample")]
-        public static void BuildAll()
+        public static void BuildAll() => BuildAllInternal(true);
+
+        public static bool BuildAllForAudit() => BuildAllInternal(false);
+
+        private static bool BuildAllInternal(bool interactive)
         {
             EnsureFolders("Catalog_GroupA_Demo");
-            if (AssetDatabase.LoadAssetAtPath<UIThemeConfig>(DefaultThemePath) == null)
-            {
-                if (!EditorUtility.DisplayDialog(
-                    "Bootstrap Defaults missing",
-                    $"No Theme found at {DefaultThemePath}.\n\nRun 'Tools/Kitforge/UI Kit/Bootstrap Defaults' first, or proceed without a Theme reference (the demo will warn at runtime).",
-                    "Proceed", "Cancel")) return;
-            }
+            if (!EnsureThemeAvailable(interactive)) return false;
             BuildConfirmPopup();
             BuildPausePopup();
             BuildTutorialPopup();
@@ -47,10 +45,21 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
             BuildDemoScene();
-            EditorUtility.DisplayDialog(
+            if (interactive) EditorUtility.DisplayDialog(
                 "Kitforge UI Kit",
                 $"Group A built at {OutputRoot}.\n\n4 prefabs + 1 scene generated. Open the scene, press Play, right-click the Demo GameObject and pick a Context Menu scenario.",
                 "OK");
+            return true;
+        }
+
+        private static bool EnsureThemeAvailable(bool interactive)
+        {
+            if (AssetDatabase.LoadAssetAtPath<UIThemeConfig>(DefaultThemePath) != null) return true;
+            if (!interactive) { Debug.LogError($"[CatalogGroupABuilder] Theme missing at {DefaultThemePath}. Run 'Tools/Kitforge/UI Kit/Bootstrap Defaults' first."); return false; }
+            return EditorUtility.DisplayDialog(
+                "Bootstrap Defaults missing",
+                $"No Theme found at {DefaultThemePath}.\n\nRun 'Tools/Kitforge/UI Kit/Bootstrap Defaults' first, or proceed without a Theme reference (the demo will warn at runtime).",
+                "Proceed", "Cancel");
         }
 
         private static ConfirmPopup BuildConfirmPopup()

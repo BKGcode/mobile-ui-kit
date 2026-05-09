@@ -57,6 +57,12 @@ namespace KitforgeLabs.MobileUIKit.Theme
                 case ThemeColorSlot.SuccessColor:    color = theme.SuccessColor; return true;
                 case ThemeColorSlot.WarningColor:    color = theme.WarningColor; return true;
                 case ThemeColorSlot.DangerColor:     color = theme.DangerColor; return true;
+                case ThemeColorSlot.FailureColor:    color = theme.FailureColor; return true;
+                case ThemeColorSlot.LoadingBarColor: color = theme.LoadingBarColor; return true;
+                case ThemeColorSlot.TertiaryColor:   color = theme.TertiaryColor; return true;
+                case ThemeColorSlot.MutedColor:      color = theme.MutedColor; return true;
+                case ThemeColorSlot.TextOnPrimary:   color = theme.TextOnPrimary; return true;
+                case ThemeColorSlot.TextOnAccent:    color = theme.TextOnAccent; return true;
                 default:                             color = default; return false;
             }
         }

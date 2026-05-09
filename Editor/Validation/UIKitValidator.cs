@@ -11,13 +11,6 @@ namespace KitforgeLabs.MobileUIKit.Editor.Validation
 {
     public static class UIKitValidator
     {
-        [MenuItem("Kitforge/UI Kit/Validate Active Scene")]
-        public static void ValidateActiveSceneMenu()
-        {
-            var report = ValidateActiveScene();
-            Debug.Log(report.Format());
-        }
-
         public static ValidationReport ValidateActiveScene()
         {
             var report = new ValidationReport();

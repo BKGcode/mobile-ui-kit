@@ -39,16 +39,14 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
         private static readonly Color HUDCapLabelColor = new Color(0.85f, 0.85f, 0.90f, 1f);
 
         [MenuItem("Tools/Kitforge/UI Kit/Build Group C Sample")]
-        public static void BuildAll()
+        public static void BuildAll() => BuildAllInternal(true);
+
+        public static bool BuildAllForAudit() => BuildAllInternal(false);
+
+        private static bool BuildAllInternal(bool interactive)
         {
             EnsureFolders("Catalog_GroupC_Demo");
-            if (AssetDatabase.LoadAssetAtPath<UIThemeConfig>(DefaultThemePath) == null)
-            {
-                if (!EditorUtility.DisplayDialog(
-                    "Bootstrap Defaults missing",
-                    $"No Theme found at {DefaultThemePath}.\n\nRun 'Tools/Kitforge/UI Kit/Bootstrap Defaults' first, or proceed without a Theme reference (icons will be missing at runtime).",
-                    "Proceed", "Cancel")) return;
-            }
+            if (!EnsureThemeAvailable(interactive)) return false;
             BuildDailyLoginPopup();
             BuildLevelCompletePopup();
             BuildGameOverPopup();
@@ -57,10 +55,21 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
             BuildDemoScene();
-            EditorUtility.DisplayDialog(
+            if (interactive) EditorUtility.DisplayDialog(
                 "Kitforge UI Kit",
                 $"Group C built at {OutputRoot}.\n\n5 prefabs + 1 scene generated. Open the scene, press Play, right-click the Demo GameObject and pick a Context Menu scenario (try 'Chain — LevelComplete → Reward sequence (3 rewards)' to see the post-level chain).",
                 "OK");
+            return true;
+        }
+
+        private static bool EnsureThemeAvailable(bool interactive)
+        {
+            if (AssetDatabase.LoadAssetAtPath<UIThemeConfig>(DefaultThemePath) != null) return true;
+            if (!interactive) { Debug.LogError($"[CatalogGroupCBuilder] Theme missing at {DefaultThemePath}. Run 'Tools/Kitforge/UI Kit/Bootstrap Defaults' first."); return false; }
+            return EditorUtility.DisplayDialog(
+                "Bootstrap Defaults missing",
+                $"No Theme found at {DefaultThemePath}.\n\nRun 'Tools/Kitforge/UI Kit/Bootstrap Defaults' first, or proceed without a Theme reference (icons will be missing at runtime).",
+                "Proceed", "Cancel");
         }
 
         private static DailyLoginPopup BuildDailyLoginPopup()
@@ -69,7 +78,7 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             var backdrop = CreateBackdrop(root.transform);
             var card = CreateCard(root.transform, new Vector2(900f, 1200f));
 
-            var title = CreateText(card.transform, "Title", "Daily Reward", 44, FontStyles.Bold);
+            var title = CreateThemedText(card.transform, "Title", "Daily Reward", 44, FontStyles.Bold, ThemeBuilderSlots.Heading);
             AnchorTopOfCard(title.GetComponent<RectTransform>(), -30f, 72f);
             title.alignment = TextAlignmentOptions.Center;
 
@@ -107,8 +116,7 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             claimRT.sizeDelta = new Vector2(440f, 96f);
             claimImg.color = SuccessTintColor;
             OverrideThemedImageSlot(claimGO, ThemeColorSlot.SuccessColor);
-            var claimLabel = CreateText(claimGO.transform, "Label", "Claim", 30, FontStyles.Bold);
-            claimLabel.color = TextLightColor;
+            var claimLabel = CreateThemedText(claimGO.transform, "Label", "Claim", 30, FontStyles.Bold, ThemeBuilderSlots.PrimaryButtonLabel);
             claimLabel.alignment = TextAlignmentOptions.Center;
             StretchInside(claimLabel.GetComponent<RectTransform>());
 
@@ -119,8 +127,7 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             watchRT.pivot = new Vector2(0.5f, 0f);
             watchRT.anchoredPosition = new Vector2(0f, 30f);
             watchRT.sizeDelta = new Vector2(380f, 72f);
-            var watchLabel = CreateText(watchGO.transform, "Label", "Watch ad to double", 24, FontStyles.Bold);
-            watchLabel.color = TextDarkColor;
+            var watchLabel = CreateThemedText(watchGO.transform, "Label", "Watch ad to double", 24, FontStyles.Bold, ThemeBuilderSlots.SecondaryButtonLabel);
             watchLabel.alignment = TextAlignmentOptions.Center;
             StretchInside(watchLabel.GetComponent<RectTransform>());
             watchGO.SetActive(false);
@@ -150,11 +157,11 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             var backdrop = CreateBackdrop(root.transform);
             var card = CreateCard(root.transform, new Vector2(900f, 1300f));
 
-            var title = CreateText(card.transform, "Title", "Level Complete!", 48, FontStyles.Bold);
+            var title = CreateThemedText(card.transform, "Title", "Level Complete!", 48, FontStyles.Bold, ThemeBuilderSlots.Heading);
             AnchorTopOfCard(title.GetComponent<RectTransform>(), -30f, 80f);
             title.alignment = TextAlignmentOptions.Center;
 
-            var levelLabel = CreateText(card.transform, "LevelLabel", "", 28, FontStyles.Italic);
+            var levelLabel = CreateThemedText(card.transform, "LevelLabel", "", 28, FontStyles.Italic, ThemeBuilderSlots.Body);
             AnchorTopOfCard(levelLabel.GetComponent<RectTransform>(), -120f, 48f);
             levelLabel.alignment = TextAlignmentOptions.Center;
             levelLabel.gameObject.SetActive(false);
@@ -184,7 +191,7 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
                 starImages[i] = starImg;
             }
 
-            var score = CreateText(card.transform, "ScoreLabel", "0", 64, FontStyles.Bold);
+            var score = CreateThemedText(card.transform, "ScoreLabel", "0", 64, FontStyles.Bold, ThemeBuilderSlots.Heading);
             var scoreRT = score.GetComponent<RectTransform>();
             scoreRT.anchorMin = new Vector2(0.5f, 1f);
             scoreRT.anchorMax = new Vector2(0.5f, 1f);
@@ -193,7 +200,7 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             scoreRT.sizeDelta = new Vector2(700f, 90f);
             score.alignment = TextAlignmentOptions.Center;
 
-            var bestScore = CreateText(card.transform, "BestScoreLabel", "Best: 0", 26, FontStyles.Italic);
+            var bestScore = CreateThemedText(card.transform, "BestScoreLabel", "Best: 0", 26, FontStyles.Italic, ThemeBuilderSlots.Caption);
             var bestRT = bestScore.GetComponent<RectTransform>();
             bestRT.anchorMin = new Vector2(0.5f, 1f);
             bestRT.anchorMax = new Vector2(0.5f, 1f);
@@ -201,7 +208,6 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             bestRT.anchoredPosition = new Vector2(0f, -540f);
             bestRT.sizeDelta = new Vector2(500f, 40f);
             bestScore.alignment = TextAlignmentOptions.Center;
-            bestScore.color = new Color(0.40f, 0.42f, 0.48f, 1f);
 
             var banner = CreateChild(card.transform, "NewBestBanner");
             var bannerRT = banner.GetComponent<RectTransform>();
@@ -211,8 +217,7 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             bannerRT.anchoredPosition = new Vector2(0f, -610f);
             bannerRT.sizeDelta = new Vector2(-100f, 64f);
             AddThemedImage(banner, SuccessTintColor, ThemeSpriteSlot.None, ThemeColorSlot.SuccessColor);
-            var bannerLabel = CreateText(banner.transform, "Label", "NEW BEST!", 30, FontStyles.Bold);
-            bannerLabel.color = TextLightColor;
+            var bannerLabel = CreateThemedText(banner.transform, "Label", "NEW BEST!", 30, FontStyles.Bold, ThemeBuilderSlots.BannerLabel);
             bannerLabel.alignment = TextAlignmentOptions.Center;
             StretchInside(bannerLabel.GetComponent<RectTransform>());
             banner.SetActive(false);
@@ -232,22 +237,19 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             btnLayout.childControlHeight = true;
 
             var (nextGO, nextButton, _) = CreatePrimaryButton(buttons.transform, "NextButton");
-            var nextLabel = CreateText(nextGO.transform, "Label", "Next", 30, FontStyles.Bold);
-            nextLabel.color = TextLightColor;
+            var nextLabel = CreateThemedText(nextGO.transform, "Label", "Next", 30, FontStyles.Bold, ThemeBuilderSlots.PrimaryButtonLabel);
             nextLabel.alignment = TextAlignmentOptions.Center;
             StretchInside(nextLabel.GetComponent<RectTransform>());
             ForceButtonHeight(nextGO, 96f);
 
             var (retryGO, retryButton, _) = CreateSecondaryButton(buttons.transform, "RetryButton");
-            var retryLabel = CreateText(retryGO.transform, "Label", "Retry", 28, FontStyles.Bold);
-            retryLabel.color = TextDarkColor;
+            var retryLabel = CreateThemedText(retryGO.transform, "Label", "Retry", 28, FontStyles.Bold, ThemeBuilderSlots.SecondaryButtonLabel);
             retryLabel.alignment = TextAlignmentOptions.Center;
             StretchInside(retryLabel.GetComponent<RectTransform>());
             ForceButtonHeight(retryGO, 92f);
 
             var (mainMenuGO, mainMenuButton, _) = CreateSecondaryButton(buttons.transform, "MainMenuButton");
-            var mainMenuLabel = CreateText(mainMenuGO.transform, "Label", "Main Menu", 26, FontStyles.Bold);
-            mainMenuLabel.color = TextDarkColor;
+            var mainMenuLabel = CreateThemedText(mainMenuGO.transform, "Label", "Main Menu", 26, FontStyles.Bold, ThemeBuilderSlots.SecondaryButtonLabel);
             mainMenuLabel.alignment = TextAlignmentOptions.Center;
             StretchInside(mainMenuLabel.GetComponent<RectTransform>());
             ForceButtonHeight(mainMenuGO, 80f);
@@ -294,11 +296,11 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             headerRT.sizeDelta = new Vector2(0f, 14f);
             var headerTint = AddThemedImage(headerTintGO, FailureColor, ThemeSpriteSlot.None, ThemeColorSlot.FailureColor);
 
-            var title = CreateText(card.transform, "Title", "Game Over", 48, FontStyles.Bold);
+            var title = CreateThemedText(card.transform, "Title", "Game Over", 48, FontStyles.Bold, ThemeBuilderSlots.Heading);
             AnchorTopOfCard(title.GetComponent<RectTransform>(), -40f, 80f);
             title.alignment = TextAlignmentOptions.Center;
 
-            var subtitle = CreateText(card.transform, "Subtitle", "", 28, FontStyles.Italic);
+            var subtitle = CreateThemedText(card.transform, "Subtitle", "", 28, FontStyles.Italic, ThemeBuilderSlots.Body);
             AnchorTopOfCard(subtitle.GetComponent<RectTransform>(), -130f, 48f);
             subtitle.alignment = TextAlignmentOptions.Center;
             subtitle.gameObject.SetActive(false);
@@ -310,7 +312,7 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             scoreBlockRT.pivot = new Vector2(0.5f, 1f);
             scoreBlockRT.anchoredPosition = new Vector2(0f, -260f);
             scoreBlockRT.sizeDelta = new Vector2(700f, 110f);
-            var scoreLabel = CreateText(scoreBlock.transform, "ScoreLabel", "0", 64, FontStyles.Bold);
+            var scoreLabel = CreateThemedText(scoreBlock.transform, "ScoreLabel", "0", 64, FontStyles.Bold, ThemeBuilderSlots.Heading);
             StretchInside(scoreLabel.GetComponent<RectTransform>());
             scoreLabel.alignment = TextAlignmentOptions.Center;
 
@@ -329,8 +331,7 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             btnLayout.childControlHeight = true;
 
             var (continueAdGO, continueAdButton, _) = CreatePrimaryButton(buttons.transform, "ContinueAdButton");
-            var continueAdLabel = CreateText(continueAdGO.transform, "Label", "Continue", 30, FontStyles.Bold);
-            continueAdLabel.color = TextLightColor;
+            var continueAdLabel = CreateThemedText(continueAdGO.transform, "Label", "Continue", 30, FontStyles.Bold, ThemeBuilderSlots.PrimaryButtonLabel);
             continueAdLabel.alignment = TextAlignmentOptions.Center;
             StretchInside(continueAdLabel.GetComponent<RectTransform>());
             ForceButtonHeight(continueAdGO, 96f);
@@ -345,22 +346,19 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             continueCurrIconRT.sizeDelta = new Vector2(48f, 48f);
             var continueCurrIcon = AddImage(continueCurrIconGO, Color.white);
             if (theme != null && theme.IconGem != null) continueCurrIcon.sprite = theme.IconGem;
-            var continueCurrLabel = CreateText(continueCurrGO.transform, "Label", "Continue (5)", 26, FontStyles.Bold);
-            continueCurrLabel.color = TextDarkColor;
+            var continueCurrLabel = CreateThemedText(continueCurrGO.transform, "Label", "Continue (5)", 26, FontStyles.Bold, ThemeBuilderSlots.SecondaryButtonLabel);
             continueCurrLabel.alignment = TextAlignmentOptions.Center;
             StretchInside(continueCurrLabel.GetComponent<RectTransform>());
             ForceButtonHeight(continueCurrGO, 96f);
 
             var (restartGO, restartButton, _) = CreateSecondaryButton(buttons.transform, "RestartButton");
-            var restartLabel = CreateText(restartGO.transform, "Label", "Restart", 28, FontStyles.Bold);
-            restartLabel.color = TextDarkColor;
+            var restartLabel = CreateThemedText(restartGO.transform, "Label", "Restart", 28, FontStyles.Bold, ThemeBuilderSlots.SecondaryButtonLabel);
             restartLabel.alignment = TextAlignmentOptions.Center;
             StretchInside(restartLabel.GetComponent<RectTransform>());
             ForceButtonHeight(restartGO, 92f);
 
             var (mainMenuGO, mainMenuButton, _) = CreateSecondaryButton(buttons.transform, "MainMenuButton");
-            var mainMenuLabel = CreateText(mainMenuGO.transform, "Label", "Main Menu", 26, FontStyles.Bold);
-            mainMenuLabel.color = TextDarkColor;
+            var mainMenuLabel = CreateThemedText(mainMenuGO.transform, "Label", "Main Menu", 26, FontStyles.Bold, ThemeBuilderSlots.SecondaryButtonLabel);
             mainMenuLabel.alignment = TextAlignmentOptions.Center;
             StretchInside(mainMenuLabel.GetComponent<RectTransform>());
             ForceButtonHeight(mainMenuGO, 80f);
@@ -413,8 +411,7 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             var icon = AddImage(iconGO, Color.white);
             if (theme != null && theme.IconEnergy != null) icon.sprite = theme.IconEnergy;
 
-            var countLabel = CreateText(root.transform, "CountLabel", "3", 32, FontStyles.Bold);
-            countLabel.color = TextLightColor;
+            var countLabel = CreateThemedText(root.transform, "CountLabel", "3", 32, FontStyles.Bold, ThemeBuilderSlots.DarkBgBody);
             var countRT = countLabel.GetComponent<RectTransform>();
             countRT.anchorMin = new Vector2(0f, 1f);
             countRT.anchorMax = new Vector2(0f, 1f);
@@ -492,8 +489,7 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             var icon = AddImage(iconGO, Color.white);
             if (theme != null && theme.IconClock != null) icon.sprite = theme.IconClock;
 
-            var label = CreateText(root.transform, "Label", "00:00", 36, FontStyles.Bold);
-            label.color = TextLightColor;
+            var label = CreateThemedText(root.transform, "Label", "00:00", 36, FontStyles.Bold, ThemeBuilderSlots.DarkBgBody);
             var labelRT = label.GetComponent<RectTransform>();
             labelRT.anchorMin = new Vector2(0f, 0f);
             labelRT.anchorMax = new Vector2(1f, 1f);
