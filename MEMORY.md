@@ -47,7 +47,7 @@ Limitation: builder writes to `Assets/`, not `Packages/.../Samples~/`. Juan's pr
 
 ## ThemedImage helper pattern — `AddThemedImage` + `OverrideThemedImageSlot` (M4.7)
 
-`CatalogGroupCBuilder.cs` (2026-05-06) introduced the canonical helper pair for migrating Image sites to runtime-themable. M4.7-bis sweep across A / B / D / E builders should extract these to `CatalogBuilderBase` (5 consumers post-sweep validates composability per ecosystem philosophy §5).
+`CatalogGroupCBuilder.cs` (2026-05-06) introduced the canonical helper pair for migrating Image sites to runtime-themable. M4.7-bis.B.1 (2026-05-08) extracted to `Editor/Generators/CatalogGroupBuilderShared.cs` — `internal static class` with `using static` directive in each consumer (NOT `abstract class CatalogBuilderBase` — C# disallows static-class inheritance; Unity-idiomatic pattern matches `AssetDatabase` / `EditorGUIUtility`). 5 consumers (A+B+C+D+E builders) validate composability per ecosystem philosophy §5.
 
 ```csharp
 private static Image AddThemedImage(GameObject go, Color color, ThemeColorSlot slot)
@@ -105,3 +105,20 @@ Catalog elements expose `private struct Refs` with direct child references (Titl
 - Buyer needing structural changes forks the prefab + derives from the popup class (their concrete `Refs` struct).
 
 This is a kit-wide design constraint — applies to every catalog element with a Refs struct, not just Group A.
+
+---
+
+## CHANGELOG.md navigation — Grep-first, never full Read
+
+`CHANGELOG.md` exceeds the Read tool's 25k token limit (~90k tokens at v0.9.0-alpha and growing). A naked `Read` call fails with `File content (90093 tokens) exceeds maximum allowed tokens (25000)`. File only grows with each release — constraint is permanent.
+
+**Why:** v0.9.0-alpha onward each Unreleased block grows ~5-10k tokens with detailed Fixed entries (M4.7-bis sweep alone added ~25k). Reading the file blindly to locate a section wastes a tool call.
+
+**How to apply:**
+
+1. Locate version blocks first: `Grep -n "^## \[" CHANGELOG.md` returns all `## [X.Y.Z-tag]` headings with line numbers.
+2. Locate the target sub-section within a block: `Grep -n "M4\.7-bis|M4 |Fixed|Added|Known issues" CHANGELOG.md`.
+3. Read by `offset/limit` for the target line range. Last-updated timestamp is line 6 (long single line — Grep returns "Omitted long matching line", read by offset to inspect).
+4. For appending entries: anchor on stable strings like `### Added` or unique entry titles, NOT on full block dumps.
+
+Applies to any markdown changelog in this project that grows monotonically.
