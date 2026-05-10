@@ -19,6 +19,8 @@ namespace KitforgeLabs.MobileUIKit.Editor.Hub
         [SerializeField] private HubTab _activeTab = HubTab.Setup;
         [SerializeField] private string _selectedCatalogKey = string.Empty;
         [SerializeField] private string _selectedThemeKey = string.Empty;
+        [SerializeField] private string _catalogGroupFilter = string.Empty;
+        [SerializeField] private string _catalogSearchQuery = string.Empty;
 
         [System.NonSerialized] private bool _isPersisted;
 
@@ -51,6 +53,30 @@ namespace KitforgeLabs.MobileUIKit.Editor.Hub
             {
                 if (_selectedThemeKey == value) return;
                 _selectedThemeKey = value ?? string.Empty;
+                Persist();
+            }
+        }
+
+        public string CatalogGroupFilter
+        {
+            get => _catalogGroupFilter;
+            set
+            {
+                var normalized = value ?? string.Empty;
+                if (_catalogGroupFilter == normalized) return;
+                _catalogGroupFilter = normalized;
+                Persist();
+            }
+        }
+
+        public string CatalogSearchQuery
+        {
+            get => _catalogSearchQuery;
+            set
+            {
+                var normalized = value ?? string.Empty;
+                if (_catalogSearchQuery == normalized) return;
+                _catalogSearchQuery = normalized;
                 Persist();
             }
         }

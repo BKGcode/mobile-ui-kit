@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -6,9 +7,15 @@ namespace KitforgeLabs.MobileUIKit.Editor.Hub.Catalog
 {
     internal sealed class KitforgeCatalogBrowser
     {
+        private const string AllGroupsToken = "";
+
         private readonly KitforgeHubState _state;
 
         private VisualElement _root;
+        private VisualElement _leftPanel;
+        private VisualElement _filterChipRow;
+        private TextField _searchField;
+        private Label _emptyResultsLabel;
         private VisualElement _grid;
         private VisualElement _detail;
         private bool _dragReady;
@@ -22,9 +29,84 @@ namespace KitforgeLabs.MobileUIKit.Editor.Hub.Catalog
         {
             _root = new VisualElement();
             _root.AddToClassList("kfh-catalog");
-            BuildGrid();
+            BuildLeftPanel();
             BuildDetailPanel();
             return _root;
+        }
+
+        private void BuildLeftPanel()
+        {
+            _leftPanel = new VisualElement();
+            _leftPanel.AddToClassList("kfh-catalog-left");
+            BuildFilterBar();
+            BuildGrid();
+            _root.Add(_leftPanel);
+        }
+
+        private void BuildFilterBar()
+        {
+            var bar = new VisualElement();
+            bar.AddToClassList("kfh-catalog-filter-bar");
+            BuildChipRow(bar);
+            BuildSearchField(bar);
+            _leftPanel.Add(bar);
+        }
+
+        private void BuildChipRow(VisualElement bar)
+        {
+            _filterChipRow = new VisualElement();
+            _filterChipRow.AddToClassList("kfh-catalog-filter-chip-row");
+            AppendChip(_filterChipRow, "All", AllGroupsToken);
+            foreach (var group in CollectGroups())
+            {
+                AppendChip(_filterChipRow, group, group);
+            }
+            bar.Add(_filterChipRow);
+        }
+
+        private void AppendChip(VisualElement row, string label, string groupToken)
+        {
+            var btn = new Button(() => OnChipClicked(groupToken)) { text = label };
+            btn.AddToClassList("kfh-catalog-filter-chip");
+            btn.userData = groupToken;
+            UpdateChipSelection(btn, groupToken);
+            row.Add(btn);
+        }
+
+        private void OnChipClicked(string groupToken)
+        {
+            _state.CatalogGroupFilter = groupToken;
+            UpdateAllChipSelections();
+            RebuildGridContents();
+        }
+
+        private void UpdateAllChipSelections()
+        {
+            foreach (var child in _filterChipRow.Children())
+            {
+                if (child is Button btn && btn.userData is string token) UpdateChipSelection(btn, token);
+            }
+        }
+
+        private void UpdateChipSelection(Button btn, string groupToken)
+        {
+            btn.EnableInClassList("kfh-catalog-filter-chip--active", _state.CatalogGroupFilter == groupToken);
+        }
+
+        private void BuildSearchField(VisualElement bar)
+        {
+            _searchField = new TextField { value = _state.CatalogSearchQuery };
+            _searchField.AddToClassList("kfh-catalog-filter-search");
+            var input = _searchField.Q(TextField.textInputUssName);
+            if (input != null) input.tooltip = "Filter by display name (case-insensitive)";
+            _searchField.RegisterValueChangedCallback(OnSearchChanged);
+            bar.Add(_searchField);
+        }
+
+        private void OnSearchChanged(ChangeEvent<string> evt)
+        {
+            _state.CatalogSearchQuery = evt.newValue ?? string.Empty;
+            RebuildGridContents();
         }
 
         private void BuildGrid()
@@ -33,12 +115,51 @@ namespace KitforgeLabs.MobileUIKit.Editor.Hub.Catalog
             scroll.AddToClassList("kfh-catalog-grid-scroll");
             _grid = new VisualElement();
             _grid.AddToClassList("kfh-catalog-grid");
+            _emptyResultsLabel = new Label("No catalog elements match the current filter. Try clearing the search or selecting another group.");
+            _emptyResultsLabel.AddToClassList("kfh-catalog-empty-results");
+            scroll.Add(_grid);
+            scroll.Add(_emptyResultsLabel);
+            _leftPanel.Add(scroll);
+            RebuildGridContents();
+        }
+
+        private void RebuildGridContents()
+        {
+            _grid.Clear();
+            var visibleCount = AppendVisibleCells();
+            _emptyResultsLabel.style.display = visibleCount == 0 ? DisplayStyle.Flex : DisplayStyle.None;
+        }
+
+        private int AppendVisibleCells()
+        {
+            var count = 0;
             foreach (var entry in KitforgeCatalogRegistry.All)
             {
+                if (!EntryPassesFilters(entry)) continue;
                 _grid.Add(BuildCell(entry));
+                count++;
             }
-            scroll.Add(_grid);
-            _root.Add(scroll);
+            return count;
+        }
+
+        private bool EntryPassesFilters(KitforgeCatalogEntry entry)
+        {
+            if (!string.IsNullOrEmpty(_state.CatalogGroupFilter) && entry.Group != _state.CatalogGroupFilter) return false;
+            var query = _state.CatalogSearchQuery;
+            if (string.IsNullOrEmpty(query)) return true;
+            return entry.DisplayName.IndexOf(query, System.StringComparison.OrdinalIgnoreCase) >= 0;
+        }
+
+        private static IEnumerable<string> CollectGroups()
+        {
+            var seen = new HashSet<string>();
+            var ordered = new List<string>();
+            foreach (var entry in KitforgeCatalogRegistry.All)
+            {
+                if (seen.Add(entry.Group)) ordered.Add(entry.Group);
+            }
+            ordered.Sort(System.StringComparer.Ordinal);
+            return ordered;
         }
 
         private VisualElement BuildCell(KitforgeCatalogEntry entry)
@@ -50,7 +171,7 @@ namespace KitforgeLabs.MobileUIKit.Editor.Hub.Catalog
             cell.Add(BuildCellName(entry));
             cell.Add(BuildCellPattern(entry));
             cell.RegisterCallback<ClickEvent>(_ => SelectEntry(entry));
-            if (entry.Pattern == KitforgeSpawnPattern.HUD) RegisterDragCallbacks(cell, entry);
+            RegisterDragCallbacks(cell, entry);
             UpdateCellSelection(cell, entry);
             return cell;
         }
@@ -107,7 +228,7 @@ namespace KitforgeLabs.MobileUIKit.Editor.Hub.Catalog
             var prefab = KitforgeCatalogPrefabResolver.LoadPrefab(entry);
             if (prefab == null)
             {
-                Debug.LogWarning($"[KitforgeCatalogBrowser] Prefab for '{entry.DisplayName}' not found. Run Tools → Kitforge → UI Kit → Build Group {entry.Group} Sample to enable drag-to-scene.");
+                Debug.LogWarning($"[KitforgeCatalogBrowser] Prefab for '{entry.DisplayName}' not found. Run Tools → Kitforge → UI Kit → Build Group {entry.Group} Sample (or import the relevant Group sample from Package Manager → Samples) to enable drag-to-scene.");
                 return;
             }
             DragAndDrop.PrepareStartDrag();
@@ -218,7 +339,12 @@ namespace KitforgeLabs.MobileUIKit.Editor.Hub.Catalog
         private string BuildSpawnInstruction(KitforgeCatalogEntry entry)
         {
             var call = ResolveCanonicalCall(entry.Pattern, entry.ComponentType.Name);
-            return $"Use the spawn snippet below — `{call}` is the canonical path. Manual scene drop creates a dormant prefab not driven by the manager.";
+            var prefab = KitforgeCatalogPrefabResolver.LoadPrefab(entry);
+            if (prefab == null)
+            {
+                return $"Use the spawn snippet below — `{call}` is the canonical path. Drag-to-scene preview unavailable: run Tools → Kitforge → UI Kit → Build Group {entry.Group} Sample first.";
+            }
+            return $"Use the spawn snippet below — `{call}` is the canonical path. Drag-to-scene drops a static preview prefab (no DTO, no manager driving) for visual composition; delete it before Play.";
         }
 
         private string ResolveCanonicalCall(KitforgeSpawnPattern pattern, string typeName)

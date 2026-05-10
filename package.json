@@ -1,7 +1,7 @@
 {
   "name": "com.kitforgelabs.mobile-ui-kit",
   "displayName": "Kitforge Mobile UI Kit",
-  "version": "1.0.0-rc.1",
+  "version": "1.0.0-rc.2",
   "unity": "6000.1",
   "description": "Opinionated UGUI router, popup queue, theme contract AND a catalog of 17 mid-core mobile UI elements (10 popups + 1 toast + 2 screens + 4 HUDs + 3 service-free HUDSimple variants) PLUS a Kitforge Hub Editor window (Tools → Kitforge → Hub) covering Setup wizard / Catalog browser / Theme Studio / Test launcher / inline cheatsheet. Stack-based screens, priority-aware popups, one ScriptableObject theme — wire it in five minutes, skin it once, ship it.",
   "keywords": [

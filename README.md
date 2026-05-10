@@ -27,7 +27,9 @@ Everything else (router app states, service interfaces) is optional and lives be
 
 Total tests: **292 EditMode** (33 framework + 259 catalog: Group A 53 + Group B 33 + DailyLogin 26 + LevelComplete 16 + GameOver 18 + HUD-Energy 10 + HUD-Timer 10 + RewardFlow 12 + IPlayerDataService 16 + IUILocalizationService 10 + SettingsPopup 19 + DailyLoginPersistence 5 + LoadingScreen 14 + MainMenuScreen 17). Public API may still move before `v1.0.0` — track BREAKING entries in [`CHANGELOG.md`](./CHANGELOG.md).
 
-Latest tag: `v1.0.0-rc.1` (2026-05-10 — first release candidate of v1.0). Hub 5/5 panes shipped (`Tools → Kitforge → Hub` — Setup wizard, Catalog browser, Theme Studio, Test launcher, inline Cheatsheet) via M5.1-M5.7. Theme presets (Default + Casual + Premium) ship under `Runtime/Theme/Presets/`. R-U-C3 HUDSimple variants (HUDSimple / HUDEnergySimple / HUDTimerSimple) coexist with the canonical service-bound HUDs for the no-services buyer path. Catalog_All_Demo single-import master demo (9th sample) wires every catalog element into one buttons-per-element scene with theme dropdown — workshop-drawer test pass. R-U-C5 multi-font + R-U-C7 SafeAreaFitter component INVALIDATED post-discovery (already shipped pre-M5.7). Public API frozen at v1.0.0-rc; only patch fixes between rc.N and final v1.0.0.
+Latest tag: `v1.0.0-rc.2` (2026-05-10 — post-rc.1 hotfix release). Bundles 3 buyer-facing fixes from in-Editor "fresh install" smoke test: **Bug 2** ships `UIAnimPreset_Playful.asset` inside the package + pre-wires the 3 ship themes so OOTB popups animate without requiring `Bootstrap Defaults`; **Bug 4** populates `Catalog_All_Demo.ShowDailyLogin`'s 7-day calendar (no more `RewardEntries = null` console warning + auto-deactivation); **Bug 5** Catalog tab gains group-filter chips (`All / A / B / C / D / E`) + name search box + universal drag-drop preview (Popups/Screens/Toasts can now drop as static preview prefab for visual composition; HUDs unchanged — auto-bind to services on enable). Public API unchanged from rc.1; samples additive only.
+
+Previous tag: `v1.0.0-rc.1` (2026-05-10 — first release candidate of v1.0). Hub 5/5 panes shipped (`Tools → Kitforge → Hub` — Setup wizard, Catalog browser, Theme Studio, Test launcher, inline Cheatsheet) via M5.1-M5.7. Theme presets (Default + Casual + Premium) ship under `Runtime/Theme/Presets/`. R-U-C3 HUDSimple variants (HUDSimple / HUDEnergySimple / HUDTimerSimple) coexist with the canonical service-bound HUDs for the no-services buyer path. Catalog_All_Demo single-import master demo (9th sample) wires every catalog element into one buttons-per-element scene with theme dropdown — workshop-drawer test pass. R-U-C5 multi-font + R-U-C7 SafeAreaFitter component INVALIDATED post-discovery (already shipped pre-M5.7). Public API frozen at v1.0.0-rc; only patch fixes between rc.N and final v1.0.0.
 
 The path to `v1.0.0-rc` was re-sequenced 2026-05-06 per the rule "complete core packaging BEFORE auditing UX": auditing UX on incomplete packaging (no theme presets, no master demo, no MIGRATION) forces re-audit, so M4 ships hardening first, then M3c audits the completed core, then M5 dispositions findings + tags. M3b per-element polish is **deferred post-`v1.0.0-rc`** pending foundational review (wrong-premise patch-on-patch incident 2026-05-06; see [`CHANGELOG.md`](./CHANGELOG.md) `[0.8.1-alpha]` block).
 
@@ -64,7 +66,7 @@ This package will **not** grow to cover the items below. If you need them, this 
 Add to `Packages/manifest.json`:
 
 ```json
-"com.kitforgelabs.mobile-ui-kit": "https://github.com/BKGcode/mobile-ui-kit.git#v1.0.0-rc.1"
+"com.kitforgelabs.mobile-ui-kit": "https://github.com/BKGcode/mobile-ui-kit.git#v1.0.0-rc.2"
 ```
 
 Or via Package Manager → **Add package from git URL…**

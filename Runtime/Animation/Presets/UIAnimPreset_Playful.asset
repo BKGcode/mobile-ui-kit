@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1c2379a8b935f744868918c57564615, type: 3}
+  m_Name: UIAnimPreset_Playful
+  m_EditorClassIdentifier: KitforgeLabs.MobileUIKit::KitforgeLabs.MobileUIKit.Animation.UIAnimPreset
+  _showDuration: 0.4
+  _showEase: 11
+  _hideDuration: 0.2
+  _hideEase: 1
+  _useScale: 1
+  _useFade: 1
+  _usePosition: 0
+  _useRotation: 0
+  _scaleFrom: 0.7
+  _scaleOvershoot: 1.1
+  _hideScaleTo: 0.9
+  _positionOffset: {x: 0, y: -120}
+  _rotationFrom: -8
+  _pressedScale: 0.92
+  _pressedDuration: 0.08
+  _pressedEase: 2

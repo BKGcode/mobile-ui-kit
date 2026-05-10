@@ -232,10 +232,22 @@ namespace KitforgeLabs.MobileUIKit.Samples.CatalogAllDemo
 
         private void ShowDailyLogin()
         {
+            var entries = new DailyLoginRewardEntry[7];
+            for (var i = 0; i < 7; i++)
+            {
+                entries[i] = new DailyLoginRewardEntry
+                {
+                    Rewards = new[] { new RewardPopupData { Title = "Coins", Amount = (i + 1) * 100, Kind = RewardKind.Coins } },
+                    IsBigReward = i == 6,
+                    AllowDouble = i == 6,
+                    Label = $"Day {i + 1}",
+                };
+            }
             _popupManager?.Show<DailyLoginPopup>(new DailyLoginPopupData
             {
                 Title = "Daily login",
                 CurrentDay = 3,
+                RewardEntries = entries,
             });
         }
 

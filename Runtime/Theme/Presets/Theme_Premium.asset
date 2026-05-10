@@ -69,4 +69,4 @@ MonoBehaviour:
   _audioSuccess: {fileID: 0}
   _audioError: {fileID: 0}
   _audioNotification: {fileID: 0}
-  _defaultAnimPreset: {fileID: 0}
+  _defaultAnimPreset: {fileID: 11400000, guid: 7adb85a485d243e09fb65e077ad33e67, type: 2}
