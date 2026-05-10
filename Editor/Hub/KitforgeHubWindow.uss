@@ -296,6 +296,41 @@
     color: rgb(200, 230, 200);
 }
 
+.kfh-test-banner--warn {
+    background-color: rgb(80, 35, 35);
+    border-bottom-color: rgb(50, 20, 20);
+}
+
+.kfh-test-banner--warn .kfh-test-banner-message {
+    color: rgb(255, 220, 200);
+    -unity-font-style: bold;
+}
+
+.kfh-test-banner-column {
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.kfh-test-banner-actions {
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin-top: 8px;
+}
+
+.kfh-test-banner-action {
+    margin-right: 6px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.kfh-test-banner-hint {
+    color: rgb(220, 180, 160);
+    font-size: 11px;
+    -unity-font-style: italic;
+    margin-top: 6px;
+    white-space: normal;
+}
+
 .kfh-test-list {
     flex-grow: 1;
     flex-direction: column;

@@ -104,13 +104,15 @@ namespace KitforgeLabs.MobileUIKit.Editor.Hub.Setup
 
         private void RunStep3() => InvokeMenu(BuildGroupASampleMenuPath);
 
-        private void RunStep2()
+        private void RunStep2() => AddSceneRootToActiveScene();
+
+        public static void AddSceneRootToActiveScene()
         {
             if (TryPingExistingBinder()) return;
             InstantiateNewKitforgeRoot();
         }
 
-        private bool TryPingExistingBinder()
+        private static bool TryPingExistingBinder()
         {
             var binders = UnityEngine.Object.FindObjectsByType<KitforgeThemeBinder>(FindObjectsInactive.Include, FindObjectsSortMode.None);
             if (binders == null || binders.Length == 0) return false;
@@ -119,7 +121,7 @@ namespace KitforgeLabs.MobileUIKit.Editor.Hub.Setup
             return true;
         }
 
-        private void InstantiateNewKitforgeRoot()
+        private static void InstantiateNewKitforgeRoot()
         {
             var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(KitforgeRootPrefabPath);
             if (prefab == null)

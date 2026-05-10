@@ -1,20 +1,29 @@
 using System;
+using System.IO;
 using System.Reflection;
 using KitforgeLabs.MobileUIKit.Core;
 using KitforgeLabs.MobileUIKit.Editor.Hub.Catalog;
+using KitforgeLabs.MobileUIKit.Editor.Hub.Setup;
 using KitforgeLabs.MobileUIKit.Toast;
 using UnityEditor;
+using UnityEditor.SceneManagement;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 
 namespace KitforgeLabs.MobileUIKit.Editor.Hub.Test
 {
     internal sealed class KitforgeTestLauncher
     {
+        private const string CatalogAllDemoScenePath = "Assets/Catalog_All_Demo/AllDemo.unity";
+
         private readonly KitforgeHubState _state;
         private readonly EditorWindow _hostWindow;
 
         private VisualElement _root;
+        private bool _hasPopupManager;
+        private bool _hasUIManager;
+        private bool _hasToastManager;
 
         public KitforgeTestLauncher(KitforgeHubState state, EditorWindow hostWindow)
         {
@@ -26,33 +35,128 @@ namespace KitforgeLabs.MobileUIKit.Editor.Hub.Test
         {
             _root = new VisualElement();
             _root.AddToClassList("kfh-test");
+            DetectManagers();
             BuildBanner();
             BuildElementList();
             EditorApplication.playModeStateChanged += OnPlayModeChanged;
-            _root.RegisterCallback<DetachFromPanelEvent>(_ => EditorApplication.playModeStateChanged -= OnPlayModeChanged);
+            EditorApplication.hierarchyChanged += OnHierarchyChanged;
+            EditorSceneManager.sceneOpened += OnSceneOpened;
+            _root.RegisterCallback<DetachFromPanelEvent>(_ =>
+            {
+                EditorApplication.playModeStateChanged -= OnPlayModeChanged;
+                EditorApplication.hierarchyChanged -= OnHierarchyChanged;
+                EditorSceneManager.sceneOpened -= OnSceneOpened;
+            });
             return _root;
         }
 
         private void OnPlayModeChanged(PlayModeStateChange change) => Refresh();
+        private void OnHierarchyChanged() => Refresh();
+        private void OnSceneOpened(Scene scene, OpenSceneMode mode) => Refresh();
 
         private void Refresh()
         {
+            DetectManagers();
             _root.Clear();
             BuildBanner();
             BuildElementList();
         }
 
+        private void DetectManagers()
+        {
+            _hasPopupManager = UnityEngine.Object.FindAnyObjectByType<PopupManager>() != null;
+            _hasUIManager = UnityEngine.Object.FindAnyObjectByType<UIManager>() != null;
+            _hasToastManager = UnityEngine.Object.FindAnyObjectByType<ToastManager>() != null;
+        }
+
+        private bool AnyManagerPresent() => _hasPopupManager || _hasUIManager || _hasToastManager;
+
         private void BuildBanner()
         {
             var banner = new VisualElement();
             banner.AddToClassList("kfh-test-banner");
-            if (Application.isPlaying) banner.AddToClassList("kfh-test-banner--play");
-            var msg = new Label(Application.isPlaying
-                ? "Play mode active — click Spawn on any element below."
-                : "Enter Play mode to spawn catalog elements with mock DTO data + Force scenarios.");
+            if (!AnyManagerPresent())
+            {
+                banner.AddToClassList("kfh-test-banner--warn");
+                BuildEmptyStateBanner(banner);
+            }
+            else if (Application.isPlaying)
+            {
+                banner.AddToClassList("kfh-test-banner--play");
+                AppendBannerMessage(banner, "Play mode active — click Spawn on any element below.");
+            }
+            else
+            {
+                AppendBannerMessage(banner, "KitforgeRoot detected — enter Play mode to spawn catalog elements with mock DTO data + Force scenarios.");
+            }
+            _root.Add(banner);
+        }
+
+        private void BuildEmptyStateBanner(VisualElement banner)
+        {
+            var column = new VisualElement();
+            column.AddToClassList("kfh-test-banner-column");
+            var msg = new Label("No KitforgeRoot in active scene — Test tab needs PopupManager / UIManager / ToastManager to spawn elements.");
+            msg.AddToClassList("kfh-test-banner-message");
+            column.Add(msg);
+            var actions = new VisualElement();
+            actions.AddToClassList("kfh-test-banner-actions");
+            var addRoot = new Button(AddSceneRoot) { text = "Add Scene Root" };
+            addRoot.AddToClassList("kfh-test-banner-action");
+            addRoot.SetEnabled(!Application.isPlaying);
+            actions.Add(addRoot);
+            if (CatalogAllDemoSceneExists())
+            {
+                var openDemo = new Button(OpenCatalogAllDemo) { text = "Open Catalog_All_Demo" };
+                openDemo.AddToClassList("kfh-test-banner-action");
+                openDemo.SetEnabled(!Application.isPlaying);
+                actions.Add(openDemo);
+            }
+            var goSetup = new Button(GoToSetupTab) { text = "Open Setup tab" };
+            goSetup.AddToClassList("kfh-test-banner-action");
+            actions.Add(goSetup);
+            column.Add(actions);
+            if (Application.isPlaying)
+            {
+                var hint = new Label("Exit Play mode to bootstrap a scene — KitforgeRoot must exist before pressing Play.");
+                hint.AddToClassList("kfh-test-banner-hint");
+                column.Add(hint);
+            }
+            banner.Add(column);
+        }
+
+        private static void AppendBannerMessage(VisualElement banner, string text)
+        {
+            var msg = new Label(text);
             msg.AddToClassList("kfh-test-banner-message");
             banner.Add(msg);
-            _root.Add(banner);
+        }
+
+        private void AddSceneRoot()
+        {
+            KitforgeSetupWizard.AddSceneRootToActiveScene();
+            Refresh();
+        }
+
+        private void OpenCatalogAllDemo()
+        {
+            if (!CatalogAllDemoSceneExists())
+            {
+                Debug.LogError($"[KitforgeTestLauncher] Catalog_All_Demo scene not found at '{CatalogAllDemoScenePath}'. Import 'Catalog — All — Single-import master demo' from Package Manager → Samples and run Tools → Kitforge → UI Kit → Build Catalog_All_Demo.");
+                return;
+            }
+            if (!EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo()) return;
+            EditorSceneManager.OpenScene(CatalogAllDemoScenePath, OpenSceneMode.Single);
+        }
+
+        private void GoToSetupTab()
+        {
+            if (_hostWindow is KitforgeHubWindow hub) hub.SwitchToTab(KitforgeHubState.HubTab.Setup);
+        }
+
+        private static bool CatalogAllDemoSceneExists()
+        {
+            return File.Exists(CatalogAllDemoScenePath);
         }
 
         private void BuildElementList()
@@ -111,7 +215,7 @@ namespace KitforgeLabs.MobileUIKit.Editor.Hub.Test
             row.Add(label);
             var btn = new Button(() => SpawnEntry(entry)) { text = "Spawn" };
             btn.AddToClassList("kfh-test-row-button");
-            btn.SetEnabled(Application.isPlaying);
+            btn.SetEnabled(IsSpawnEnabled(entry.Pattern));
             row.Add(btn);
             return row;
         }
@@ -125,9 +229,21 @@ namespace KitforgeLabs.MobileUIKit.Editor.Hub.Test
             row.Add(label);
             var btn = new Button(() => SpawnForceScenario(scenario)) { text = "Spawn" };
             btn.AddToClassList("kfh-test-row-button");
-            btn.SetEnabled(Application.isPlaying);
+            btn.SetEnabled(IsSpawnEnabled(scenario.Pattern));
             row.Add(btn);
             return row;
+        }
+
+        private bool IsSpawnEnabled(KitforgeSpawnPattern pattern)
+        {
+            if (!Application.isPlaying) return false;
+            return pattern switch
+            {
+                KitforgeSpawnPattern.Popup => _hasPopupManager,
+                KitforgeSpawnPattern.Screen => _hasUIManager,
+                KitforgeSpawnPattern.Toast => _hasToastManager,
+                _ => false,
+            };
         }
 
         private void SpawnEntry(KitforgeCatalogEntry entry)

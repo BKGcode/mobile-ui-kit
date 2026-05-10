@@ -107,6 +107,8 @@ namespace KitforgeLabs.MobileUIKit.Editor.Hub
             parent.Add(_content);
         }
 
+        public void SwitchToTab(KitforgeHubState.HubTab tab) => SwitchTab(tab);
+
         private void SwitchTab(KitforgeHubState.HubTab tab)
         {
             _state.ActiveTab = tab;
