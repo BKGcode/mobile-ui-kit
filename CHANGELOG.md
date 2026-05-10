@@ -7,6 +7,17 @@ _Last updated: 2026-05-09 (M4.X cluster close — post-`v0.9.0-alpha` hardening,
 
 ## [Unreleased]
 
+## [1.0.0] — 2026-05-10
+
+> First stable release of Kitforge Mobile UI Kit. Promotion from `v1.0.0-rc.2` with no code, API, or sample changes — release-candidate cycle (rc.1 → rc.2 → 1.0.0) closed without further hotfixes. Promotion gate: 24/24 UIKit Audit (17 prefabs + 7 scenes) PASS + 303 EditMode tests green. Public API frozen.
+
+### Notes
+
+- No `Added`, `Changed`, `Fixed`, or `BREAKING` entries — content identical to `[1.0.0-rc.2]`. The release-candidate cycle closed clean.
+- Buyers upgrading from `v1.0.0-rc.2`: zero migration steps. Pin install URL `#v1.0.0` (or omit the qualifier to track `main`).
+- Buyers upgrading from `v0.X.0-alpha`: see migration blocks in earlier version entries below — most recent BREAKING tags are `[0.6.0-alpha]` (Group C — `IEconomyService` v2 + `HUDCurrency` parameterized), `[0.7.0-alpha]` (Group D — `IPlayerDataService` rewritten + new `IUILocalizationService`), `[0.8.0-alpha]` (Group E — Screens + 8 new theme slots + OnUpdate infra dispatch).
+- Release evidence (audit baseline + per-version snapshot): `Documentation~/QAReports/_Summary.md` (latest) + `Documentation~/QAReports/v1.0.0/_Summary.md` (versioned).
+
 ## [1.0.0-rc.2] — 2026-05-10
 
 > Post-rc.1 hotfix release closing 4 buyer-facing bugs surfaced via in-Editor "fresh install" smoke test (Unity MCP) + user-driven Regenerate+Audit: Bug 2 (`UIAnimPreset` shipped + 3 themes pre-wired so out-of-the-box popups animate without requiring Bootstrap Defaults), Bug 4 (`Catalog_All_Demo.ShowDailyLogin` no longer leaves `RewardEntries = null`), Bug 5 (Catalog tab gains group-filter chips + search box + universal drag-drop — workshop-drawer test pass for the M3c UX audit's findability gap on the Catalog browser), Bug 6 (`CatalogAllDemoBuilder` now wires `UIManager._screenRoot` — pre-existing builder gap latent since rc.1 that broke `PushLoadingScreen` + `PushMainMenuScreen` AllDemo buttons). No public API changes; samples additive only. **Triple gate VERDE post-Bug 6 fix**: 303/303 EditMode tests + UIKit Audit 24/24 (17 prefabs + 7 scenes incl. AllDemo) PASS + AllDemo Play smoke validated.

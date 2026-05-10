@@ -1,4 +1,4 @@
-# UI Kit Audit — Summary
+# UI Kit Audit — Summary (v1.0.0)
 
 - Generated: 2026-05-10T19:43:56Z
 - Unity: 6000.4.0f1
