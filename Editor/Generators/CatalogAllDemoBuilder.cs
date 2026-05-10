@@ -106,10 +106,11 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             var casualTheme = AssetDatabase.LoadAssetAtPath<UIThemeConfig>(CasualThemePath);
             var premiumTheme = AssetDatabase.LoadAssetAtPath<UIThemeConfig>(PremiumThemePath);
             var canvasGO = BuildCanvas(scene);
+            var screenRoot = CreateStretchChild(canvasGO.transform, "ScreenRoot");
             var popupRoot = CreateStretchChild(canvasGO.transform, "PopupRoot");
             var toastRoot = CreateStretchChild(canvasGO.transform, "ToastRoot");
             var services = BuildServices(scene);
-            var (uiManager, popupManager, toastManager) = BuildManagers(scene, defaultTheme, services, popupRoot, toastRoot);
+            var (uiManager, popupManager, toastManager) = BuildManagers(scene, defaultTheme, services, screenRoot, popupRoot, toastRoot);
             var (themeDropdown, buttonRefs) = BuildSidebarAndDropdown(canvasGO.transform);
             BuildHost(scene, uiManager, popupManager, toastManager, services, themeDropdown, buttonRefs, defaultTheme, casualTheme, premiumTheme);
             EditorSceneManager.SaveScene(scene, ScenePath);
@@ -130,7 +131,7 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             return canvasGO;
         }
 
-        private static (UIManager ui, PopupManager popup, ToastManager toast) BuildManagers(Scene scene, UIThemeConfig theme, UIServices services, RectTransform popupRoot, RectTransform toastRoot)
+        private static (UIManager ui, PopupManager popup, ToastManager toast) BuildManagers(Scene scene, UIThemeConfig theme, UIServices services, RectTransform screenRoot, RectTransform popupRoot, RectTransform toastRoot)
         {
             var uiHost = new GameObject("UIManager");
             SceneManager.MoveGameObjectToScene(uiHost, scene);
@@ -141,15 +142,16 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             var toastHost = new GameObject("ToastManager");
             SceneManager.MoveGameObjectToScene(toastHost, scene);
             var toast = toastHost.AddComponent<ToastManager>();
-            WireManagerArrays(ui, popup, toast, theme, services, popupRoot, toastRoot);
+            WireManagerArrays(ui, popup, toast, theme, services, screenRoot, popupRoot, toastRoot);
             return (ui, popup, toast);
         }
 
-        private static void WireManagerArrays(UIManager ui, PopupManager popup, ToastManager toast, UIThemeConfig theme, UIServices services, RectTransform popupRoot, RectTransform toastRoot)
+        private static void WireManagerArrays(UIManager ui, PopupManager popup, ToastManager toast, UIThemeConfig theme, UIServices services, RectTransform screenRoot, RectTransform popupRoot, RectTransform toastRoot)
         {
             var uiSO = new SerializedObject(ui);
             uiSO.FindProperty("_themeConfig").objectReferenceValue = theme;
             uiSO.FindProperty("_services").objectReferenceValue = services;
+            uiSO.FindProperty("_screenRoot").objectReferenceValue = screenRoot;
             var screensProp = uiSO.FindProperty("_screenPrefabs");
             screensProp.arraySize = ScreenPrefabs.Length;
             for (var i = 0; i < ScreenPrefabs.Length; i++)
