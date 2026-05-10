@@ -42,7 +42,7 @@ This package will **not** grow to cover the items below. If you need them, this 
 3. **No networking, save system or analytics.** Service interfaces in samples are stubs — your game implements them.
 4. **No DI container in Runtime.** `KitforgeLabs.MobileUIKit` has zero dependency on VContainer / Zenject. DI is a sample, opt-in.
 5. **No animation engine.** DOTween Pro is the assumed sequencer for module show/hide, but the package does not redistribute or wrap it.
-6. **No Editor authoring window.** No visual screen graph, no drag-and-drop registry. Inspector + prefab references only.
+6. **No visual screen-graph editor.** No node-based flow authoring, no drag-and-drop screen registry. Inspector + prefab references only — but the kit ships a single-front-door **Kitforge Hub** (`Tools → Kitforge → Hub`, UI Toolkit) covering Setup wizard / Catalog browser / Theme Studio / Test launcher / inline Cheatsheet. The Hub authors *scene state* (drop `KitforgeRoot.prefab`, scan themes) — not screen graphs.
 7. **No automatic safe-area / notch handling beyond `RectTransform` anchors.** Use a dedicated package for that.
 8. **No UI Toolkit support.** UGUI only. UI Toolkit lives in a different problem space and a different (future) package.
 
