@@ -1,9 +1,9 @@
 {
   "name": "com.kitforgelabs.mobile-ui-kit",
   "displayName": "Kitforge Mobile UI Kit",
-  "version": "0.9.0-alpha",
+  "version": "1.0.0-rc.1",
   "unity": "6000.1",
-  "description": "Opinionated UGUI router, popup queue, theme contract AND a catalog of mid-core mobile UI elements (Confirm / Pause / Tutorial / Toast in v0.4; Shop / Reward / Settings / DailyLogin / GameOver / LevelComplete / HUD / Screens shipping group-by-group). Stack-based screens, priority-aware popups, one ScriptableObject theme — wire it in five minutes, skin it once, ship it.",
+  "description": "Opinionated UGUI router, popup queue, theme contract AND a catalog of 17 mid-core mobile UI elements (10 popups + 1 toast + 2 screens + 4 HUDs + 3 service-free HUDSimple variants) PLUS a Kitforge Hub Editor window (Tools → Kitforge → Hub) covering Setup wizard / Catalog browser / Theme Studio / Test launcher / inline cheatsheet. Stack-based screens, priority-aware popups, one ScriptableObject theme — wire it in five minutes, skin it once, ship it.",
   "keywords": [
     "ui",
     "ugui",
@@ -12,7 +12,9 @@
     "theme",
     "popup",
     "menu",
-    "kitforge"
+    "kitforge",
+    "editor",
+    "hub"
   ],
   "author": {
     "name": "Kitforge Labs",
@@ -54,6 +56,11 @@
       "displayName": "Catalog — M4.1 — Theme Presets",
       "description": "Reskin demo for the kit's 'skin it once' contract. Ships Theme_Casual.asset (bright/saturated, Royal Match vibe) + Theme_Premium.asset (dark/desaturated, Hades vibe) + a runtime dropdown that re-skins GameOver + LevelComplete popups across 3 themes (Default / Casual / Premium). Casual + Premium clone the Default theme's sprites/fonts/audio at build time — only colors differ, validating the contract that swapping a single ScriptableObject re-skins the kit. Requires Group B (Economy / Ads stubs) + Group C samples (GameOver / LevelComplete prefabs + Time / Progression stubs). After importing, run Tools/Kitforge/UI Kit/Build M4.1 — Theme Presets.",
       "path": "Samples~/Catalog_M4_ThemePresets"
+    },
+    {
+      "displayName": "Catalog — All — Single-import master demo",
+      "description": "Workshop-drawer demo: single scene wiring every catalog popup (10 + 1 toast) + 2 screens + theme dropdown into ONE scene with buttons-per-element. Requires the 5 group catalog samples + M4.1 Theme Presets imported and built first. After that, run Tools → Kitforge → UI Kit → Build Catalog_All_Demo — open AllDemo.unity, press Play, click any button to spawn the corresponding element across 3 themes (Default / Casual / Premium). Demonstrates the canonical PopupManager.Show<T>(dto) / UIManager.Push<T>(dto) / ToastManager.Show<T>(dto) pattern documented in Quickstart §Manual prefab registration.",
+      "path": "Samples~/Catalog_All_Demo"
     },
     {
       "displayName": "Game Wiring (VContainer)",

@@ -47,6 +47,26 @@ This sample shows the smallest viable wiring of `UIManager` + `PopupManager`. A 
    - Drag to Project, delete scene instance.
    - On `PopupManager`, add the prefab to `_popupPrefabs`.
 
+## Manual prefab registration (canonical path)
+
+There is **no `PopupManager.RegisterPrefab(Type, GameObject)` runtime API.** Prefab registration in this kit is **Inspector-driven**: drop your popup / screen / toast prefab into the corresponding `[SerializeField] _popupPrefabs[]` / `_screenPrefabs[]` / `_toastPrefabs[]` array on the manager component, and the resolver in `PopupManager.Show<T>()` (and `UIManager.Push<T>()` / `ToastManager.Show<T>()`) walks the array looking for the entry whose root `GetType() == typeof(T)`.
+
+**Why Inspector-only?** Because the kit's contract is "wire it once at design time, ship it." Runtime mutation of the prefab map is out of scope (no `RegisterPrefab` / `UnregisterPrefab` API surface, no event for "prefabs changed"). If a buyer needs runtime registration (e.g. a DLC system loading new popups at runtime), they hold a reference to the manager's `_popupPrefabs` field via reflection or extend the manager — out of scope for v1.0.
+
+**Step-by-step for adding a new popup type:**
+
+1. Create your popup class: `public sealed class MyPopup : UIModule<MyPopupData> { ... }` plus `[Serializable] public class MyPopupData { ... }`.
+2. Create the prefab: a `RectTransform` child of `PopupRoot` with `MyPopup` component on the root + your visual children.
+3. Drag from the Hierarchy into Project to make it a prefab; delete the scene instance.
+4. **On the `PopupManager` component in your scene, expand `_popupPrefabs` in the Inspector and drag `MyPopup.prefab` into a new array slot.**
+5. Call from your gameplay code: `_popupManager.Show<MyPopup>(new MyPopupData { ... });`
+
+The same flow applies to:
+- **Screens** → drag prefab to `UIManager._screenPrefabs[]`, call `_uiManager.Push<MyScreen>(data)`.
+- **Toasts** → drag prefab to `ToastManager._toastPrefabs[]`, call `_toastManager.Show<MyToast>(data)`.
+
+**Validation check:** `[ContextMenu("Validate")]` on `UIServices` walks each slot and warns about nulls. The `_popupPrefabs[]` array does NOT have a built-in null-slot check — drop only valid prefabs and the resolver will silently return null for `Show<T>` when `T` is not in the array (the caller can inspect the return value and act on null).
+
 ## Run it
 
 1. Press **Play**.

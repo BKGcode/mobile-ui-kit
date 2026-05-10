@@ -4,7 +4,7 @@ Validates the kit's "skin it once" claim by reskinning **GameOver** + **LevelCom
 
 ## Prerequisites
 
-- `Theme_Default` shipped in the package at `Packages/com.kitforgelabs.mobile-ui-kit/Runtime/Theme/Presets/Theme_Default.asset` (no Bootstrap Defaults required — it ships pre-wired).
+- 3 themes ship in the package at `Packages/com.kitforgelabs.mobile-ui-kit/Runtime/Theme/Presets/` (`Theme_Default.asset` + `Theme_Casual.asset` + `Theme_Premium.asset`). No Bootstrap Defaults required — pre-wired.
 - Group B sample imported + built (`Build Group B Sample` — provides `InMemoryEconomyService` / `InMemoryAdsService` stubs).
 - Group C sample imported + built (`Build Group C Sample` — provides `GameOverPopup.prefab` + `LevelCompletePopup.prefab` + `InMemoryProgressionService` / `InMemoryTimeService`).
 
@@ -16,11 +16,7 @@ After importing this sample, run:
 Tools → Kitforge → UI Kit → Build M4.1 — Theme Presets
 ```
 
-The builder generates under `Assets/Catalog_M4_ThemePresets_Demo/`:
-
-- `Themes/Theme_Casual.asset` — bright/saturated palette (Royal Match / Disney Getaway Blast vibe). Sprites/fonts/audio cloned from `UIThemeConfig_Default`; only colors differ.
-- `Themes/Theme_Premium.asset` — dark/desaturated palette (Hades / Genshin menu vibe). Same clone strategy.
-- `ThemePresetsDemo.unity` — wired scene with `ThemeSwitcherSample` MonoBehaviour, top-of-canvas dropdown (3 options) + `Show GameOver` / `Show LevelComplete` buttons.
+The builder generates `Assets/Catalog_M4_ThemePresets_Demo/ThemePresetsDemo.unity` — a wired scene with `ThemeSwitcherSample` MonoBehaviour, top-of-canvas dropdown (3 options) + `Show GameOver` / `Show LevelComplete` buttons. The 3 theme assets it references already live in the package under `Runtime/Theme/Presets/` (Casual = bright/saturated Royal Match-style palette; Premium = dark/desaturated Hades-style palette).
 
 ## Validate the contract
 
@@ -45,7 +41,7 @@ No script edits required.
 ## Limitations
 
 - **Live re-skin on an open popup is not supported.** Catalog popups capture `Theme` at `Initialize` time; changing the theme dropdown while a popup is open dismisses + respawns it. This is the documented sample pattern.
-- **Sprites/fonts/audio are shared across the 3 themes** in this sample. Casual/Premium clone Default's non-color refs at build time. If you want sprite-level reskin (e.g. cartoon icons in Casual, minimal-line icons in Premium), edit the generated `.asset` files and assign your own slot values — the kit reads them transparently.
+- **Sprites/fonts/audio are unset on the 3 themes that ship.** The Casual/Premium presets only differ from Default in color; sprite/font/audio slots are `None` (left to your project). If you want sprite-level reskin (e.g. cartoon icons in Casual, minimal-line icons in Premium), **duplicate** the package preset to your `Assets/` folder (UPM packages are read-only — edits to files under `Packages/` will be reverted on package update) and assign sprite slots on the copy; the kit reads them transparently.
 - **CloseOnBackdrop is false on the demo GameOver** so you can't dismiss by tapping the backdrop while exploring (use Restart / MainMenu / Continue or the Back button instead).
 - **`ThemedImage` runtime read is currently wired only on Group C catalog (`DailyLogin`, `LevelComplete`, `GameOver`, `HUD-Energy`, `HUD-Timer`).** This sample shows `GameOverPopup` + `LevelCompletePopup`, so the "skin it once" contract is validated end-to-end here. If you extend the sample with Group A / B / D / E popups, or build a scene that uses them, the dropdown swap will NOT visibly reskin those popups — their builders still hardcode `Image.color`. The sweep to A / B / D / E lands in M4.7-bis (next sub-step in milestone M4, pre-tag `v0.9.0-alpha`). Until then, treat Group C reskin as the canonical demo of the contract.
 - **Secondary buttons (Restart / Main Menu / Watch ad / Retry) do not reskin in M4.7.** `Theme_Default._secondaryColor` and the builder's `ButtonSecondaryColor` constant differ by Δ 0.5 — migrating Secondary buttons to the slot today would change the Editor preview into a darker palette with poor text contrast. Reconciliation requires a cross-theme palette decision and lands in M4.7-bis. HUD backgrounds and sprite icons stay hardcoded by design (no semantic slot for translucent overlays; sprites are sprite-driven via `ThemeSpriteSlot`, not color-driven).

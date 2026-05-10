@@ -13,18 +13,17 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
     public static class CatalogM41ThemeBuilder
     {
         private const string OutputRoot = "Assets/Catalog_M4_ThemePresets_Demo";
-        private const string ThemesFolder = OutputRoot + "/Themes";
-        private const string CasualPath = ThemesFolder + "/Theme_Casual.asset";
-        private const string PremiumPath = ThemesFolder + "/Theme_Premium.asset";
         private const string ScenePath = OutputRoot + "/ThemePresetsDemo.unity";
         private const string DefaultThemePath = "Packages/com.kitforgelabs.mobile-ui-kit/Runtime/Theme/Presets/Theme_Default.asset";
+        private const string CasualThemePath = "Packages/com.kitforgelabs.mobile-ui-kit/Runtime/Theme/Presets/Theme_Casual.asset";
+        private const string PremiumThemePath = "Packages/com.kitforgelabs.mobile-ui-kit/Runtime/Theme/Presets/Theme_Premium.asset";
         private const string GameOverPrefabPath = "Assets/Catalog_GroupC_Demo/Prefabs/GameOverPopup.prefab";
         private const string LevelCompletePrefabPath = "Assets/Catalog_GroupC_Demo/Prefabs/LevelCompletePopup.prefab";
         private const string GroupBStubAsmdef = "KitforgeLabs.MobileUIKit.Samples.CatalogGroupB";
         private const string GroupCStubAsmdef = "KitforgeLabs.MobileUIKit.Samples.CatalogGroupC";
         private const string SampleAsmdef = "KitforgeLabs.MobileUIKit.Samples.CatalogM41ThemePresets";
         private const string SwitcherTypeName = "KitforgeLabs.MobileUIKit.Samples.CatalogM41ThemePresets.ThemeSwitcherSample, " + SampleAsmdef;
-        private const string InstructionsText = "M4.1 — Theme Presets demo. Use the dropdown to switch theme; press a button to spawn the popup. Same prefab + 3 themes = 3 distinct visual identities (skin-it-once contract).";
+        private const string InstructionsText = "M4.1 — Theme Presets demo. Use the dropdown to switch theme; press a button to spawn the popup. Same prefab + 3 themes = 3 distinct visual identities (skin-it-once contract). Theme assets ship in the package at Runtime/Theme/Presets/.";
 
         private static readonly Color HUDPanelColor = new Color(0f, 0f, 0f, 0.55f);
         private static readonly Color UIBgColor = new Color(0.10f, 0.12f, 0.16f, 1f);
@@ -38,25 +37,23 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
         {
             if (!CheckDependencies(interactive)) return false;
             EnsureFolders();
-            var defaultTheme = AssetDatabase.LoadAssetAtPath<UIThemeConfig>(DefaultThemePath);
-            BuildThemeAsset(defaultTheme, CasualPath, CasualPalette);
-            BuildThemeAsset(defaultTheme, PremiumPath, PremiumPalette);
-            AssetDatabase.SaveAssets();
-            AssetDatabase.Refresh();
             BuildDemoScene();
             if (interactive) EditorUtility.DisplayDialog(
                 "Kitforge UI Kit — M4.1 Theme Presets",
-                $"Generated under {OutputRoot}:\n• Theme_Casual.asset (bright/saturated)\n• Theme_Premium.asset (dark/desaturated)\n• ThemePresetsDemo.unity\n\nOpen the scene → Play → use the Theme dropdown + buttons to validate the skin-it-once contract.",
+                $"Generated under {OutputRoot}:\n• ThemePresetsDemo.unity wired to 3 themes shipped in the package (Default + Casual + Premium under Runtime/Theme/Presets/).\n\nOpen the scene → Play → use the Theme dropdown + buttons to validate the skin-it-once contract.",
                 "OK");
             return true;
         }
 
         private static bool CheckDependencies(bool interactive)
         {
-            if (AssetDatabase.LoadAssetAtPath<UIThemeConfig>(DefaultThemePath) == null)
+            if (AssetDatabase.LoadAssetAtPath<UIThemeConfig>(DefaultThemePath) == null
+                || AssetDatabase.LoadAssetAtPath<UIThemeConfig>(CasualThemePath) == null
+                || AssetDatabase.LoadAssetAtPath<UIThemeConfig>(PremiumThemePath) == null)
             {
-                if (!interactive) { Debug.LogError($"[CatalogM41ThemeBuilder] Theme missing at {DefaultThemePath}. Run 'Tools/Kitforge/UI Kit/Bootstrap Defaults' first."); return false; }
-                EditorUtility.DisplayDialog("Bootstrap Defaults missing", $"No Theme found at {DefaultThemePath}.\n\nRun 'Tools/Kitforge/UI Kit/Bootstrap Defaults' first.", "OK");
+                var msg = $"Theme presets missing. Expected:\n• {DefaultThemePath}\n• {CasualThemePath}\n• {PremiumThemePath}\n\nReinstall the package (the 3 .asset files ship under Runtime/Theme/Presets/).";
+                if (!interactive) { Debug.LogError($"[CatalogM41ThemeBuilder] {msg}"); return false; }
+                EditorUtility.DisplayDialog("Theme presets missing", msg, "OK");
                 return false;
             }
             if (AssetDatabase.LoadAssetAtPath<GameObject>(GameOverPrefabPath) == null
@@ -75,41 +72,6 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
         private static void EnsureFolders()
         {
             if (!AssetDatabase.IsValidFolder(OutputRoot)) AssetDatabase.CreateFolder("Assets", "Catalog_M4_ThemePresets_Demo");
-            if (!AssetDatabase.IsValidFolder(ThemesFolder)) AssetDatabase.CreateFolder(OutputRoot, "Themes");
-        }
-
-        // ── Theme cloning ───────────────────────────────────────────────────
-
-        private static UIThemeConfig BuildThemeAsset(UIThemeConfig source, string path, ColorPalette palette)
-        {
-            var sourcePath = AssetDatabase.GetAssetPath(source);
-            if (AssetDatabase.LoadAssetAtPath<UIThemeConfig>(path) != null) AssetDatabase.DeleteAsset(path);
-            AssetDatabase.CopyAsset(sourcePath, path);
-            var asset = AssetDatabase.LoadAssetAtPath<UIThemeConfig>(path);
-            var so = new SerializedObject(asset);
-            ApplyPalette(so, palette);
-            so.ApplyModifiedPropertiesWithoutUndo();
-            return asset;
-        }
-
-        private static void ApplyPalette(SerializedObject so, ColorPalette p)
-        {
-            so.FindProperty("_primaryColor").colorValue = p.Primary;
-            so.FindProperty("_secondaryColor").colorValue = p.Secondary;
-            so.FindProperty("_accentColor").colorValue = p.Accent;
-            so.FindProperty("_backgroundDark").colorValue = p.BackgroundDark;
-            so.FindProperty("_backgroundLight").colorValue = p.BackgroundLight;
-            so.FindProperty("_textPrimary").colorValue = p.TextPrimary;
-            so.FindProperty("_textSecondary").colorValue = p.TextSecondary;
-            so.FindProperty("_successColor").colorValue = p.Success;
-            so.FindProperty("_warningColor").colorValue = p.Warning;
-            so.FindProperty("_dangerColor").colorValue = p.Danger;
-            so.FindProperty("_failureColor").colorValue = p.Failure;
-            so.FindProperty("_tertiaryColor").colorValue = p.Tertiary;
-            so.FindProperty("_mutedColor").colorValue = p.Muted;
-            so.FindProperty("_textOnPrimary").colorValue = p.TextOnPrimary;
-            so.FindProperty("_textOnAccent").colorValue = p.TextOnAccent;
-            so.FindProperty("_loadingBarColor").colorValue = p.LoadingBar;
         }
 
         // ── Demo scene ──────────────────────────────────────────────────────
@@ -118,8 +80,8 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
         {
             var scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
             var defaultTheme = AssetDatabase.LoadAssetAtPath<UIThemeConfig>(DefaultThemePath);
-            var casual = AssetDatabase.LoadAssetAtPath<UIThemeConfig>(CasualPath);
-            var premium = AssetDatabase.LoadAssetAtPath<UIThemeConfig>(PremiumPath);
+            var casual = AssetDatabase.LoadAssetAtPath<UIThemeConfig>(CasualThemePath);
+            var premium = AssetDatabase.LoadAssetAtPath<UIThemeConfig>(PremiumThemePath);
             EditorSceneFactory.CreateMainCamera(scene);
             BuildEventSystem(scene);
             var (canvas, popupRoot, dropdown, gameOverButton, levelCompleteButton) = BuildUICanvas(scene);
@@ -364,45 +326,6 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             rt.pivot = new Vector2(1f, 0f);
             rt.anchoredPosition = new Vector2(x, y);
             rt.sizeDelta = new Vector2(w, h);
-        }
-
-        // ── Palettes ────────────────────────────────────────────────────────
-
-        private struct ColorPalette
-        {
-            public Color Primary, Secondary, Tertiary, Accent, Muted;
-            public Color BackgroundDark, BackgroundLight;
-            public Color TextPrimary, TextSecondary, TextOnPrimary, TextOnAccent;
-            public Color Success, Warning, Danger, Failure, LoadingBar;
-        }
-
-        private static readonly ColorPalette CasualPalette = new ColorPalette
-        {
-            Primary = Hex("#FF7B2B"), Secondary = Hex("#00B5A8"), Tertiary = Hex("#8DC93B"),
-            Accent = Hex("#FFC93B"), Muted = Hex("#B5AAA0"),
-            BackgroundDark = Hex("#2E1B4D"), BackgroundLight = Hex("#FFF7E8"),
-            TextPrimary = Hex("#3D2817"), TextSecondary = Hex("#7A5A40"),
-            TextOnPrimary = Hex("#FFFFFF"), TextOnAccent = Hex("#2A1A0F"),
-            Success = Hex("#4CDB4C"), Warning = Hex("#FFA830"),
-            Danger = Hex("#FF4D5E"), Failure = Hex("#D62828"),
-            LoadingBar = Hex("#FFC93B")
-        };
-
-        private static readonly ColorPalette PremiumPalette = new ColorPalette
-        {
-            Primary = Hex("#1A8B6F"), Secondary = Hex("#3B5C7A"), Tertiary = Hex("#8A6A3B"),
-            Accent = Hex("#C9A55A"), Muted = Hex("#3A3F4A"),
-            BackgroundDark = Hex("#0D1117"), BackgroundLight = Hex("#1F232B"),
-            TextPrimary = Hex("#E8E0CE"), TextSecondary = Hex("#A89C82"),
-            TextOnPrimary = Hex("#E8E0CE"), TextOnAccent = Hex("#1A1410"),
-            Success = Hex("#4A9D8A"), Warning = Hex("#C97C3B"),
-            Danger = Hex("#A53048"), Failure = Hex("#7A1A1A"),
-            LoadingBar = Hex("#C9A55A")
-        };
-
-        private static Color Hex(string hex)
-        {
-            return ColorUtility.TryParseHtmlString(hex, out var c) ? c : Color.magenta;
         }
     }
 }
