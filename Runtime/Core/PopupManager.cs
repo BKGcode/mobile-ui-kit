@@ -179,6 +179,8 @@ namespace KitforgeLabs.UIKit.Core
             Dismiss(popup);
         }
 
+        public bool IsRegistered(Type type) => FindPrefab(type) != null;
+
         private UIModuleBase FindPrefab(Type type)
         {
             if (_popupPrefabs == null) return null;

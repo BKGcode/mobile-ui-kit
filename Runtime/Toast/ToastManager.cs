@@ -107,6 +107,8 @@ namespace KitforgeLabs.UIKit.Toast
             }
         }
 
+        public bool IsRegistered(Type type) => FindPrefab(type) != null;
+
         private UIToastBase FindPrefab(Type type)
         {
             if (_toastPrefabs == null) return null;

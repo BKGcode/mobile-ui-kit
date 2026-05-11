@@ -2,6 +2,17 @@
 
 All notable changes to this package are documented here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.3] — 2026-05-11
+
+### Added
+
+- **`IsRegistered(Type)` public API** on `PopupManager`, `UIManager` and `ToastManager`. Returns `true` when a prefab matching the requested type exists in the manager's Inspector array. Lets editor tooling and host code pre-check registration without triggering the error-logging path.
+
+### Fixed
+
+- **Hub Test launcher silent error spam** when buyer clicks Spawn on a popup / screen / toast whose prefab is not yet wired into the manager. The launcher now uses `IsRegistered` to pre-check before invoking the manager method; if missing, it logs a single warning explaining how to wire the prefab (instead of triggering 17 `[PopupManager] No prefab registered` errors when the buyer cycles through the catalog).
+- **Test launcher banner copy** clarifies the v1.1.x contract: the kit ships catalog *components* but not prefab assets — the buyer wires their own. v1.2.0 will revisit this with package-shipped prefabs or programmatic spawn.
+
 ## [1.1.2] — 2026-05-11
 
 ### Fixed

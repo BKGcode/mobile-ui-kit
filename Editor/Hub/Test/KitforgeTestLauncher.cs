@@ -80,11 +80,11 @@ namespace KitforgeLabs.UIKit.Editor.Hub.Test
             else if (Application.isPlaying)
             {
                 banner.AddToClassList("kfh-test-banner--play");
-                AppendBannerMessage(banner, "Play mode active — click Spawn on any element below.");
+                AppendBannerMessage(banner, "Play mode active. Click Spawn on any element whose prefab you have wired into the corresponding manager's Inspector array. The kit ships catalog components but not prefab assets — wire your own prefabs first.");
             }
             else
             {
-                AppendBannerMessage(banner, "KitforgeRoot detected — enter Play mode to spawn catalog elements with mock DTO data + Force scenarios.");
+                AppendBannerMessage(banner, "KitforgeRoot detected. Wire your catalog prefabs into PopupManager._popupPrefabs[], UIManager._screenPrefabs[], ToastManager._toastPrefabs[] in the Inspector. Then enter Play mode and use Spawn to test with mock DTO data + Force scenarios.");
             }
             _root.Add(banner);
         }
@@ -262,7 +262,21 @@ namespace KitforgeLabs.UIKit.Editor.Hub.Test
                 NotifyHub($"Spawn blocked: no {typeof(TManager).Name}");
                 return;
             }
+            if (!IsTypeRegistered(manager, componentType))
+            {
+                Debug.LogWarning($"[KitforgeTestLauncher] No prefab registered for {componentType.Name} on {typeof(TManager).Name}. The kit ships the component scripts but not prefab assets — wire your own {componentType.Name} prefab into the manager's Inspector array (e.g. PopupManager._popupPrefabs[]) before testing. The Hub Catalog tab shows the canonical spawn snippet for every element.");
+                NotifyHub($"No prefab wired: {componentType.Name}");
+                return;
+            }
             InvokeManagerMethod(manager, methodName, componentType, data, displayName);
+        }
+
+        private static bool IsTypeRegistered(MonoBehaviour manager, Type componentType)
+        {
+            var method = manager.GetType().GetMethod("IsRegistered", new[] { typeof(Type) });
+            if (method == null) return true;
+            var result = method.Invoke(manager, new object[] { componentType });
+            return result is bool ok && ok;
         }
 
         private void InvokeManagerMethod(MonoBehaviour manager, string methodName, Type componentType, object data, string displayName)
