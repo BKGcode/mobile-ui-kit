@@ -7,6 +7,12 @@ _Last updated: 2026-05-09 (M4.X cluster close — post-`v0.9.0-alpha` hardening,
 
 ## [Unreleased]
 
+## [1.0.1] — 2026-05-11
+
+### Fixed
+
+- **Input System package compatibility** — `KitforgeRoot.prefab` shipped with a legacy `StandaloneInputModule` on its `EventSystem`, which threw `InvalidOperationException: You are trying to read Input using the UnityEngine.Input class` under buyers with `Active Input Handling = Input System Package` (legacy disabled). New `KitforgeInputBootstrap` runtime static class (`Runtime/Bootstrap/KitforgeInputBootstrap.cs`, gated by `ENABLE_INPUT_SYSTEM && !ENABLE_LEGACY_INPUT_MANAGER`) hooks `SceneManager.sceneLoaded` via `[RuntimeInitializeOnLoadMethod(BeforeSceneLoad)]` and reflectively swaps `StandaloneInputModule` for `UnityEngine.InputSystem.UI.InputSystemUIInputModule` on every `EventSystem` in the scene. No asmdef changes (reflection-based — works whether the Input System package is installed or not). No prefab modification (zero binary delta). Zero buyer action required after upgrade.
+
 ## [1.0.0] — 2026-05-10
 
 > First stable release of Kitforge Mobile UI Kit. Promotion from `v1.0.0-rc.2` with no code, API, or sample changes — release-candidate cycle (rc.1 → rc.2 → 1.0.0) closed without further hotfixes. Promotion gate: 24/24 UIKit Audit (17 prefabs + 7 scenes) PASS + 303 EditMode tests green. Public API frozen.
