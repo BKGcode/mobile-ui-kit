@@ -1,6 +1,6 @@
 using System;
 
-namespace KitforgeLabs.MobileUIKit.Catalog.Shop
+namespace KitforgeLabs.UIKit.Catalog.Shop
 {
     [Serializable]
     public class ShopPopupData

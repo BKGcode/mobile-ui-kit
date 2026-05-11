@@ -1,4 +1,4 @@
-namespace KitforgeLabs.MobileUIKit.Catalog.GameOver
+namespace KitforgeLabs.UIKit.Catalog.GameOver
 {
     public enum BackPressBehavior
     {

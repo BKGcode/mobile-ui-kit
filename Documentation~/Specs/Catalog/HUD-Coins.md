@@ -7,7 +7,7 @@ Live coin counter that lives on the gameplay screen (NOT in popup registry), rea
 
 | # | Decision | Proposal | Rationale |
 |---|---|---|---|
-| HC1 | Class hierarchy | `HUDCoins : UIHUDBase` (sealed). No further subclassing — buyer customizes via Theme + Refs. | Avoids over-abstraction. Per ecosystem feedback (KF_MobileUIKit pre-Group B): "if a primitive solves it, don't abstract". UIHUDBase IS the abstraction. |
+| HC1 | Class hierarchy | `HUDCoins : UIHUDBase` (sealed). No further subclassing — buyer customizes via Theme + Refs. | Avoids over-abstraction. Principle: if a primitive solves it, don't abstract. UIHUDBase IS the abstraction. |
 | HC2 | Animation on change | Punch-scale tween on counter label when value changes. `_changeAnimDuration` (default 0.18s) + `_changeAnimScale` (1.20) Inspector-tunable. | Standard mobile feedback ("juicy"). Style preset = `Punchy`. |
 | HC3 | Number formatting | Default integer with thousand separators (`12,345`). Buyer overrides via `_formatString` Inspector field (default `"N0"`). | Plain int + `ToString(format)`. No new dependency. |
 | HC4 | Initial value source | `OnEnable` calls `Refresh()` which reads `Services.Economy.GetCoins()`. No initial animation (snap to current). | Avoids "0 → 1000 ramp" on every screen load. |

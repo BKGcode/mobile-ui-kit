@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace KitforgeLabs.MobileUIKit.Services
+namespace KitforgeLabs.UIKit.Services
 {
     [DisallowMultipleComponent]
     [DefaultExecutionOrder(-100)]

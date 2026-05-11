@@ -1,7 +1,7 @@
 using System;
-using KitforgeLabs.MobileUIKit.Services;
+using KitforgeLabs.UIKit.Services;
 
-namespace KitforgeLabs.MobileUIKit.Catalog.Tests.Helpers
+namespace KitforgeLabs.UIKit.Catalog.Tests.Helpers
 {
     internal sealed class FakeAdsService : IAdsService
     {

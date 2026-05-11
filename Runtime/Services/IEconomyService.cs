@@ -1,6 +1,6 @@
 using System;
 
-namespace KitforgeLabs.MobileUIKit.Services
+namespace KitforgeLabs.UIKit.Services
 {
     public interface IEconomyService
     {

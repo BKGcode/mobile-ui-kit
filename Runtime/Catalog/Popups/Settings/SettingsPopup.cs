@@ -1,13 +1,13 @@
 using System;
 using System.Collections.Generic;
-using KitforgeLabs.MobileUIKit.Animation;
-using KitforgeLabs.MobileUIKit.Core;
-using KitforgeLabs.MobileUIKit.Services;
+using KitforgeLabs.UIKit.Animation;
+using KitforgeLabs.UIKit.Core;
+using KitforgeLabs.UIKit.Services;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace KitforgeLabs.MobileUIKit.Catalog.Settings
+namespace KitforgeLabs.UIKit.Catalog.Settings
 {
     [DisallowMultipleComponent]
     [RequireComponent(typeof(UIAnimSettingsPopup))]

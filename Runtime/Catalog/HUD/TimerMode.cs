@@ -1,4 +1,4 @@
-namespace KitforgeLabs.MobileUIKit.Catalog.HUD
+namespace KitforgeLabs.UIKit.Catalog.HUD
 {
     public enum TimerMode
     {

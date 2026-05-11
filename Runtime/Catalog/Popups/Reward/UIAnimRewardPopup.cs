@@ -1,6 +1,6 @@
-using KitforgeLabs.MobileUIKit.Catalog.Internal;
+using KitforgeLabs.UIKit.Catalog.Internal;
 
-namespace KitforgeLabs.MobileUIKit.Catalog.Reward
+namespace KitforgeLabs.UIKit.Catalog.Reward
 {
     public sealed class UIAnimRewardPopup : UIAnimPopupBase { }
 }

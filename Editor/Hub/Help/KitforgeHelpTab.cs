@@ -6,13 +6,11 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using PackageInfo = UnityEditor.PackageManager.PackageInfo;
 
-namespace KitforgeLabs.MobileUIKit.Editor.Hub.Help
+namespace KitforgeLabs.UIKit.Editor.Hub.Help
 {
     internal sealed class KitforgeHelpTab
     {
         private const string CheatsheetRelative = "Documentation~/CHEATSHEET.md";
-        private const string AuditMenu = "Tools/Kitforge/UI Kit/Audit";
-        private const string BuildGroupAMenu = "Tools/Kitforge/UI Kit/Build Group A Sample";
         private static readonly Regex LinkRegex = new(@"\[([^\]]+)\]\(([^)]+)\)", RegexOptions.Compiled);
 
         private VisualElement _root;
@@ -43,8 +41,6 @@ namespace KitforgeLabs.MobileUIKit.Editor.Hub.Help
             var toolbar = new VisualElement();
             toolbar.AddToClassList("kfh-help-toolbar");
             toolbar.Add(MakeToolbarButton("Open in editor", OpenCheatsheetExternally));
-            toolbar.Add(MakeToolbarButton("Run Audit", () => EditorApplication.ExecuteMenuItem(AuditMenu)));
-            toolbar.Add(MakeToolbarButton("Build Group A Sample", () => EditorApplication.ExecuteMenuItem(BuildGroupAMenu)));
             _root.Add(toolbar);
         }
 

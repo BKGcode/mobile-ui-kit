@@ -1,9 +1,9 @@
 using System.Collections.Generic;
-using KitforgeLabs.MobileUIKit.Catalog.Tutorial;
+using KitforgeLabs.UIKit.Catalog.Tutorial;
 using NUnit.Framework;
 using UnityEngine;
 
-namespace KitforgeLabs.MobileUIKit.Catalog.Tests
+namespace KitforgeLabs.UIKit.Catalog.Tests
 {
     [TestFixture]
     public class TutorialPopupTests

@@ -1,10 +1,10 @@
-using KitforgeLabs.MobileUIKit.Animation;
+using KitforgeLabs.UIKit.Animation;
 using TMPro;
 using UnityEngine;
 
-namespace KitforgeLabs.MobileUIKit.Theme
+namespace KitforgeLabs.UIKit.Theme
 {
-    [CreateAssetMenu(menuName = "Kitforge/UI Kit/Theme Config", fileName = "UIThemeConfig", order = 0)]
+    [CreateAssetMenu(menuName = "KitforgeLabs/UI Kit/Theme", fileName = "UIThemeConfig", order = 0)]
     public class UIThemeConfig : ScriptableObject
     {
         [Header("Colors")]

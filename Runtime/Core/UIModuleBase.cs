@@ -1,10 +1,10 @@
 using System;
-using KitforgeLabs.MobileUIKit.Animation;
-using KitforgeLabs.MobileUIKit.Services;
-using KitforgeLabs.MobileUIKit.Theme;
+using KitforgeLabs.UIKit.Animation;
+using KitforgeLabs.UIKit.Services;
+using KitforgeLabs.UIKit.Theme;
 using UnityEngine;
 
-namespace KitforgeLabs.MobileUIKit.Core
+namespace KitforgeLabs.UIKit.Core
 {
     public abstract class UIModuleBase : MonoBehaviour
     {
@@ -38,7 +38,7 @@ namespace KitforgeLabs.MobileUIKit.Core
             if (preset == null && !_presetWarningLogged)
             {
                 _presetWarningLogged = true;
-                Debug.LogWarning($"[{GetType().Name}] No animation preset resolved — popup will appear without animation. Run 'Tools/Kitforge/UI Kit/Bootstrap Defaults' or assign UIThemeConfig.DefaultAnimPreset.", this);
+                Debug.LogWarning($"[{GetType().Name}] No animation preset resolved — popup will appear without animation. Run 'KitforgeLabs/UI Kit/Bootstrap Defaults' or assign UIThemeConfig.DefaultAnimPreset.", this);
             }
             return preset;
         }

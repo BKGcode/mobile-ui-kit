@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
-using KitforgeLabs.MobileUIKit.Routing;
+using KitforgeLabs.UIKit.Routing;
 using UnityEngine;
 
-namespace KitforgeLabs.MobileUIKit.Core
+namespace KitforgeLabs.UIKit.Core
 {
     [DisallowMultipleComponent]
     public sealed class UIRouter : MonoBehaviour

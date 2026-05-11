@@ -1,10 +1,10 @@
-using KitforgeLabs.MobileUIKit.Catalog.Shop;
-using KitforgeLabs.MobileUIKit.Catalog.Tests.Helpers;
-using KitforgeLabs.MobileUIKit.Services;
+using KitforgeLabs.UIKit.Catalog.Shop;
+using KitforgeLabs.UIKit.Catalog.Tests.Helpers;
+using KitforgeLabs.UIKit.Services;
 using NUnit.Framework;
 using UnityEngine;
 
-namespace KitforgeLabs.MobileUIKit.Catalog.Tests
+namespace KitforgeLabs.UIKit.Catalog.Tests
 {
     [TestFixture]
     public class ShopPopupTests

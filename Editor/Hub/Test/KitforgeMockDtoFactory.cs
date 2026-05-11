@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
-using KitforgeLabs.MobileUIKit.Catalog.DailyLogin;
-using KitforgeLabs.MobileUIKit.Catalog.Reward;
-using KitforgeLabs.MobileUIKit.Catalog.Tutorial;
-using KitforgeLabs.MobileUIKit.Editor.Hub.Catalog;
+using KitforgeLabs.UIKit.Catalog.DailyLogin;
+using KitforgeLabs.UIKit.Catalog.Reward;
+using KitforgeLabs.UIKit.Catalog.Tutorial;
+using KitforgeLabs.UIKit.Editor.Hub.Catalog;
 using UnityEngine;
 
-namespace KitforgeLabs.MobileUIKit.Editor.Hub.Test
+namespace KitforgeLabs.UIKit.Editor.Hub.Test
 {
     public static class KitforgeMockDtoFactory
     {

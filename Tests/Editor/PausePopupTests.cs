@@ -1,12 +1,12 @@
-using KitforgeLabs.MobileUIKit.Animation;
-using KitforgeLabs.MobileUIKit.Catalog.Pause;
-using KitforgeLabs.MobileUIKit.Services;
-using KitforgeLabs.MobileUIKit.Theme;
+using KitforgeLabs.UIKit.Animation;
+using KitforgeLabs.UIKit.Catalog.Pause;
+using KitforgeLabs.UIKit.Services;
+using KitforgeLabs.UIKit.Theme;
 using NUnit.Framework;
 using UnityEditor;
 using UnityEngine;
 
-namespace KitforgeLabs.MobileUIKit.Catalog.Tests
+namespace KitforgeLabs.UIKit.Catalog.Tests
 {
     [TestFixture]
     public class PausePopupTests

@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace KitforgeLabs.MobileUIKit.Catalog.Screens
+namespace KitforgeLabs.UIKit.Catalog.Screens
 {
     [Serializable]
     public class MainMenuScreenData

@@ -1,10 +1,10 @@
 using System.Collections.Generic;
-using KitforgeLabs.MobileUIKit.Core;
-using KitforgeLabs.MobileUIKit.Routing;
+using KitforgeLabs.UIKit.Core;
+using KitforgeLabs.UIKit.Routing;
 using NUnit.Framework;
 using UnityEngine;
 
-namespace KitforgeLabs.MobileUIKit.Tests.EditMode
+namespace KitforgeLabs.UIKit.Tests.EditMode
 {
     public sealed class UIRouterTests
     {

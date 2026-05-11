@@ -1,6 +1,6 @@
 using System;
 
-namespace KitforgeLabs.MobileUIKit.Catalog.Settings
+namespace KitforgeLabs.UIKit.Catalog.Settings
 {
     [Serializable]
     public class SettingsPopupData

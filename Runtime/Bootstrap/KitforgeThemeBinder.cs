@@ -1,9 +1,9 @@
-using KitforgeLabs.MobileUIKit.Core;
-using KitforgeLabs.MobileUIKit.Theme;
-using KitforgeLabs.MobileUIKit.Toast;
+using KitforgeLabs.UIKit.Core;
+using KitforgeLabs.UIKit.Theme;
+using KitforgeLabs.UIKit.Toast;
 using UnityEngine;
 
-namespace KitforgeLabs.MobileUIKit.Bootstrap
+namespace KitforgeLabs.UIKit.Bootstrap
 {
     [DefaultExecutionOrder(-200)]
     [DisallowMultipleComponent]

@@ -1,7 +1,7 @@
 using System;
-using KitforgeLabs.MobileUIKit.Services;
+using KitforgeLabs.UIKit.Services;
 
-namespace KitforgeLabs.MobileUIKit.Catalog.GameOver
+namespace KitforgeLabs.UIKit.Catalog.GameOver
 {
     [Serializable]
     public class GameOverPopupData

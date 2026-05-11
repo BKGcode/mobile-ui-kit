@@ -1,13 +1,13 @@
 using System;
-using KitforgeLabs.MobileUIKit.Animation;
-using KitforgeLabs.MobileUIKit.Core;
-using KitforgeLabs.MobileUIKit.Services;
-using KitforgeLabs.MobileUIKit.Theme;
+using KitforgeLabs.UIKit.Animation;
+using KitforgeLabs.UIKit.Core;
+using KitforgeLabs.UIKit.Services;
+using KitforgeLabs.UIKit.Theme;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace KitforgeLabs.MobileUIKit.Catalog.Pause
+namespace KitforgeLabs.UIKit.Catalog.Pause
 {
     [DisallowMultipleComponent]
     [RequireComponent(typeof(UIAnimPausePopup))]

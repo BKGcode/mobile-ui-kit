@@ -1,13 +1,13 @@
 using System;
-using KitforgeLabs.MobileUIKit.Animation;
-using KitforgeLabs.MobileUIKit.Services;
-using KitforgeLabs.MobileUIKit.Theme;
-using KitforgeLabs.MobileUIKit.Toast;
+using KitforgeLabs.UIKit.Animation;
+using KitforgeLabs.UIKit.Services;
+using KitforgeLabs.UIKit.Theme;
+using KitforgeLabs.UIKit.Toast;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace KitforgeLabs.MobileUIKit.Catalog.Toasts
+namespace KitforgeLabs.UIKit.Catalog.Toasts
 {
     [DisallowMultipleComponent]
     [RequireComponent(typeof(UIAnimNotificationToast))]

@@ -1,4 +1,4 @@
-namespace KitforgeLabs.MobileUIKit.Catalog.Confirm
+namespace KitforgeLabs.UIKit.Catalog.Confirm
 {
     public enum ConfirmTone
     {

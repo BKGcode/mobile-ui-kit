@@ -1,13 +1,13 @@
 using System;
 using DG.Tweening;
-using KitforgeLabs.MobileUIKit.HUD;
-using KitforgeLabs.MobileUIKit.Services;
+using KitforgeLabs.UIKit.HUD;
+using KitforgeLabs.UIKit.Services;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-namespace KitforgeLabs.MobileUIKit.Catalog.HUD
+namespace KitforgeLabs.UIKit.Catalog.HUD
 {
     /// <summary>
     /// Parameterized HUD that displays a single currency from <see cref="IEconomyService"/>.

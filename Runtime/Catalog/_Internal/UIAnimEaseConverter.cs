@@ -1,7 +1,7 @@
 using DG.Tweening;
-using KitforgeLabs.MobileUIKit.Animation;
+using KitforgeLabs.UIKit.Animation;
 
-namespace KitforgeLabs.MobileUIKit.Catalog.Internal
+namespace KitforgeLabs.UIKit.Catalog.Internal
 {
     internal static class UIAnimEaseConverter
     {

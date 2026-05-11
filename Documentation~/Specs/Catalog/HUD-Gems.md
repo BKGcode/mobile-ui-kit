@@ -82,15 +82,12 @@ public interface IEconomyService
 | Axis | v1 (current) | v2 (proposed) |
 |---|---|---|
 | HUD per currency | New class per currency (HUD-Coins, HUD-Gems, HUD-Energy = 3 classes) | Single `HUDCurrency` parameterized by enum (1 class) |
-| Migration effort | Zero | BREAKING — every buyer impl rewrites |
-| Adding 4th currency | Add `GetXxx`/`SpendXxx`/`AddXxx`/`OnXxxChanged` to interface (BREAKING) + new HUD class | Add enum value (NOT breaking the interface) + reuse `HUDCurrency` |
 | Type safety | Compiler catches `economy.SpendCoins(x)` typos | Runtime — `Spend(CurrencyType.Coins, x)` requires param check |
 | Group A/B existing code | Compiles unchanged | Refactor `IShopDataProvider`, all popups, all tests |
 
 **Decision criteria** (apply at Group C kickoff, NOT now):
 1. Does Group C add a 3rd currency (Energy)? → +1 evidence for v2.
 2. Does the Asset Store competitive analysis show buyers asking for 4+ currencies (premium / event / soft / hard)? → +1 for v2.
-3. Is BREAKING acceptable in `v0.6.0-alpha`? → required for v2 path.
 
 **Recommended posture**: v2 is the cleaner long-term contract. Migration timing is the only question. Most likely adopted at Group C kickoff (where Energy joins). Group B does NOT block the migration — it inherits whatever contract exists.
 

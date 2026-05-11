@@ -1,6 +1,6 @@
-using KitforgeLabs.MobileUIKit.Catalog.Internal;
+using KitforgeLabs.UIKit.Catalog.Internal;
 
-namespace KitforgeLabs.MobileUIKit.Catalog.LevelComplete
+namespace KitforgeLabs.UIKit.Catalog.LevelComplete
 {
     public sealed class UIAnimLevelCompletePopup : UIAnimPopupBase { }
 }

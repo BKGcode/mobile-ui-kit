@@ -22,7 +22,7 @@ Live timer label — three modes: countdown to UTC target, countup since UTC sta
 **No DTO**. Inspector-configured + service-driven. Same as HUDCoins/HUDGems/HUDEnergy.
 
 ## Service binding
-Null-service behavior follows `CATALOG_GroupC_DELTA.md` § 4.5 (HUD = silent degrade — see Edge cases for per-service fallback).
+Null-service behavior follows the "silent degrade" rule (HUD = silent degrade — see Edge cases for per-service fallback).
 
 - `ITimeService` (REQUIRED via `_services` ref) for `CountdownToTarget` / `CountupSinceTarget` modes. Reads `GetServerTimeUtc()` per tick.
 - `IUIAudioRouter` (optional). Cue: `Error` (warning threshold crossed inbound — once; reused as the closest semantic match — `UIAudioCue.Failure` does NOT exist in the enum, drift fix vs older spec wording, same precedent as GameOver), `Success` (expiry — once). Off by default to avoid annoying gameplay HUD.
@@ -53,7 +53,7 @@ C# events reset on `SetTarget(...)` or `Reset()`.
 - `IconClock` (NEW Theme slot — optional icon left of label, applied via `ThemedImage` if `Refs.IconImage` non-null).
 
 ## Edge cases
-- **`_services` null OR `Services.Time` null in UTC mode**: label shows `"--:--"` SILENTLY, no LogError. Drift fix vs older "logs error" wording — `CATALOG_GroupC_DELTA.md` § 4.5 (HUD = silent degrade) wins; HUDs live on screens and a missing time service is a valid "feature not configured" state during scene-edit iteration. Stopwatch mode unaffected (uses `Time.unscaledTime` / `Time.time` per `_pausesWithTimeScale`).
+- **`_services` null OR `Services.Time` null in UTC mode**: label shows `"--:--"` SILENTLY, no LogError. Drift fix vs older "logs error" wording — the "silent degrade" rule (HUD = silent degrade) wins; HUDs live on screens and a missing time service is a valid "feature not configured" state during scene-edit iteration. Stopwatch mode unaffected (uses `Time.unscaledTime` / `Time.time` per `_pausesWithTimeScale`).
 - **`_targetUtc` default (`DateTime.MinValue`)**: countdown shows huge negative remaining → clamped to "00:00" + immediate expiry. Buyer must call `SetTarget` before `OnEnable` OR set `_targetUtcIso` in Inspector.
 - **Server clock drift** (`ITimeService.GetServerTimeUtc()` jumps backwards): tick recomputes from new now. Possible visual glitch (timer "rewinds"). Buyer's `ITimeService` impl should clamp.
 - **Format string invalid** (e.g. typo): falls back to `"mm:ss"` and logs error once.
@@ -92,8 +92,8 @@ Tests/Editor/
 ```
 
 ## Status
-- Code: ✅ delivered 2026-05-04 — `Runtime/Catalog/HUD/HUDTimer.cs` + `Runtime/Catalog/HUD/TimerMode.cs`. Single class with `TimerMode` enum (CountdownToTarget / CountupSinceTarget / LocalStopwatch), `[Serializable] private struct TimerRefs`, format/target/expiry/warning/pause SerializeFields, `RealTimeProviderForTests` Func injection, `Update() → tick rate throttle → Tick()` chain (M3 sweep: workaround indirection removed, logic inlined into Update), `OnEnable` bypasses `base.OnEnable` when `Services==null && _mode==LocalStopwatch` (stopwatch doesn't need services), public `SetTarget`/`Reset`/`SetPaused` API, C# events `OnExpired`/`OnWarningEntered` cleared via `ResetTransientFlags` in `SetTarget`/`Reset`, format-string validation with try/catch FormatException + fallback to `"mm\\:ss"` + LogError once.
+- Code: ✅ `Runtime/Catalog/HUD/HUDTimer.cs` + `Runtime/Catalog/HUD/TimerMode.cs`. Single class with `TimerMode` enum (CountdownToTarget / CountupSinceTarget / LocalStopwatch), `[Serializable] private struct TimerRefs`, format/target/expiry/warning/pause SerializeFields, `RealTimeProviderForTests` Func injection, `Update() → tick rate throttle → Tick()` chain , `OnEnable` bypasses `base.OnEnable` when `Services==null && _mode==LocalStopwatch` (stopwatch doesn't need services), public `SetTarget`/`Reset`/`SetPaused` API, C# events `OnExpired`/`OnWarningEntered` cleared via `ResetTransientFlags` in `SetTarget`/`Reset`, format-string validation with try/catch FormatException + fallback to `"mm\\:ss"` + LogError once.
 - Spec: ✅ this document
-- Tests: ✅ delivered 2026-05-04 — `Tests/Editor/HUDTimerTests.cs` 10 tests covering countdown initial/tick/expiry/warning/hide-on-expire / countup initial / stopwatch zero/pause/reset / UTC null-time silent (§ 4.5 drift fix). **199/199 tests verde sobre fresh compile.**
+- Tests: ✅ `Tests/Editor/HUDTimerTests.cs` 10 tests covering countdown initial/tick/expiry/warning/hide-on-expire / countup initial / stopwatch zero/pause/reset / UTC null-time silent (§ 4.5 drift fix). **199/199 tests verde sobre fresh compile.**
 - Prefab: ⏳ pending (`CatalogGroupCBuilder.BuildHUDTimer` — one prefab per mode, three presets total)
 - Demo scene entry: ⏳ pending (HUD on persistent canvas)

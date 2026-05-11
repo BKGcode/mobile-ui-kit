@@ -3,7 +3,7 @@ using System.IO;
 using UnityEditor;
 using UnityEngine;
 
-namespace KitforgeLabs.MobileUIKit.Editor.Hub.Catalog
+namespace KitforgeLabs.UIKit.Editor.Hub.Catalog
 {
     public static class KitforgeCatalogPrefabResolver
     {

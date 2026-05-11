@@ -1,13 +1,13 @@
 using System.Collections.Generic;
-using KitforgeLabs.MobileUIKit.Core;
-using KitforgeLabs.MobileUIKit.Toast;
+using KitforgeLabs.UIKit.Core;
+using KitforgeLabs.UIKit.Toast;
 using UnityEditor;
 using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace KitforgeLabs.MobileUIKit.Editor.Validation
+namespace KitforgeLabs.UIKit.Editor.Validation
 {
     public static class UIKitValidator
     {

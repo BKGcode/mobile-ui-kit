@@ -39,7 +39,7 @@ Modal that announces a completed level — stars (0-3), score, optional new-best
 `Bind(null)` → falls back to fresh instance.
 
 ## Service binding
-Null-service behavior follows `CATALOG_GroupC_DELTA.md` § 4.5.
+Null-service behavior follows the "silent degrade" rule.
 
 - `IUIAudioRouter` (optional). Cues: `PopupOpen`, `Success` (per star reveal + new-best banner), `ButtonTap` (any CTA), `PopupClose`.
 - No `IEconomyService` access — see L3.

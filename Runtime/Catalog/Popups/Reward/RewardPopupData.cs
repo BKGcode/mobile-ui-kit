@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace KitforgeLabs.MobileUIKit.Catalog.Reward
+namespace KitforgeLabs.UIKit.Catalog.Reward
 {
     [Serializable]
     public class RewardPopupData

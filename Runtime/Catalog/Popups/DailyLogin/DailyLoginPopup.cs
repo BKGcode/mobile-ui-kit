@@ -1,13 +1,13 @@
 using System;
-using KitforgeLabs.MobileUIKit.Animation;
-using KitforgeLabs.MobileUIKit.Catalog.Reward;
-using KitforgeLabs.MobileUIKit.Core;
-using KitforgeLabs.MobileUIKit.Services;
+using KitforgeLabs.UIKit.Animation;
+using KitforgeLabs.UIKit.Catalog.Reward;
+using KitforgeLabs.UIKit.Core;
+using KitforgeLabs.UIKit.Services;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace KitforgeLabs.MobileUIKit.Catalog.DailyLogin
+namespace KitforgeLabs.UIKit.Catalog.DailyLogin
 {
     [DisallowMultipleComponent]
     [RequireComponent(typeof(UIAnimDailyLoginPopup))]

@@ -1,15 +1,15 @@
 using System.Reflection;
 using System.Text.RegularExpressions;
-using KitforgeLabs.MobileUIKit.Catalog.LevelComplete;
-using KitforgeLabs.MobileUIKit.Catalog.Reward;
-using KitforgeLabs.MobileUIKit.Catalog.Tests.Helpers;
-using KitforgeLabs.MobileUIKit.Core;
-using KitforgeLabs.MobileUIKit.Services;
+using KitforgeLabs.UIKit.Catalog.LevelComplete;
+using KitforgeLabs.UIKit.Catalog.Reward;
+using KitforgeLabs.UIKit.Catalog.Tests.Helpers;
+using KitforgeLabs.UIKit.Core;
+using KitforgeLabs.UIKit.Services;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
 
-namespace KitforgeLabs.MobileUIKit.Catalog.Tests
+namespace KitforgeLabs.UIKit.Catalog.Tests
 {
     [TestFixture]
     public class LevelCompletePopupTests

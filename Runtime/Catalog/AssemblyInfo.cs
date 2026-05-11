@@ -1,3 +1,3 @@
 using System.Runtime.CompilerServices;
 
-[assembly: InternalsVisibleTo("KitforgeLabs.MobileUIKit.Catalog.Tests")]
+[assembly: InternalsVisibleTo("KitforgeLabs.UIKit.Catalog.Tests")]

@@ -45,7 +45,7 @@ Modal that announces level failure / death — Continue (rewarded ad OR currency
 `Bind(null)` → falls back to fresh instance.
 
 ## Service binding
-Null-service behavior follows `CATALOG_GroupC_DELTA.md` § 4.5.
+Null-service behavior follows the "silent degrade" rule.
 
 - `IAdsService` (optional). `IsRewardedAdReady()` queried on Bind to gate Ad CTA — disabled (grayed) when not ready.
 - `IEconomyService` (optional). `CanAfford(currency, amount)` queried on Bind to gate Currency CTA per GO3.

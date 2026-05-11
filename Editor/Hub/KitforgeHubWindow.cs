@@ -1,14 +1,14 @@
 using System;
-using KitforgeLabs.MobileUIKit.Editor.Hub.Catalog;
-using KitforgeLabs.MobileUIKit.Editor.Hub.Help;
-using KitforgeLabs.MobileUIKit.Editor.Hub.Setup;
-using KitforgeLabs.MobileUIKit.Editor.Hub.Test;
-using KitforgeLabs.MobileUIKit.Editor.Hub.Theme;
+using KitforgeLabs.UIKit.Editor.Hub.Catalog;
+using KitforgeLabs.UIKit.Editor.Hub.Help;
+using KitforgeLabs.UIKit.Editor.Hub.Setup;
+using KitforgeLabs.UIKit.Editor.Hub.Test;
+using KitforgeLabs.UIKit.Editor.Hub.Theme;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace KitforgeLabs.MobileUIKit.Editor.Hub
+namespace KitforgeLabs.UIKit.Editor.Hub
 {
     public sealed class KitforgeHubWindow : EditorWindow
     {
@@ -18,7 +18,7 @@ namespace KitforgeLabs.MobileUIKit.Editor.Hub
         private VisualElement _sidebar;
         private VisualElement _content;
 
-        [MenuItem("Tools/Kitforge/Hub")]
+        [MenuItem("KitforgeLabs/UI Kit/Hub")]
         public static void Open()
         {
             var w = GetWindow<KitforgeHubWindow>("Kitforge Hub");

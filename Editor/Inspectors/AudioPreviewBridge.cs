@@ -2,7 +2,7 @@ using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 
-namespace KitforgeLabs.MobileUIKit.Editor.Inspectors
+namespace KitforgeLabs.UIKit.Editor.Inspectors
 {
     internal static class AudioPreviewBridge
     {

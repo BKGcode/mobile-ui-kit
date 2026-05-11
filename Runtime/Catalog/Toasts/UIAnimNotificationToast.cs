@@ -1,9 +1,9 @@
 using DG.Tweening;
-using KitforgeLabs.MobileUIKit.Animation;
-using KitforgeLabs.MobileUIKit.Catalog.Internal;
+using KitforgeLabs.UIKit.Animation;
+using KitforgeLabs.UIKit.Catalog.Internal;
 using UnityEngine;
 
-namespace KitforgeLabs.MobileUIKit.Catalog.Toasts
+namespace KitforgeLabs.UIKit.Catalog.Toasts
 {
     [DisallowMultipleComponent]
     [RequireComponent(typeof(CanvasGroup))]

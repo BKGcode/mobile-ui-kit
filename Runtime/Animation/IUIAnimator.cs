@@ -1,6 +1,6 @@
 using System;
 
-namespace KitforgeLabs.MobileUIKit.Animation
+namespace KitforgeLabs.UIKit.Animation
 {
     public interface IUIAnimator
     {

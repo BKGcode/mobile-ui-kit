@@ -1,6 +1,6 @@
-using KitforgeLabs.MobileUIKit.Catalog.Internal;
+using KitforgeLabs.UIKit.Catalog.Internal;
 
-namespace KitforgeLabs.MobileUIKit.Catalog.Settings
+namespace KitforgeLabs.UIKit.Catalog.Settings
 {
     public sealed class UIAnimSettingsPopup : UIAnimPopupBase { }
 }

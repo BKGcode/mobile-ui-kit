@@ -1,20 +1,19 @@
 using System;
 using DG.Tweening;
-using KitforgeLabs.MobileUIKit.Services;
+using KitforgeLabs.UIKit.Services;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace KitforgeLabs.MobileUIKit.Catalog.HUD
+namespace KitforgeLabs.UIKit.Catalog.HUD
 {
     /// <summary>
     /// HUD that displays player energy. Seals <see cref="HUDCurrency.ResolveCurrency"/> to
     /// <see cref="CurrencyType.Energy"/> regardless of the inherited <c>_currency</c> Inspector
-    /// field — buyer cannot break energy binding via Inspector mistake. Extends the base HUD
-    /// with a regen-tick countdown label, a max-cap suffix label, an energy bar fill image,
-    /// and a 1Hz <see cref="IProgressionService.GetEnergyRegenState"/> poll. Null-progression
-    /// behavior follows CATALOG_GroupC_DELTA § 4.5 (silent degrade — regen UI hidden, base HUD
-    /// counter remains functional).
+    /// field. Adds a regen-tick countdown label, a max-cap suffix label, an energy bar fill
+    /// image, and a 1Hz <see cref="IProgressionService.GetEnergyRegenState"/> poll. When no
+    /// <see cref="IProgressionService"/> is wired the regen UI is hidden and the base counter
+    /// keeps working.
     /// </summary>
     [DisallowMultipleComponent]
     public sealed class HUDEnergy : HUDCurrency

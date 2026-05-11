@@ -1,9 +1,9 @@
 using System;
 using DG.Tweening;
-using KitforgeLabs.MobileUIKit.Animation;
+using KitforgeLabs.UIKit.Animation;
 using UnityEngine;
 
-namespace KitforgeLabs.MobileUIKit.Catalog.Internal
+namespace KitforgeLabs.UIKit.Catalog.Internal
 {
     [DisallowMultipleComponent]
     [RequireComponent(typeof(CanvasGroup))]

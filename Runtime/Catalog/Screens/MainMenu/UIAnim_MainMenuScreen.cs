@@ -1,9 +1,9 @@
 using System;
 using DG.Tweening;
-using KitforgeLabs.MobileUIKit.Catalog.Internal;
+using KitforgeLabs.UIKit.Catalog.Internal;
 using UnityEngine;
 
-namespace KitforgeLabs.MobileUIKit.Catalog.Screens
+namespace KitforgeLabs.UIKit.Catalog.Screens
 {
     public sealed class UIAnim_MainMenuScreen : UIAnimScreenBase
     {

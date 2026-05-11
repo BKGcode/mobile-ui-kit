@@ -1,4 +1,4 @@
-namespace KitforgeLabs.MobileUIKit.Routing
+namespace KitforgeLabs.UIKit.Routing
 {
     public enum AppState
     {

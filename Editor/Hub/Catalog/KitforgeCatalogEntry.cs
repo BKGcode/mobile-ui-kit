@@ -1,6 +1,6 @@
 using System;
 
-namespace KitforgeLabs.MobileUIKit.Editor.Hub.Catalog
+namespace KitforgeLabs.UIKit.Editor.Hub.Catalog
 {
     public enum KitforgeSpawnPattern
     {

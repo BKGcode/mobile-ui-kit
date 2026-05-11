@@ -1,6 +1,6 @@
 using System;
 
-namespace KitforgeLabs.MobileUIKit.Catalog.DailyLogin
+namespace KitforgeLabs.UIKit.Catalog.DailyLogin
 {
     [Serializable]
     public class DailyLoginPopupData

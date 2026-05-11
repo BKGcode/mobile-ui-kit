@@ -1,11 +1,11 @@
 using System.Reflection;
-using KitforgeLabs.MobileUIKit.Core;
-using KitforgeLabs.MobileUIKit.Theme;
+using KitforgeLabs.UIKit.Core;
+using KitforgeLabs.UIKit.Theme;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
 
-namespace KitforgeLabs.MobileUIKit.Tests.EditMode
+namespace KitforgeLabs.UIKit.Tests.EditMode
 {
     public sealed class UIManagerTests
     {

@@ -1,4 +1,4 @@
-namespace KitforgeLabs.MobileUIKit.Animation
+namespace KitforgeLabs.UIKit.Animation
 {
     public enum UIAnimChannel
     {

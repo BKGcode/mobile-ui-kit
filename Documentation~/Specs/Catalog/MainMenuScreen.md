@@ -1,7 +1,6 @@
 # MainMenuScreen
 
-> Status: **SPEC DRAFT 2026-05-05** — MM1-MM9 locked. Targets M3a (`v0.8.0-alpha` BREAKING). Element 13 (Screen) of Group E.
-> Infrastructure prerequisites: `CATALOG_GroupE_DELTA.md` § 1 (Theme slots) + § 2 (folder convention).
+> Infrastructure prerequisites: see the Theme slots and folder convention notes.
 
 ## Purpose
 
@@ -13,7 +12,7 @@ Entry-point screen displayed after the boot sequence. Exposes Play, Settings, Sh
 |---|---|---|---|
 | **MM1** | Button surface | **LOCKED — 4 standard buttons**: Play, Settings, Shop, DailyLogin. Each individually hide-able via DTO bool. No "Leaderboard", "Friends", "Profile" buttons in MVP — capability-gate: each adds a new popup dependency and a new service interface. Buyer adds extra buttons via subclass or Inspector extension. | Royal Match / Homescapes / Candy Crush MainMenu: 1 giant play button + 2-4 secondary meta buttons. This surfaces the 90% of mid-core mobile games without bloating the base. |
 | **MM2** | Event model | **LOCKED — C# `event Action`** (not UnityEvent). `OnPlayRequested`, `OnSettingsRequested`, `OnShopRequested`, `OnDailyRequested`. Host wires to `UIManager.Push<GameScreen>()` / `PopupManager.Show<SettingsPopup>()` etc. Events reset on every `Bind(...)`. | CATALOG § 3.2.1 + § 3.1.9. C# events (not UnityEvents) for per-Show cleanup without UnityEvent serialization noise. Same approach as DailyLoginPopup. |
-| **MM3** | Daily indicator dot | **LOCKED — optional badge on DailyLogin button.** `Refs.DailyIndicatorDot` (GameObject). Shown when `IProgressionService.GetDailyLoginState().AlreadyClaimedToday == false`. Polled: on `OnShow` + 30s throttle via `private void Update()`. If `IProgressionService` null: dot hidden silently (per `CATALOG_GroupE_DELTA.md` § 4 silent degrade). | Standard mobile meta pattern (coin-master style daily dot). 30s poll is correct granularity — daily claim status changes at most once per UTC day. 1Hz would be technically correct but wastes battery/CPU for a static state. |
+| **MM3** | Daily indicator dot | **LOCKED — optional badge on DailyLogin button.** `Refs.DailyIndicatorDot` (GameObject). Shown when `IProgressionService.GetDailyLoginState().AlreadyClaimedToday == false`. Polled: on `OnShow` + 30s throttle via `private void Update()`. If `IProgressionService` null: dot hidden silently (per the "silent degrade" rule silent degrade). | Standard mobile meta pattern (coin-master style daily dot). 30s poll is correct granularity — daily claim status changes at most once per UTC day. 1Hz would be technically correct but wastes battery/CPU for a static state. |
 | **MM4** | HUD integration | **LOCKED — buyer-configures-as-children.** Screen has Inspector refs `_coinHudSlot` / `_gemHudSlot` / `_energyHudSlot` (GameObject, nullable). On `OnShow`, activates non-null slots; on `OnHide`, deactivates. Buyer drops `HUDCurrency` prefabs as children and wires refs. Screen does NOT instantiate or configure HUDs. | CATALOG § 3.2.6 (no Resources.Load). Screen doesn't know which HUD flavors buyer ships. Inspector-ref pattern keeps DI-free and prefab-configureable. Buyer wires once in prefab editor. |
 | **MM5** | Back button (Android) | **LOCKED — emits `OnBackRequested` C# event. Default behavior: no-op.** Buyer wires to `Application.Quit()` or `PopupManager.Show<ConfirmPopup>()` confirm-before-quit. | CATALOG § 3.1.8 — self-contained back behavior. For a root screen, the kit cannot know if buyer wants quit, confirm dialog, or something else (some games go to a "quit?" popup, some just quit). Event is the correct abstraction. |
 | **MM6** | Game logo / title display | **LOCKED — dual support**: `Refs.LogoImage` (Image, optional) shows `Theme.LogoMainMenu` sprite (NEW slot). `Refs.TitleLabel` (TMP_Text, optional) shows `LoadingScreenData.Title`. If both assigned, both show. If neither assigned, top area is empty. Buyer uses whichever matches their game's visual identity. | Most mid-core games use a logo sprite, not a text label. Text label is a fast placeholder. Both slots live on the prefab; buyer enables/hides as needed. |
@@ -40,7 +39,7 @@ Entry-point screen displayed after the boot sequence. Exposes Play, Settings, Sh
 - `IProgressionService` (optional) — polls `GetDailyLoginState()` for daily dot. Null = dot hidden silently.
 - `IUIAudioRouter` (optional) — cues `UIAudioCue.Ambient` on `OnShow`, stop on `OnHide`.
 
-Null-service behavior follows `CATALOG_GroupE_DELTA.md` § 4 (Screen = silent degrade).
+Null-service behavior follows the "silent degrade" rule (Screen = silent degrade).
 
 ## Events emitted
 
@@ -150,8 +149,7 @@ Tests/Editor/
 
 ## Status
 
-- Code: ✅ delivered 2026-05-05 — `Runtime/Catalog/Screens/MainMenu/MainMenuScreen.cs` with `MainMenuRefs` + `HudSlots` foldouts, 5 C# events (OnPlayRequested/OnSettingsRequested/OnShopRequested/OnDailyRequested/OnBackRequested), `RefreshDailyDot` with `IProgressionService` optional + silent degrade, 30s `Update()` poll throttle, `SetHudSlotsActive` on OnShow/OnHide. `UIAnim_MainMenuScreen` with panel slide-from-bottom + `_staggerItems` entry array (captures base positions in Awake, skips inactive items).
+- Code: ✅ `Runtime/Catalog/Screens/MainMenu/MainMenuScreen.cs` with `MainMenuRefs` + `HudSlots` foldouts, 5 C# events (OnPlayRequested/OnSettingsRequested/OnShopRequested/OnDailyRequested/OnBackRequested), `RefreshDailyDot` with `IProgressionService` optional + silent degrade, 30s `Update()` poll throttle, `SetHudSlotsActive` on OnShow/OnHide. `UIAnim_MainMenuScreen` with panel slide-from-bottom + `_staggerItems` entry array (captures base positions in Awake, skips inactive items).
 - Spec: ✅ this document (2026-05-05)
-- Tests: ✅ delivered 2026-05-05 — `Tests/Editor/MainMenuScreenTests.cs` 17 tests covering DTO defaults / Bind null / each button hide-able / title label show+hide / Bind clears subscriptions / Play+Settings events / daily dot ShowDailyButton=false / null progression / AlreadyClaimedToday false→dot visible / true→dot hidden / OnBackPressed fires event / OnBackPressed while hidden no-op.
-- Prefab: ✅ delivered — `CatalogGroupEBuilder.BuildMainMenuScreen` (run `Tools/Kitforge/UI Kit/Build Group E Sample` to generate `Catalog_GroupE_Demo/Prefabs/MainMenuScreen.prefab`)
+- Tests: ✅ `Tests/Editor/MainMenuScreenTests.cs` 17 tests covering DTO defaults / Bind null / each button hide-able / title label show+hide / Bind clears subscriptions / Play+Settings events / daily dot ShowDailyButton=false / null progression / AlreadyClaimedToday false→dot visible / true→dot hidden / OnBackPressed fires event / OnBackPressed while hidden no-op.
 - Demo scene entry: ✅ delivered — `GroupE_BootDemo.unity` built by `CatalogGroupEBuilder.BuildDemoScene`

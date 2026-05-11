@@ -1,18 +1,18 @@
 using System;
-using KitforgeLabs.MobileUIKit.Animation;
-using KitforgeLabs.MobileUIKit.Bootstrap;
+using KitforgeLabs.UIKit.Animation;
+using KitforgeLabs.UIKit.Bootstrap;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace KitforgeLabs.MobileUIKit.Editor.Hub.Setup
+namespace KitforgeLabs.UIKit.Editor.Hub.Setup
 {
     internal sealed class KitforgeSetupWizard
     {
         private const string KitforgeRootPrefabPath = "Packages/com.kitforgelabs.mobile-ui-kit/Runtime/Bootstrap/KitforgeRoot.prefab";
         private const string GroupADemoScenePath = "Assets/Catalog_GroupA_Demo/Catalog_GroupA_Demo.unity";
-        private const string BootstrapDefaultsMenuPath = "Tools/Kitforge/UI Kit/Bootstrap Defaults";
-        private const string BuildGroupASampleMenuPath = "Tools/Kitforge/UI Kit/Build Group A Sample";
+        private const string BootstrapDefaultsMenuPath = "KitforgeLabs/UI Kit/Bootstrap Defaults";
+        private const string BuildGroupASampleMenuPath = "KitforgeLabs/UI Kit/Build Group A Sample";
 
         private VisualElement _root;
         private VisualElement _step1Card;

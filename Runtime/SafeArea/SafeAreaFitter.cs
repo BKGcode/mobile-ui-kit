@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace KitforgeLabs.MobileUIKit.SafeArea
+namespace KitforgeLabs.UIKit.SafeArea
 {
     [DisallowMultipleComponent]
     [RequireComponent(typeof(RectTransform))]

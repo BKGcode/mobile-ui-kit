@@ -1,42 +1,32 @@
-using KitforgeLabs.MobileUIKit.Animation;
-using KitforgeLabs.MobileUIKit.Theme;
+using System.IO;
+using KitforgeLabs.UIKit.Animation;
 using UnityEditor;
 using UnityEngine;
 
-namespace KitforgeLabs.MobileUIKit.Editor.Generators
+namespace KitforgeLabs.UIKit.Editor.Generators
 {
     public static class DefaultUIAnimPresetsCreator
     {
-        private const string FolderAssets = "Assets";
-        private const string FolderSettings = "Settings";
-        private const string FolderPresetsName = "UIAnimPresets";
-        private const string FolderPresets = "Assets/Settings/UIAnimPresets";
-        private const string PackageThemeFolder = "Packages/com.kitforgelabs.mobile-ui-kit/Runtime/Theme";
-        private const string PackagePresetsFolder = PackageThemeFolder + "/Presets";
-        private const string DefaultThemePath = PackagePresetsFolder + "/Theme_Default.asset";
+        private const string PresetsFolder = "Assets/KitforgeLabs/UI Kit/Settings/UIAnimPresets";
 
-        [MenuItem("Tools/Kitforge/UI Kit/Bootstrap Defaults")]
+        [MenuItem("KitforgeLabs/UI Kit/Bootstrap Defaults")]
         public static void CreateAll()
         {
-            EnsureFolders();
+            EnsureFolder();
             CreatePresets();
-            var theme = EnsureDefaultTheme();
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
-            Selection.activeObject = theme;
-            EditorGUIUtility.PingObject(theme);
             EditorUtility.DisplayDialog(
-                "Kitforge UI Kit",
-                $"10 UIAnimPreset SOs created at {FolderPresets}.\nDefault Theme shipped with the package at {DefaultThemePath}.\n\nDrop KitforgeRoot.prefab in your scene — Theme is wired via KitforgeThemeBinder. To use one of the 10 presets, drag it onto Theme._defaultAnimPreset (or create your own Theme variant).",
+                "KitforgeLabs · UI Kit",
+                $"10 UIAnimPreset assets are ready at {PresetsFolder}.\n\nDrop KitforgeRoot.prefab in your scene, then drag any preset onto UIThemeConfig._defaultAnimPreset, or create your own UIThemeConfig via Assets → Create → KitforgeLabs → UI Kit → Theme.",
                 "OK");
         }
 
-        private static void EnsureFolders()
+        private static void EnsureFolder()
         {
-            var settings = $"{FolderAssets}/{FolderSettings}";
-            if (!AssetDatabase.IsValidFolder(settings)) AssetDatabase.CreateFolder(FolderAssets, FolderSettings);
-            if (!AssetDatabase.IsValidFolder(FolderPresets)) AssetDatabase.CreateFolder(settings, FolderPresetsName);
-            if (!AssetDatabase.IsValidFolder(PackagePresetsFolder)) AssetDatabase.CreateFolder(PackageThemeFolder, "Presets");
+            if (AssetDatabase.IsValidFolder(PresetsFolder)) return;
+            Directory.CreateDirectory(PresetsFolder);
+            AssetDatabase.Refresh();
         }
 
         private static void CreatePresets()
@@ -56,7 +46,7 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
         private static void CreatePreset(string name, float showDuration, UIAnimEase showEase,
             float hideDuration, UIAnimEase hideEase, float overshoot)
         {
-            var assetPath = $"{FolderPresets}/UIAnimPreset_{name}.asset";
+            var assetPath = $"{PresetsFolder}/UIAnimPreset_{name}.asset";
             var existing = AssetDatabase.LoadAssetAtPath<UIAnimPreset>(assetPath);
             var asset = existing != null ? existing : CreateAsset(assetPath);
             ApplyValues(asset, showDuration, showEase, hideDuration, hideEase, overshoot);
@@ -79,15 +69,6 @@ namespace KitforgeLabs.MobileUIKit.Editor.Generators
             so.FindProperty("_hideEase").enumValueIndex = (int)hideEase;
             so.FindProperty("_scaleOvershoot").floatValue = overshoot;
             so.ApplyModifiedPropertiesWithoutUndo();
-        }
-
-        private static UIThemeConfig EnsureDefaultTheme()
-        {
-            var theme = AssetDatabase.LoadAssetAtPath<UIThemeConfig>(DefaultThemePath);
-            if (theme != null) return theme;
-            theme = ScriptableObject.CreateInstance<UIThemeConfig>();
-            AssetDatabase.CreateAsset(theme, DefaultThemePath);
-            return theme;
         }
     }
 }

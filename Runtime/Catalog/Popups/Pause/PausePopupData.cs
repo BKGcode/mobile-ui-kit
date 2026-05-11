@@ -1,6 +1,6 @@
 using System;
 
-namespace KitforgeLabs.MobileUIKit.Catalog.Pause
+namespace KitforgeLabs.UIKit.Catalog.Pause
 {
     [Serializable]
     public class PausePopupData

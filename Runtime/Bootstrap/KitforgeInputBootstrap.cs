@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 
-namespace KitforgeLabs.MobileUIKit.Bootstrap
+namespace KitforgeLabs.UIKit.Bootstrap
 {
     public static class KitforgeInputBootstrap
     {

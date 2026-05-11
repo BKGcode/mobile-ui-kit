@@ -1,10 +1,12 @@
 {
-    "name": "KitforgeLabs.MobileUIKit.Tests.EditMode",
-    "rootNamespace": "KitforgeLabs.MobileUIKit.Tests.EditMode",
+    "name": "KitforgeLabs.UIKit.Catalog.Tests",
+    "rootNamespace": "KitforgeLabs.UIKit.Catalog.Tests",
     "references": [
-        "KitforgeLabs.MobileUIKit",
+        "KitforgeLabs.UIKit",
+        "KitforgeLabs.UIKit.Catalog",
         "UnityEngine.TestRunner",
-        "UnityEditor.TestRunner"
+        "UnityEditor.TestRunner",
+        "Unity.TextMeshPro"
     ],
     "includePlatforms": [
         "Editor"

@@ -1,11 +1,11 @@
-using KitforgeLabs.MobileUIKit.Catalog.HUD;
-using KitforgeLabs.MobileUIKit.Catalog.Tests.Helpers;
-using KitforgeLabs.MobileUIKit.Services;
+using KitforgeLabs.UIKit.Catalog.HUD;
+using KitforgeLabs.UIKit.Catalog.Tests.Helpers;
+using KitforgeLabs.UIKit.Services;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
 
-namespace KitforgeLabs.MobileUIKit.Catalog.Tests
+namespace KitforgeLabs.UIKit.Catalog.Tests
 {
     [TestFixture]
     public class HUDCurrencyTests

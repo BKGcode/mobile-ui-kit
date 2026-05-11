@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace KitforgeLabs.MobileUIKit.Editor.Hub.Catalog
+namespace KitforgeLabs.UIKit.Editor.Hub.Catalog
 {
     public static class KitforgeCatalogSnippetBuilder
     {

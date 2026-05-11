@@ -1,13 +1,13 @@
 using System.Text.RegularExpressions;
-using KitforgeLabs.MobileUIKit.Catalog.Settings;
-using KitforgeLabs.MobileUIKit.Catalog.Tests.Helpers;
-using KitforgeLabs.MobileUIKit.Services;
-using KitforgeLabs.MobileUIKit.Theme;
+using KitforgeLabs.UIKit.Catalog.Settings;
+using KitforgeLabs.UIKit.Catalog.Tests.Helpers;
+using KitforgeLabs.UIKit.Services;
+using KitforgeLabs.UIKit.Theme;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
 
-namespace KitforgeLabs.MobileUIKit.Catalog.Tests
+namespace KitforgeLabs.UIKit.Catalog.Tests
 {
     [TestFixture]
     public class SettingsPopupTests

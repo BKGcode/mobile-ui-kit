@@ -1,12 +1,12 @@
 using System;
-using KitforgeLabs.MobileUIKit.Animation;
-using KitforgeLabs.MobileUIKit.Core;
-using KitforgeLabs.MobileUIKit.Services;
+using KitforgeLabs.UIKit.Animation;
+using KitforgeLabs.UIKit.Core;
+using KitforgeLabs.UIKit.Services;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace KitforgeLabs.MobileUIKit.Catalog.LevelComplete
+namespace KitforgeLabs.UIKit.Catalog.LevelComplete
 {
     [DisallowMultipleComponent]
     [RequireComponent(typeof(UIAnimLevelCompletePopup))]

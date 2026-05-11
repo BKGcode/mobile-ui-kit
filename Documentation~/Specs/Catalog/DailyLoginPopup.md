@@ -44,7 +44,7 @@ Modal that announces a daily login reward streak — N-day calendar (default 7),
 `Bind(null)` → falls back to fresh `DailyLoginPopupData()` with empty `RewardEntries`. Popup logs warning and closes immediately if `RewardEntries.Length == 0`.
 
 ## Service binding
-Null-service behavior follows `CATALOG_GroupC_DELTA.md` § 4.5.
+Null-service behavior follows the "silent degrade" rule.
 
 - `ITimeService` (REQUIRED). Reads `GetServerTimeUtc()` on Bind for cooldown countdown. Subscribes via internal `Update()` ticking once per second when popup is shown in already-claimed state (D7).
 - `IAdsService` (optional). `IsRewardedAdReady()` queried on Bind to gate watch-to-double CTA visibility.
@@ -131,7 +131,7 @@ Helper queries `IProgressionService.GetDailyLoginState()`, populates `CurrentDay
 **Idempotency (FQ2)**: `DailyLoginFlow` holds an internal `_shownThisLaunch: bool` flag. First `ShowIfDue` call with `due=true` sets flag and returns `true`. Subsequent calls in the same app launch return `false` without showing — even if `due` is still `true`. Flag resets on next app launch (static state lives on the static class; if buyer needs explicit reset for testing, expose `_internal_ResetForTests()`).
 
 ## Pre-flight infrastructure
-See `CATALOG_GroupC_DELTA.md` — `IProgressionService.GetDailyLoginState()` extension is required before delivery.
+Required infrastructure: `IProgressionService.GetDailyLoginState()` extension is required before delivery.
 
 ## Files
 ```
@@ -147,7 +147,7 @@ Tests/Editor/
 ```
 
 ## Status
-- Code: ✅ delivered 2026-05-03 — `DailyLoginPopupData`, `DailyLoginRewardEntry`, `DailyLoginPopup`, `DailyLoginFlow`, `UIAnimDailyLoginPopup`
+- Code: ✅ `DailyLoginPopupData`, `DailyLoginRewardEntry`, `DailyLoginPopup`, `DailyLoginFlow`, `UIAnimDailyLoginPopup`
 - Spec: ✅ this document (§ 4.5 citation applied)
 - Tests: ✅ 25 EditMode tests (18 popup + 7 flow) — exceed target of 13
 - Prefab: ⏳ pending (`CatalogGroupCBuilder.BuildDailyLoginPopup`)

@@ -1,7 +1,5 @@
 # IUILocalizationService
 
-> Status: **CONFIRMED 2026-05-04** — L1-L7 locked.
-> Targets M2 (`v0.7.0-alpha`). Spec-2 of UI Kit Services namespace.
 
 ## Purpose
 
@@ -15,7 +13,7 @@ The kit does **NOT translate strings** — kit-side English literals are frozen 
 |---|---|---|---|
 | L1 | Surface | `CurrentLanguage` (string getter) + `AvailableLanguages` (`IReadOnlyList<string>`) + `event Action<string> OnLanguageChanged` + `SetLanguage(string)` | Minimal: 4 members. Mirrors common localization service patterns (Unity Localization, I2). |
 | L2 | Persistence dependency | NO — service does NOT depend on `IPlayerDataService` | Decouples. Buyer wires "read from PlayerData on boot → call `SetLanguage`" themselves. Kit doesn't impose persistence policy on the localization service. |
-| L3 | Implementation shipping at M2 close | `InMemoryLocalizationService` (Sample stub only) | Buyer's Runtime localization is custom (Unity Loc / I2 / JSON). No reasonable stock Runtime default beyond in-memory. Buyer writes ~20 lines to bridge to their localization system. |
+| L3 | Implementation shipping | `InMemoryLocalizationService` (Sample stub only) | Buyer's Runtime localization is custom (Unity Loc / I2 / JSON). No reasonable stock Runtime default beyond in-memory. Buyer writes ~20 lines to bridge to their localization system. |
 | L4 | Constructor validation | Constructor takes (`currentCode`, `availableCodes`); throws `ArgumentException` if `currentCode ∉ availableCodes` OR `availableCodes` empty | Fail loud — silent fallback hides config bugs. Buyer detects misconfiguration at boot, not at first language switch. |
 | L5 | `SetLanguage` with same code | No-op (no event emitted) | Avoid spurious re-skin triggers when buyer's code redundantly sets the same language. |
 | L6 | `SetLanguage` with unknown code | Throws `ArgumentException` | Fail loud. Buyer's code should validate against `AvailableLanguages` before calling. |
@@ -24,7 +22,7 @@ The kit does **NOT translate strings** — kit-side English literals are frozen 
 ## Surface
 
 ```csharp
-namespace KitforgeLabs.MobileUIKit.Services
+namespace KitforgeLabs.UIKit.Services
 {
     public interface IUILocalizationService
     {
@@ -38,16 +36,16 @@ namespace KitforgeLabs.MobileUIKit.Services
 
 4 members. `AvailableLanguages` is immutable post-construction (no add/remove methods — would complicate buyer wiring; if buyer needs dynamic languages, they re-construct the service).
 
-## Implementation shipping at M2 close
+## Implementation shipping
 
 ### `InMemoryLocalizationService` (Samples + Tests)
 - Constructor: `InMemoryLocalizationService(string currentCode, IReadOnlyList<string> availableCodes)`.
 - Throws `ArgumentException` if `availableCodes` is null/empty OR `currentCode` is not contained.
 - `SetLanguage(code)`: validates against `AvailableLanguages`; if same as `CurrentLanguage` → no-op; else updates + raises `OnLanguageChanged`.
-- Path: `Samples~/Catalog_GroupD_PlayerData/Stubs/InMemoryLocalizationService.cs` (mirrors Group B/C stub layout).
+- Path: `Samples (deprecated)/InMemoryLocalizationService.cs` (mirrors Group B/C stub layout).
 - Used by `SettingsPopup` tests.
 
-## Buyer integration patterns (M4 QUICKSTART entries)
+## Buyer integration patterns (Buyer integration patterns)
 
 ### Pattern A — Bridge to Unity Localization Package (~20 lines)
 Buyer implements `IUILocalizationService` wrapping `LocalizationSettings.SelectedLocale` and `LocalizationSettings.AvailableLocales`. `SetLanguage` calls `LocalizationSettings.SelectedLocale = locale`. Buyer subscribes to Unity Localization's locale change → emits `OnLanguageChanged` from the bridge impl.

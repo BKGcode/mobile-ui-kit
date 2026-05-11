@@ -3,7 +3,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace KitforgeLabs.MobileUIKit.Editor.Hub.Catalog
+namespace KitforgeLabs.UIKit.Editor.Hub.Catalog
 {
     internal sealed class KitforgeCatalogBrowser
     {
@@ -228,7 +228,7 @@ namespace KitforgeLabs.MobileUIKit.Editor.Hub.Catalog
             var prefab = KitforgeCatalogPrefabResolver.LoadPrefab(entry);
             if (prefab == null)
             {
-                Debug.LogWarning($"[KitforgeCatalogBrowser] Prefab for '{entry.DisplayName}' not found. Run Tools → Kitforge → UI Kit → Build Group {entry.Group} Sample (or import the relevant Group sample from Package Manager → Samples) to enable drag-to-scene.");
+                Debug.Log($"[KitforgeCatalogBrowser] Drag-to-scene for catalog entries is not available in this release. Use the snippet panel on the right to copy the Show/Push call into your script.");
                 return;
             }
             DragAndDrop.PrepareStartDrag();
@@ -331,7 +331,7 @@ namespace KitforgeLabs.MobileUIKit.Editor.Hub.Catalog
             var prefab = KitforgeCatalogPrefabResolver.LoadPrefab(entry);
             if (prefab == null)
             {
-                return $"Drag-to-scene unavailable — run Tools → Kitforge → UI Kit → Build Group {entry.Group} Sample first.";
+                return $"Drag-to-scene unavailable — run KitforgeLabs → UI Kit → Build Group {entry.Group} Sample first.";
             }
             return "Drag the cell into KitforgeRoot/UICanvas/ScreenRoot. HUDs auto-bind to required services on enable.";
         }
@@ -342,7 +342,7 @@ namespace KitforgeLabs.MobileUIKit.Editor.Hub.Catalog
             var prefab = KitforgeCatalogPrefabResolver.LoadPrefab(entry);
             if (prefab == null)
             {
-                return $"Use the spawn snippet below — `{call}` is the canonical path. Drag-to-scene preview unavailable: run Tools → Kitforge → UI Kit → Build Group {entry.Group} Sample first.";
+                return $"Use the spawn snippet below — `{call}` is the canonical path. Drag-to-scene preview unavailable: run KitforgeLabs → UI Kit → Build Group {entry.Group} Sample first.";
             }
             return $"Use the spawn snippet below — `{call}` is the canonical path. Drag-to-scene drops a static preview prefab (no DTO, no manager driving) for visual composition; delete it before Play.";
         }
