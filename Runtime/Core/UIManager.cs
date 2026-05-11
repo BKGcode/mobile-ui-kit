@@ -93,6 +93,8 @@ namespace KitforgeLabs.UIKit.Core
             return (T)instance;
         }
 
+        public bool IsRegistered(System.Type type) => FindPrefab(type) != null;
+
         private UIModuleBase FindPrefab(System.Type type)
         {
             if (_screenPrefabs == null) return null;
