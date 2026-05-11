@@ -80,11 +80,11 @@ namespace KitforgeLabs.UIKit.Editor.Hub.Test
             else if (Application.isPlaying)
             {
                 banner.AddToClassList("kfh-test-banner--play");
-                AppendBannerMessage(banner, "Play mode active. Click Spawn on any element whose prefab you have wired into the corresponding manager's Inspector array. The kit ships catalog components but not prefab assets — wire your own prefabs first.");
+                AppendBannerMessage(banner, "Play mode active — click Spawn on any element below. KitforgeRoot ships pre-wired with the 13 manager-driven catalog prefabs (popups + screens + toast).");
             }
             else
             {
-                AppendBannerMessage(banner, "KitforgeRoot detected. Wire your catalog prefabs into PopupManager._popupPrefabs[], UIManager._screenPrefabs[], ToastManager._toastPrefabs[] in the Inspector. Then enter Play mode and use Spawn to test with mock DTO data + Force scenarios.");
+                AppendBannerMessage(banner, "KitforgeRoot detected. Enter Play mode to spawn catalog elements with mock DTO data + Force scenarios. The 13 manager-driven prefabs are already wired into PopupManager / UIManager / ToastManager arrays.");
             }
             _root.Add(banner);
         }
