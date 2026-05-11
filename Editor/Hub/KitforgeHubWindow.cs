@@ -133,7 +133,7 @@ namespace KitforgeLabs.UIKit.Editor.Hub
 
         private VisualElement BuildPaneFor(KitforgeHubState.HubTab tab)
         {
-            if (tab == KitforgeHubState.HubTab.Setup) return new KitforgeSetupWizard().Build();
+            if (tab == KitforgeHubState.HubTab.Setup) return new KitforgeSetupWizard(this).Build();
             if (tab == KitforgeHubState.HubTab.Catalog) return new KitforgeCatalogBrowser(_state).Build();
             if (tab == KitforgeHubState.HubTab.Theme) return new KitforgeThemeStudio(_state).Build();
             if (tab == KitforgeHubState.HubTab.Test) return new KitforgeTestLauncher(_state, this).Build();

@@ -229,7 +229,7 @@ namespace KitforgeLabs.UIKit.Catalog.Shop
         {
             if (_refs.CellTemplate == null || _refs.GridContainer == null)
             {
-                Debug.LogError("[ShopPopup] CellTemplate or GridContainer not assigned. Cannot spawn cells. Run 'KitforgeLabs/UI Kit/Build Group B Sample' to regenerate the prefab, or wire both fields manually in the Inspector.", this);
+                Debug.LogError("[ShopPopup] CellTemplate or GridContainer not assigned. Cannot spawn cells. Wire both fields manually in the Inspector (use the Hub Catalog browser snippet panel for guidance).", this);
                 return;
             }
             var cell = Instantiate(_refs.CellTemplate, _refs.GridContainer, false);

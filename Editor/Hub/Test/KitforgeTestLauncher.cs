@@ -150,7 +150,7 @@ namespace KitforgeLabs.UIKit.Editor.Hub.Test
             var header = new Label("Force scenarios");
             header.AddToClassList("kfh-test-section-header");
             scroll.Add(header);
-            var note = new Label("Spawn catalog popups pre-configured for specific edge cases (DTO override; no service mutation). Requires the relevant Group sample built and prefabs wired in the active scene's PopupManager — easiest path: open the demo scene from KitforgeLabs → UI Kit → Build Group X Sample.");
+            var note = new Label("Spawn catalog popups pre-configured for specific edge cases (DTO override; no service mutation). Requires your catalog prefabs wired into PopupManager._popupPrefabs[] in the active scene.");
             note.AddToClassList("kfh-test-section-note");
             scroll.Add(note);
             foreach (var scenario in KitforgeForceScenariosRegistry.All)
@@ -258,7 +258,7 @@ namespace KitforgeLabs.UIKit.Editor.Hub.Test
             var manager = UnityEngine.Object.FindAnyObjectByType<TManager>();
             if (manager == null)
             {
-                Debug.LogError($"[KitforgeTestLauncher] {typeof(TManager).Name} not found in active scene → Run Setup → Step 2 (Add Scene Root) to drop KitforgeRoot.prefab. Or open a Group X demo scene built via KitforgeLabs → UI Kit → Build Group X Sample.");
+                Debug.LogError($"[KitforgeTestLauncher] {typeof(TManager).Name} not found in active scene → Run Setup → Step 2 (Add Scene Root) to drop KitforgeRoot.prefab. Then re-run this step.");
                 NotifyHub($"Spawn blocked: no {typeof(TManager).Name}");
                 return;
             }
@@ -283,7 +283,7 @@ namespace KitforgeLabs.UIKit.Editor.Hub.Test
             }
             catch (TargetInvocationException ex)
             {
-                Debug.LogError($"[KitforgeTestLauncher] Spawn failed for {displayName} → {ex.InnerException?.Message ?? ex.Message}. Likely cause: prefab not wired into PopupManager._popupPrefabs[] in the active scene. Open a Group X sample scene built via KitforgeLabs → UI Kit → Build Group X Sample (those ship pre-wired).");
+                Debug.LogError($"[KitforgeTestLauncher] Spawn failed for {displayName} → {ex.InnerException?.Message ?? ex.Message}. Likely cause: prefab not wired into PopupManager._popupPrefabs[] in the active scene. Wire the prefab manually into PopupManager._popupPrefabs[] on KitforgeRoot.");
                 NotifyHub($"Spawn failed: {displayName}");
             }
         }

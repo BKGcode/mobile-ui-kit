@@ -140,4 +140,3 @@ Tests/Editor/
 - Spec: ✅ this document
 - Tests: ⏳ pending (target ~6)
 - Prefab: ⏳ pending (`CatalogGroupABuilder.BuildRewardPopup`)
-- Demo scene entry: ⏳ pending (`Catalog_GroupB_Demo` scene, `[ContextMenu]` triggers on `CatalogGroupBDemo`)

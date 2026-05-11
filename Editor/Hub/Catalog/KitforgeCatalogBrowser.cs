@@ -331,7 +331,7 @@ namespace KitforgeLabs.UIKit.Editor.Hub.Catalog
             var prefab = KitforgeCatalogPrefabResolver.LoadPrefab(entry);
             if (prefab == null)
             {
-                return $"Drag-to-scene unavailable — run KitforgeLabs → UI Kit → Build Group {entry.Group} Sample first.";
+                return "Drag-to-scene unavailable in this release. Copy the spawn snippet on the right and wire the prefab manually into PopupManager._popupPrefabs[].";
             }
             return "Drag the cell into KitforgeRoot/UICanvas/ScreenRoot. HUDs auto-bind to required services on enable.";
         }
@@ -342,7 +342,7 @@ namespace KitforgeLabs.UIKit.Editor.Hub.Catalog
             var prefab = KitforgeCatalogPrefabResolver.LoadPrefab(entry);
             if (prefab == null)
             {
-                return $"Use the spawn snippet below — `{call}` is the canonical path. Drag-to-scene preview unavailable: run KitforgeLabs → UI Kit → Build Group {entry.Group} Sample first.";
+                return $"Use the spawn snippet below — `{call}` is the canonical path. Drag-to-scene preview is unavailable in this release.";
             }
             return $"Use the spawn snippet below — `{call}` is the canonical path. Drag-to-scene drops a static preview prefab (no DTO, no manager driving) for visual composition; delete it before Play.";
         }

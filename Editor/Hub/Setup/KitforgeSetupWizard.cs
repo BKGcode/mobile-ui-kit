@@ -10,9 +10,9 @@ namespace KitforgeLabs.UIKit.Editor.Hub.Setup
     internal sealed class KitforgeSetupWizard
     {
         private const string KitforgeRootPrefabPath = "Packages/com.kitforgelabs.mobile-ui-kit/Runtime/Bootstrap/KitforgeRoot.prefab";
-        private const string GroupADemoScenePath = "Assets/Catalog_GroupA_Demo/Catalog_GroupA_Demo.unity";
         private const string BootstrapDefaultsMenuPath = "KitforgeLabs/UI Kit/Bootstrap Defaults";
-        private const string BuildGroupASampleMenuPath = "KitforgeLabs/UI Kit/Build Group A Sample";
+
+        private readonly KitforgeHubWindow _hostWindow;
 
         private VisualElement _root;
         private VisualElement _step1Card;
@@ -20,13 +20,20 @@ namespace KitforgeLabs.UIKit.Editor.Hub.Setup
         private VisualElement _step3Card;
         private Label _summaryLabel;
 
+        public KitforgeSetupWizard(KitforgeHubWindow hostWindow)
+        {
+            _hostWindow = hostWindow;
+        }
+
+        public KitforgeSetupWizard() : this(null) { }
+
         public VisualElement Build()
         {
             _root = new VisualElement();
             _root.AddToClassList("kfh-wizard");
-            _step1Card = BuildStepCard(1, "Initialize Project", BuildStep1Description(), "Run Initialize", RunStep1);
+            _step1Card = BuildStepCard(1, "Bootstrap Defaults", BuildStep1Description(), "Run Bootstrap Defaults", RunStep1);
             _step2Card = BuildStepCard(2, "Add Scene Root", BuildStep2Description(), "Add Scene Root", RunStep2);
-            _step3Card = BuildStepCard(3, "Hello World", BuildStep3Description(), "Build Group A Sample", RunStep3);
+            _step3Card = BuildStepCard(3, "Browse Catalog", BuildStep3Description(), "Open Catalog Tab", RunStep3);
             _root.Add(_step1Card);
             _root.Add(_step2Card);
             _root.Add(_step3Card);
@@ -42,7 +49,7 @@ namespace KitforgeLabs.UIKit.Editor.Hub.Setup
             RefreshStep(_step1Card, IsStep1Done());
             RefreshStep(_step2Card, IsStep2Done());
             RefreshStep(_step3Card, IsStep3Done());
-            _summaryLabel.text = AllStepsDone() ? "Setup complete — switch to Catalog to browse the 17 elements." : string.Empty;
+            _summaryLabel.text = AllStepsDone() ? "Setup complete — open the Catalog tab to browse the 17 elements and copy spawn snippets." : string.Empty;
         }
 
         private VisualElement BuildStepCard(int index, string title, string description, string actionLabel, Action onAction)
@@ -80,7 +87,7 @@ namespace KitforgeLabs.UIKit.Editor.Hub.Setup
             status.EnableInClassList("kfh-wizard-card-status--done", isDone);
         }
 
-        private bool AllStepsDone() => IsStep1Done() && IsStep2Done() && IsStep3Done();
+        private bool AllStepsDone() => IsStep1Done() && IsStep2Done();
 
         private bool IsStep1Done()
         {
@@ -94,17 +101,16 @@ namespace KitforgeLabs.UIKit.Editor.Hub.Setup
             return binders != null && binders.Length > 0;
         }
 
-        private bool IsStep3Done()
-        {
-            var asset = AssetDatabase.LoadAssetAtPath<SceneAsset>(GroupADemoScenePath);
-            return asset != null;
-        }
+        private bool IsStep3Done() => false;
 
         private void RunStep1() => InvokeMenu(BootstrapDefaultsMenuPath);
 
-        private void RunStep3() => InvokeMenu(BuildGroupASampleMenuPath);
-
         private void RunStep2() => AddSceneRootToActiveScene();
+
+        private void RunStep3()
+        {
+            if (_hostWindow != null) _hostWindow.SwitchToTab(KitforgeHubState.HubTab.Catalog);
+        }
 
         public static void AddSceneRootToActiveScene()
         {
@@ -126,12 +132,12 @@ namespace KitforgeLabs.UIKit.Editor.Hub.Setup
             var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(KitforgeRootPrefabPath);
             if (prefab == null)
             {
-                Debug.LogError($"[KitforgeSetupWizard] KitforgeRoot.prefab not found at '{KitforgeRootPrefabPath}'. Reinstall the Kitforge Mobile UI Kit package.");
+                Debug.LogError($"[KitforgeSetupWizard] KitforgeRoot.prefab not found at '{KitforgeRootPrefabPath}'. Reinstall the KitforgeLabs UI Kit package.");
                 return;
             }
             var instance = (GameObject)PrefabUtility.InstantiatePrefab(prefab);
             if (instance == null) return;
-            Undo.RegisterCreatedObjectUndo(instance, "Add Kitforge Scene Root");
+            Undo.RegisterCreatedObjectUndo(instance, "Add KitforgeLabs Scene Root");
             Selection.activeGameObject = instance;
             EditorGUIUtility.PingObject(instance);
         }
@@ -140,23 +146,23 @@ namespace KitforgeLabs.UIKit.Editor.Hub.Setup
         {
             if (!EditorApplication.ExecuteMenuItem(path))
             {
-                Debug.LogError($"[KitforgeSetupWizard] Menu '{path}' not found. Package may be partially installed; reinstall the Kitforge Mobile UI Kit.");
+                Debug.LogError($"[KitforgeSetupWizard] Menu '{path}' not found. Package may be partially installed; reinstall the KitforgeLabs UI Kit.");
             }
         }
 
         private string BuildStep1Description()
         {
-            return "Generates 10 default UIAnimPreset assets in Assets/Settings/UIAnimPresets/. Required once per project. Idempotent — safe to re-run; partial states top up.";
+            return "Generates 10 UIAnimPreset assets at Assets/KitforgeLabs/UI Kit/Settings/UIAnimPresets/. Required once per project. Idempotent — safe to re-run.";
         }
 
         private string BuildStep2Description()
         {
-            return "Drops KitforgeRoot.prefab into the active scene. Pre-wires 3 managers, EventSystem, PopupBackdrop, and Theme_Default. Press Play to verify zero LogError.";
+            return "Drops KitforgeRoot.prefab into the active scene. Pre-wires 3 managers + UIServices + EventSystem + PopupBackdrop + Theme_Default. Press Play to verify zero LogError.";
         }
 
         private string BuildStep3Description()
         {
-            return "Builds the Group A demo scene (Confirm + Pause + Tutorial + NotificationToast). Press Play and right-click GroupADemoHost in Hierarchy to trigger popups.";
+            return "Switches to the Catalog tab. Search any of the 17 catalog elements, copy the canonical Show<T>(dto) / Push<T>(dto) snippet, paste into your game code.";
         }
     }
 }
