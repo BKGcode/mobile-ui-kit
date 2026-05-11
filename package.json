@@ -1,7 +1,7 @@
 {
   "name": "com.kitforgelabs.mobile-ui-kit",
   "displayName": "KitforgeLabs · UI Kit",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "unity": "6000.1",
   "description": "Mobile UGUI kit for hybrid-casual games: UIManager (stack), PopupManager (priority queue), UIThemeConfig (one ScriptableObject reskins everything) + a catalog of 17 ready-to-use elements (popups, toasts, screens, HUDs) and the KitforgeLabs Hub editor window for setup, theme studio, catalog browser and inline cheatsheet. Wire it in five minutes, skin it once, ship it.",
   "keywords": [

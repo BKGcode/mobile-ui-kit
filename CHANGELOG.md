@@ -2,6 +2,12 @@
 
 All notable changes to this package are documented here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.1] — 2026-05-11
+
+### Fixed
+
+- **Hub state path** now follows the v1.1.0 namespace convention. `KitforgeHubState.asset` is created at `Assets/KitforgeLabs/UI Kit/Settings/HubState.asset` (was `Assets/Settings/Kitforge/HubState.asset` — a v1.1.0 oversight). Buyers upgrading from v1.1.0 can safely delete the legacy `Assets/Settings/Kitforge/` folder; the Hub re-creates the state at the new path on next open. Tab selection / catalog filter / theme selection reset on first launch after upgrade (one-time cosmetic — no persistent state lost).
+
 ## [1.1.0] — 2026-05-11
 
 Major studio-wide reorganization under the `KitforgeLabs` namespace and removal of downloadable Samples — the Hub editor window is now the single entry point.

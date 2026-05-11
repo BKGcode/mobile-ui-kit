@@ -1,3 +1,4 @@
+using System.IO;
 using UnityEditor;
 using UnityEngine;
 
@@ -14,7 +15,8 @@ namespace KitforgeLabs.UIKit.Editor.Hub
             Help,
         }
 
-        public const string AssetPath = "Assets/Settings/Kitforge/HubState.asset";
+        public const string AssetFolder = "Assets/KitforgeLabs/UI Kit/Settings";
+        public const string AssetPath = AssetFolder + "/HubState.asset";
 
         [SerializeField] private HubTab _activeTab = HubTab.Setup;
         [SerializeField] private string _selectedCatalogKey = string.Empty;
@@ -110,16 +112,15 @@ namespace KitforgeLabs.UIKit.Editor.Hub
             AssetDatabase.SaveAssets();
             var verified = AssetDatabase.LoadAssetAtPath<KitforgeHubState>(AssetPath);
             if (verified != null) return MarkPersisted(verified);
-            Debug.LogError($"[KitforgeHubState] Could not persist state at '{AssetPath}'. Verify Assets/Settings/Kitforge/ is writable (not under VCS lock). Hub will operate in-memory until permissions allow asset write.");
+            Debug.LogError($"[KitforgeHubState] Could not persist state at '{AssetPath}'. Verify '{AssetFolder}' is writable (not under VCS lock). Hub will operate in-memory until permissions allow asset write.");
             return created;
         }
 
         private static void EnsureFolders()
         {
-            if (!AssetDatabase.IsValidFolder("Assets/Settings"))
-                AssetDatabase.CreateFolder("Assets", "Settings");
-            if (!AssetDatabase.IsValidFolder("Assets/Settings/Kitforge"))
-                AssetDatabase.CreateFolder("Assets/Settings", "Kitforge");
+            if (AssetDatabase.IsValidFolder(AssetFolder)) return;
+            Directory.CreateDirectory(AssetFolder);
+            AssetDatabase.Refresh();
         }
     }
 }

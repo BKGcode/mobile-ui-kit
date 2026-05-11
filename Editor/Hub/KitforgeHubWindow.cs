@@ -74,7 +74,7 @@ namespace KitforgeLabs.UIKit.Editor.Hub
             if (_state.IsPersisted) return;
             var banner = new VisualElement();
             banner.AddToClassList("kfh-banner");
-            var msg = new Label($"Hub state is in-memory only — could not write {KitforgeHubState.AssetPath}. Verify Assets/Settings/Kitforge/ is writable. Tab choice will reset on Editor restart.");
+            var msg = new Label($"Hub state is in-memory only — could not write {KitforgeHubState.AssetPath}. Verify '{KitforgeHubState.AssetFolder}' is writable. Tab choice will reset on Editor restart.");
             msg.AddToClassList("kfh-banner-message");
             banner.Add(msg);
             rootVisualElement.Add(banner);
