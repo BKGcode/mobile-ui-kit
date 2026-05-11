@@ -25,13 +25,26 @@ namespace KitforgeLabs.UIKit.Toast
 
         public T Show<T>(object data = null, float? duration = null) where T : UIToastBase
         {
+            TryShow<T>(out var toast, out _, data, duration);
+            return toast;
+        }
+
+        public bool TryShow<T>(out T toast, out Core.ShowFailureReason reason, object data = null, float? duration = null) where T : UIToastBase
+        {
+            toast = null;
+            reason = Core.ShowFailureReason.None;
             var request = new PendingToast { Type = typeof(T), Data = data, Duration = duration };
             if (_active.Count >= _maxConcurrent)
             {
                 _pending.Enqueue(request);
-                return null;
+                reason = Core.ShowFailureReason.Queued;
+                Debug.LogWarning($"[ToastManager] {typeof(T).Name} queued — concurrent limit ({_maxConcurrent}) reached.", this);
+                return false;
             }
-            return (T)ShowInternal(request);
+            toast = (T)ShowInternal(request);
+            if (toast != null) return true;
+            reason = Core.ShowFailureReason.PrefabMissing;
+            return false;
         }
 
         public void DismissAll()

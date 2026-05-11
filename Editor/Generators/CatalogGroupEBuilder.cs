@@ -204,5 +204,52 @@ namespace KitforgeLabs.UIKit.Editor.Generators
                 stagger.GetArrayElementAtIndex(i).objectReferenceValue = buttons[i].GetComponent<RectTransform>();
             so.ApplyModifiedPropertiesWithoutUndo();
         }
+
+        // ── Helpers ─────────────────────────────────────────────────────────
+
+        private static GameObject CreatePanel(Transform parent, string name, float width, float height)
+        {
+            var go = CreateChild(parent, name);
+            PositionCentered(go.GetComponent<RectTransform>(), 0f, 0f, width, height);
+            return go;
+        }
+
+        private static TextMeshProUGUI CreateLabel(Transform parent, string name, string text, int size, FontStyles style, float width, float height, TextThemeSlot slot)
+        {
+            var label = CreateThemedText(parent, name, text, size, style, slot);
+            var le = label.gameObject.AddComponent<LayoutElement>();
+            le.preferredWidth = width;
+            le.preferredHeight = height;
+            return label;
+        }
+
+        private static void ApplyVerticalLayout(GameObject go, float spacing)
+        {
+            var layout = go.AddComponent<VerticalLayoutGroup>();
+            layout.spacing = spacing;
+            layout.childAlignment = TextAnchor.MiddleCenter;
+            layout.childForceExpandWidth = false;
+            layout.childForceExpandHeight = false;
+            layout.childControlWidth = false;
+            layout.childControlHeight = false;
+        }
+
+        private static void PositionCentered(RectTransform rt, float x, float y, float w, float h)
+        {
+            rt.anchorMin = new Vector2(0.5f, 0.5f);
+            rt.anchorMax = new Vector2(0.5f, 0.5f);
+            rt.pivot = new Vector2(0.5f, 0.5f);
+            rt.anchoredPosition = new Vector2(x, y);
+            rt.sizeDelta = new Vector2(w, h);
+        }
+
+        private static void AnchorTopStretch(RectTransform rt, float y, float height)
+        {
+            rt.anchorMin = new Vector2(0f, 1f);
+            rt.anchorMax = new Vector2(1f, 1f);
+            rt.pivot = new Vector2(0.5f, 1f);
+            rt.anchoredPosition = new Vector2(0f, y);
+            rt.sizeDelta = new Vector2(-40f, height);
+        }
     }
 }

@@ -268,7 +268,14 @@ namespace KitforgeLabs.UIKit.Editor.Hub.Test
                 NotifyHub($"No prefab wired: {componentType.Name}");
                 return;
             }
+            ClearPriorInstances(manager);
             InvokeManagerMethod(manager, methodName, componentType, data, displayName);
+        }
+
+        private static void ClearPriorInstances(MonoBehaviour manager)
+        {
+            var dismissAll = manager.GetType().GetMethod("DismissAll", Type.EmptyTypes);
+            dismissAll?.Invoke(manager, null);
         }
 
         private static bool IsTypeRegistered(MonoBehaviour manager, Type componentType)
@@ -293,12 +300,14 @@ namespace KitforgeLabs.UIKit.Editor.Hub.Test
             try
             {
                 var result = concrete.Invoke(manager, args);
-                NotifyHub(result == null ? $"Spawn failed: {displayName} (see Console)" : $"Spawned {displayName}");
+                if (result != null) { NotifyHub($"Spawned {displayName}"); return; }
+                Debug.LogError($"[KitforgeTestLauncher] {manager.GetType().Name}.{methodName}<{componentType.Name}> returned null. Common causes: (a) prefab not registered, (b) queue full / concurrent limit reached. Check the previous Console log for [PopupManager]/[ToastManager] queue warnings.", manager);
+                NotifyHub($"Spawn failed: {displayName} (see Console)");
             }
             catch (TargetInvocationException ex)
             {
-                Debug.LogError($"[KitforgeTestLauncher] Spawn failed for {displayName} → {ex.InnerException?.Message ?? ex.Message}. Likely cause: prefab not wired into PopupManager._popupPrefabs[] in the active scene. Wire the prefab manually into PopupManager._popupPrefabs[] on KitforgeRoot.");
-                NotifyHub($"Spawn failed: {displayName}");
+                Debug.LogError($"[KitforgeTestLauncher] Exception spawning {displayName} → {ex.InnerException?.GetType().Name}: {ex.InnerException?.Message ?? ex.Message}\n{ex.InnerException?.StackTrace}", manager);
+                NotifyHub($"Spawn failed: {displayName} (see Console)");
             }
         }
 

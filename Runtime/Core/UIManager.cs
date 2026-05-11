@@ -30,12 +30,21 @@ namespace KitforgeLabs.UIKit.Core
 
         public T Push<T>(object data = null) where T : UIModuleBase
         {
-            var screen = ResolveScreen<T>();
-            if (screen == null) return null;
-            if (Current != null) Current.gameObject.SetActive(false);
-            _screenStack.Push(screen);
-            ActivateScreen(screen, data);
+            TryPush<T>(out var screen, out _, data);
             return screen;
+        }
+
+        public bool TryPush<T>(out T screen, out ShowFailureReason reason, object data = null) where T : UIModuleBase
+        {
+            screen = null;
+            reason = ShowFailureReason.None;
+            var resolved = ResolveScreen<T>();
+            if (resolved == null) { reason = ShowFailureReason.PrefabMissing; return false; }
+            if (Current != null) Current.gameObject.SetActive(false);
+            _screenStack.Push(resolved);
+            ActivateScreen(resolved, data);
+            screen = resolved;
+            return true;
         }
 
         public void Pop()

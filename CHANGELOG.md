@@ -2,6 +2,29 @@
 
 All notable changes to this package are documented here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] — 2026-05-11
+
+Catalog prefabs now ship with the package and the kit boots out-of-box on a clean install. Service contract reworked around Null Object defaults so buyers never see "service not registered" errors before wiring their own implementations. EditMode smoke test covers all 13 manager-driven catalog elements.
+
+### Added
+
+- **17 catalog prefabs shipped with the package** under `Runtime/Catalog/Prefabs/` (10 popups, 1 toast, 2 screens, 4 HUDs). The `KitforgeRoot.prefab` registries are pre-wired so spawning any catalog element via `PopupManager.Show<T>()`, `UIManager.Push<T>()` or `ToastManager.Show<T>()` works on first install with zero buyer setup.
+- **Null Object service defaults** in `Runtime/Services/Null/`. `UIServices` now auto-instantiates `NullEconomyService`, `NullPlayerDataService`, `NullProgressionService`, `NullShopDataProvider`, `NullAdsService`, `NullTimeService`, `NullAudioRouter` and `NullLocalizationService` in `Awake` when the corresponding Inspector slot is empty. The kit always boots; buyers swap in production services via the Inspector when ready. A single warning logs at startup if any Null defaults are used.
+- **`TryShow<T>(out T popup, out ShowFailureReason reason)` API** on `PopupManager` and `ToastManager`, plus `TryPush<T>(out T screen, out ShowFailureReason reason)` on `UIManager`. The new methods replace the ambiguous `null` return of legacy `Show<T>` / `Push<T>` with a structured failure reason (`PrefabMissing`, `Queued`, `InitializationFailed`, `ManagerUnavailable`). Legacy methods remain for backwards compatibility.
+- **EditMode smoke test suite** at `Tests/Editor/Smoke/KitforgeRootSmokeTests.cs`. Spawns the `KitforgeRoot.prefab` in a temp scene and asserts every catalog popup / screen / toast opens cleanly with the Null Object defaults — no errors, no warnings. Gates v1.2.0+ releases against silent regressions.
+- **Editor menus** `KitforgeLabs/UI Kit/Maintenance/Regenerate Catalog Prefabs (Dev)` and `... /Wire Catalog Into KitforgeRoot (Dev)` for the package maintainer to rebuild and re-wire the catalog when the kit evolves. Both are dev-only and refuse to write into a read-only (Git-installed) package — embed the package first.
+
+### Changed
+
+- **`PopupManager.Show<T>` queue path** now emits a `Debug.LogWarning` instead of silently returning `null` when the stack is full and no lower-priority popup can be evicted. Behavior unchanged otherwise.
+- **`ToastManager.Show<T>` concurrent path** matches: a `Debug.LogWarning` is emitted when the request is queued because `_maxConcurrent` is reached.
+- **Hub Test launcher** now dismisses prior popups before spawning the next, so cycling through the catalog never silently hits the `MaxDepth` queue. Error messages also include the inner exception stacktrace when a popup throws during `OnShow` / `BindUntyped`.
+- **`KitforgeRoot.prefab` ships with empty service Inspector slots** — UIServices populates Null Object defaults at runtime. Previous behavior (pre-wired in-memory stub services) is removed: stubs were sample-only and conflicted with the "no samples" mandate.
+
+### Removed
+
+- **`Runtime/Services/Stubs/`** (`InMemoryEconomyService`, `InMemoryShopDataProvider`, `InMemoryAdsService`, `InMemoryTimeService`, `InMemoryProgressionService`, `InMemoryLocalizationService`). Replaced by the Null Object defaults in `Runtime/Services/Null/`. Buyers who relied on the in-memory state can either wire their own production services (the contract is unchanged) or copy a Null Object as a starting template.
+
 ## [1.1.3] — 2026-05-11
 
 ### Added

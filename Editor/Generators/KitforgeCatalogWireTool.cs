@@ -33,7 +33,7 @@ namespace KitforgeLabs.UIKit.Editor.Generators
             }
             EditorUtility.DisplayDialog(
                 "KitforgeLabs · UI Kit",
-                $"KitforgeRoot wired:\n• {popups.Count} popups\n• {screens.Count} screens\n• {toasts.Count} toasts\n\nHUD prefabs are not registry-wired (scene drag-drop only).\n\nCommit Runtime/Catalog/Prefabs/* and Runtime/Bootstrap/KitforgeRoot.prefab.",
+                $"KitforgeRoot wired:\n• {popups.Count} popups\n• {screens.Count} screens\n• {toasts.Count} toasts\n\nServices: KitforgeRoot ships with empty Service refs — UIServices auto-instantiates Null Object defaults on Awake so the kit boots out-of-box. Wire your production services on UIServices for live data.\n\nHUD prefabs are not registry-wired (scene drag-drop only).\n\nCommit Runtime/Catalog/Prefabs/* and Runtime/Bootstrap/KitforgeRoot.prefab.",
                 "OK");
         }
 

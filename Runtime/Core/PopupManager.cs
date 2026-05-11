@@ -27,13 +27,26 @@ namespace KitforgeLabs.UIKit.Core
 
         public T Show<T>(object data = null, PopupPriority priority = PopupPriority.Gameplay) where T : UIModuleBase
         {
+            TryShow<T>(out var popup, out _, data, priority);
+            return popup;
+        }
+
+        public bool TryShow<T>(out T popup, out ShowFailureReason reason, object data = null, PopupPriority priority = PopupPriority.Gameplay) where T : UIModuleBase
+        {
+            popup = null;
+            reason = ShowFailureReason.None;
             var request = new PopupRecord { Type = typeof(T), Data = data, Priority = priority };
             if (_activeStack.Count >= MaxDepth && !TryEvictLowerPriority(priority))
             {
                 EnqueuePending(request);
-                return null;
+                reason = ShowFailureReason.Queued;
+                Debug.LogWarning($"[PopupManager] {typeof(T).Name} queued — stack full ({MaxDepth}) and no lower-priority popup to evict.", this);
+                return false;
             }
-            return (T)ShowInternal(request);
+            popup = (T)ShowInternal(request);
+            if (popup != null) return true;
+            reason = ShowFailureReason.PrefabMissing;
+            return false;
         }
 
         public void Dismiss(UIModuleBase popup)

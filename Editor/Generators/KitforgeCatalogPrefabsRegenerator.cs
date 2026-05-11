@@ -26,9 +26,9 @@ namespace KitforgeLabs.UIKit.Editor.Generators
 
         private static bool ConfirmWritable(string folder)
         {
-            var pkg = PackageInfo.FindForAssetPath(folder);
+            var pkg = UnityEditor.PackageManager.PackageInfo.FindForAssetPath(folder);
             if (pkg == null) return true;
-            if (pkg.source == PackageSource.Embedded || pkg.source == PackageSource.Local) return true;
+            if (pkg.source == UnityEditor.PackageManager.PackageSource.Embedded || pkg.source == PackageSource.Local) return true;
             Debug.LogError($"[KitforgeCatalogPrefabsRegenerator] Target folder '{folder}' belongs to a package installed from '{pkg.source}' which is read-only. Embed the package (move to Packages/ folder) or reference it via 'file:...' in manifest.json, then re-run this menu.");
             return false;
         }

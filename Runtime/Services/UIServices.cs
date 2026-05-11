@@ -1,3 +1,4 @@
+using KitforgeLabs.UIKit.Services.Null;
 using UnityEngine;
 
 namespace KitforgeLabs.UIKit.Services
@@ -24,16 +25,19 @@ namespace KitforgeLabs.UIKit.Services
         public IUIAudioRouter Audio { get; private set; }
         public IUILocalizationService Localization { get; private set; }
 
+        public bool UsingNullDefaults { get; private set; }
+
         private void Awake()
         {
-            Economy ??= Resolve<IEconomyService>(_economyServiceRef, nameof(Economy));
-            PlayerData ??= Resolve<IPlayerDataService>(_playerDataServiceRef, nameof(PlayerData));
-            Progression ??= Resolve<IProgressionService>(_progressionServiceRef, nameof(Progression));
-            ShopData ??= Resolve<IShopDataProvider>(_shopDataProviderRef, nameof(ShopData));
-            Ads ??= Resolve<IAdsService>(_adsServiceRef, nameof(Ads));
-            Time ??= Resolve<ITimeService>(_timeServiceRef, nameof(Time));
-            Audio ??= Resolve<IUIAudioRouter>(_audioRouterRef, nameof(Audio));
-            Localization ??= Resolve<IUILocalizationService>(_localizationServiceRef, nameof(Localization));
+            Economy ??= Resolve<IEconomyService>(_economyServiceRef, nameof(Economy)) ?? FallbackNull<IEconomyService>(new NullEconomyService());
+            PlayerData ??= Resolve<IPlayerDataService>(_playerDataServiceRef, nameof(PlayerData)) ?? FallbackNull<IPlayerDataService>(new NullPlayerDataService());
+            Progression ??= Resolve<IProgressionService>(_progressionServiceRef, nameof(Progression)) ?? FallbackNull<IProgressionService>(new NullProgressionService());
+            ShopData ??= Resolve<IShopDataProvider>(_shopDataProviderRef, nameof(ShopData)) ?? FallbackNull<IShopDataProvider>(new NullShopDataProvider());
+            Ads ??= Resolve<IAdsService>(_adsServiceRef, nameof(Ads)) ?? FallbackNull<IAdsService>(new NullAdsService());
+            Time ??= Resolve<ITimeService>(_timeServiceRef, nameof(Time)) ?? FallbackNull<ITimeService>(new NullTimeService());
+            Audio ??= Resolve<IUIAudioRouter>(_audioRouterRef, nameof(Audio)) ?? FallbackNull<IUIAudioRouter>(new NullAudioRouter());
+            Localization ??= Resolve<IUILocalizationService>(_localizationServiceRef, nameof(Localization)) ?? FallbackNull<IUILocalizationService>(new NullLocalizationService());
+            if (UsingNullDefaults) Debug.LogWarning("[UIServices] Using Null Object defaults for unwired services. Wire your production implementations in the Inspector before shipping.", this);
         }
 
         public void SetEconomy(IEconomyService impl) => Economy = impl;
@@ -53,19 +57,10 @@ namespace KitforgeLabs.UIKit.Services
             return null;
         }
 
-        [ContextMenu("Validate")]
-        private void Validate()
+        private T FallbackNull<T>(T nullImpl) where T : class
         {
-            var missing = 0;
-            if (_economyServiceRef == null) { Debug.LogWarning("[UIServices] Economy service is null.", this); missing++; }
-            if (_playerDataServiceRef == null) { Debug.LogWarning("[UIServices] PlayerData service is null.", this); missing++; }
-            if (_progressionServiceRef == null) { Debug.LogWarning("[UIServices] Progression service is null.", this); missing++; }
-            if (_shopDataProviderRef == null) { Debug.LogWarning("[UIServices] ShopData provider is null.", this); missing++; }
-            if (_adsServiceRef == null) { Debug.LogWarning("[UIServices] Ads service is null.", this); missing++; }
-            if (_timeServiceRef == null) { Debug.LogWarning("[UIServices] Time service is null.", this); missing++; }
-            if (_audioRouterRef == null) { Debug.LogWarning("[UIServices] Audio router is null.", this); missing++; }
-            if (_localizationServiceRef == null) { Debug.LogWarning("[UIServices] Localization service is null.", this); missing++; }
-            Debug.Log($"[UIServices] Validation complete. Missing: {missing}/8.", this);
+            UsingNullDefaults = true;
+            return nullImpl;
         }
     }
 }
