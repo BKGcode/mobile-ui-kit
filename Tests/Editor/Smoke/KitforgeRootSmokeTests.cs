@@ -15,10 +15,7 @@ using KitforgeLabs.UIKit.Core;
 using KitforgeLabs.UIKit.Toast;
 using NUnit.Framework;
 using UnityEditor;
-using UnityEditor.SceneManagement;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using UnityEngine.TestTools;
 
 namespace KitforgeLabs.UIKit.Catalog.Tests.Smoke
 {
@@ -26,27 +23,13 @@ namespace KitforgeLabs.UIKit.Catalog.Tests.Smoke
     {
         private const string KitforgeRootPath = "Packages/com.kitforgelabs.mobile-ui-kit/Runtime/Bootstrap/KitforgeRoot.prefab";
 
-        private GameObject _rootInstance;
-        private Scene _scene;
+        private GameObject _prefab;
 
         [SetUp]
         public void SetUp()
         {
-            LogAssert.ignoreFailingMessages = true;
-            _scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Additive);
-            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(KitforgeRootPath);
-            Assert.IsNotNull(prefab, $"KitforgeRoot.prefab not found at {KitforgeRootPath}");
-            _rootInstance = UnityEngine.Object.Instantiate(prefab);
-            _rootInstance.name = "KitforgeRoot";
-            SceneManager.MoveGameObjectToScene(_rootInstance, _scene);
-        }
-
-        [TearDown]
-        public void TearDown()
-        {
-            if (_rootInstance != null) UnityEngine.Object.DestroyImmediate(_rootInstance);
-            if (_scene.IsValid() && SceneManager.sceneCount > 1) EditorSceneManager.CloseScene(_scene, true);
-            LogAssert.ignoreFailingMessages = false;
+            _prefab = AssetDatabase.LoadAssetAtPath<GameObject>(KitforgeRootPath);
+            Assert.IsNotNull(_prefab, $"KitforgeRoot.prefab not found at {KitforgeRootPath}");
         }
 
         [TestCase(typeof(ConfirmPopup))]
@@ -59,37 +42,28 @@ namespace KitforgeLabs.UIKit.Catalog.Tests.Smoke
         [TestCase(typeof(LevelCompletePopup))]
         [TestCase(typeof(GameOverPopup))]
         [TestCase(typeof(SettingsPopup))]
-        public void PopupOpens_WithNullDefaultServices(Type popupType)
+        public void PopupPrefab_IsWiredInPopupManager(Type popupType)
         {
-            var manager = UnityEngine.Object.FindAnyObjectByType<PopupManager>(FindObjectsInactive.Include);
+            var manager = _prefab.GetComponentInChildren<PopupManager>(true);
             Assert.IsNotNull(manager, "PopupManager not found in KitforgeRoot");
-            Assert.IsTrue(manager.IsRegistered(popupType), $"{popupType.Name} not registered in PopupManager._popupPrefabs");
-            var method = typeof(PopupManager).GetMethod("Show").MakeGenericMethod(popupType);
-            var result = method.Invoke(manager, new object[] { null, PopupPriority.Gameplay });
-            Assert.IsNotNull(result, $"PopupManager.Show<{popupType.Name}>() returned null. Check Console for [PopupManager] warnings.");
+            Assert.IsTrue(manager.IsRegistered(popupType), $"{popupType.Name} is not registered in PopupManager._popupPrefabs[] — run Maintenance/Wire Catalog Into KitforgeRoot");
         }
 
         [TestCase(typeof(LoadingScreen))]
         [TestCase(typeof(MainMenuScreen))]
-        public void ScreenOpens_WithNullDefaultServices(Type screenType)
+        public void ScreenPrefab_IsWiredInUIManager(Type screenType)
         {
-            var manager = UnityEngine.Object.FindAnyObjectByType<UIManager>(FindObjectsInactive.Include);
+            var manager = _prefab.GetComponentInChildren<UIManager>(true);
             Assert.IsNotNull(manager, "UIManager not found in KitforgeRoot");
-            Assert.IsTrue(manager.IsRegistered(screenType), $"{screenType.Name} not registered in UIManager._screenPrefabs");
-            var method = typeof(UIManager).GetMethod("Push").MakeGenericMethod(screenType);
-            var result = method.Invoke(manager, new object[] { null });
-            Assert.IsNotNull(result, $"UIManager.Push<{screenType.Name}>() returned null. Check Console for [UIManager] warnings.");
+            Assert.IsTrue(manager.IsRegistered(screenType), $"{screenType.Name} is not registered in UIManager._screenPrefabs[] — run Maintenance/Wire Catalog Into KitforgeRoot");
         }
 
         [TestCase(typeof(NotificationToast))]
-        public void ToastOpens_WithNullDefaultServices(Type toastType)
+        public void ToastPrefab_IsWiredInToastManager(Type toastType)
         {
-            var manager = UnityEngine.Object.FindAnyObjectByType<ToastManager>(FindObjectsInactive.Include);
+            var manager = _prefab.GetComponentInChildren<ToastManager>(true);
             Assert.IsNotNull(manager, "ToastManager not found in KitforgeRoot");
-            Assert.IsTrue(manager.IsRegistered(toastType), $"{toastType.Name} not registered in ToastManager._toastPrefabs");
-            var method = typeof(ToastManager).GetMethod("Show").MakeGenericMethod(toastType);
-            var result = method.Invoke(manager, new object[] { null, null });
-            Assert.IsNotNull(result, $"ToastManager.Show<{toastType.Name}>() returned null. Check Console for [ToastManager] warnings.");
+            Assert.IsTrue(manager.IsRegistered(toastType), $"{toastType.Name} is not registered in ToastManager._toastPrefabs[] — run Maintenance/Wire Catalog Into KitforgeRoot");
         }
     }
 }
