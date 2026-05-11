@@ -2,6 +2,13 @@
 
 All notable changes to this package are documented here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.2] — 2026-05-11
+
+### Fixed
+
+- **Setup Wizard Step 3** previously invoked the `KitforgeLabs/UI Kit/Build Group A Sample` menu, which v1.1.0 removed. The wizard now uses Step 3 to switch to the Hub Catalog tab — the canonical flow now that samples no longer ship. Step 1 description updated to reference the v1.1.0 path `Assets/KitforgeLabs/UI Kit/Settings/UIAnimPresets/`.
+- **Stray sample-builder references** in error messages cleared from `ShopPopup`, `KitforgeTestLauncher`, `KitforgeCatalogBrowser`, and per-element specs. Error guidance now points at the Hub Catalog snippet panel or the buyer's own Inspector wiring rather than at deleted menu items.
+
 ## [1.1.1] — 2026-05-11
 
 ### Fixed
