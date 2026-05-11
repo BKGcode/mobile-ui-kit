@@ -1,12 +1,12 @@
 using System;
-using KitforgeLabs.MobileUIKit.Animation;
-using KitforgeLabs.MobileUIKit.Core;
+using KitforgeLabs.UIKit.Animation;
+using KitforgeLabs.UIKit.Core;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-namespace KitforgeLabs.MobileUIKit.Catalog.Screens
+namespace KitforgeLabs.UIKit.Catalog.Screens
 {
     [DisallowMultipleComponent]
     [RequireComponent(typeof(UIAnim_MainMenuScreen))]

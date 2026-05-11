@@ -1,10 +1,10 @@
-using KitforgeLabs.MobileUIKit.Theme;
+using KitforgeLabs.UIKit.Theme;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace KitforgeLabs.MobileUIKit.Editor.Inspectors
+namespace KitforgeLabs.UIKit.Editor.Inspectors
 {
     [CustomEditor(typeof(UIThemeConfig))]
     public class UIThemeConfigEditor : UnityEditor.Editor

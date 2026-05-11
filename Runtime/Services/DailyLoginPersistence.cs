@@ -1,7 +1,7 @@
 using System;
 using System.Globalization;
 
-namespace KitforgeLabs.MobileUIKit.Services
+namespace KitforgeLabs.UIKit.Services
 {
     public static class DailyLoginPersistence
     {

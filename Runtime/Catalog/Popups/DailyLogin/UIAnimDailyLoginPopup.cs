@@ -1,6 +1,6 @@
-using KitforgeLabs.MobileUIKit.Catalog.Internal;
+using KitforgeLabs.UIKit.Catalog.Internal;
 
-namespace KitforgeLabs.MobileUIKit.Catalog.DailyLogin
+namespace KitforgeLabs.UIKit.Catalog.DailyLogin
 {
     public sealed class UIAnimDailyLoginPopup : UIAnimPopupBase { }
 }

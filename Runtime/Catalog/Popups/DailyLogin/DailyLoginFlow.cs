@@ -1,10 +1,10 @@
 using System;
-using KitforgeLabs.MobileUIKit.Catalog.Reward;
-using KitforgeLabs.MobileUIKit.Core;
-using KitforgeLabs.MobileUIKit.Services;
+using KitforgeLabs.UIKit.Catalog.Reward;
+using KitforgeLabs.UIKit.Core;
+using KitforgeLabs.UIKit.Services;
 using UnityEngine;
 
-namespace KitforgeLabs.MobileUIKit.Catalog.DailyLogin
+namespace KitforgeLabs.UIKit.Catalog.DailyLogin
 {
     public static class DailyLoginFlow
     {

@@ -1,10 +1,10 @@
 {
-    "name": "KitforgeLabs.MobileUIKit.Samples.CatalogGroupC",
-    "rootNamespace": "KitforgeLabs.MobileUIKit.Samples.CatalogGroupC",
+    "name": "KitforgeLabs.UIKit.Catalog",
+    "rootNamespace": "KitforgeLabs.UIKit.Catalog",
     "references": [
-        "KitforgeLabs.MobileUIKit",
-        "KitforgeLabs.MobileUIKit.Catalog",
-        "Unity.TextMeshPro"
+        "KitforgeLabs.UIKit",
+        "Unity.TextMeshPro",
+        "DOTween.Modules"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

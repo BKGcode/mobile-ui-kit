@@ -1,22 +1,19 @@
 using System;
-using System.IO;
 using System.Reflection;
-using KitforgeLabs.MobileUIKit.Core;
-using KitforgeLabs.MobileUIKit.Editor.Hub.Catalog;
-using KitforgeLabs.MobileUIKit.Editor.Hub.Setup;
-using KitforgeLabs.MobileUIKit.Toast;
+using KitforgeLabs.UIKit.Core;
+using KitforgeLabs.UIKit.Editor.Hub.Catalog;
+using KitforgeLabs.UIKit.Editor.Hub.Setup;
+using KitforgeLabs.UIKit.Toast;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 
-namespace KitforgeLabs.MobileUIKit.Editor.Hub.Test
+namespace KitforgeLabs.UIKit.Editor.Hub.Test
 {
     internal sealed class KitforgeTestLauncher
     {
-        private const string CatalogAllDemoScenePath = "Assets/Catalog_All_Demo/AllDemo.unity";
-
         private readonly KitforgeHubState _state;
         private readonly EditorWindow _hostWindow;
 
@@ -105,13 +102,6 @@ namespace KitforgeLabs.MobileUIKit.Editor.Hub.Test
             addRoot.AddToClassList("kfh-test-banner-action");
             addRoot.SetEnabled(!Application.isPlaying);
             actions.Add(addRoot);
-            if (CatalogAllDemoSceneExists())
-            {
-                var openDemo = new Button(OpenCatalogAllDemo) { text = "Open Catalog_All_Demo" };
-                openDemo.AddToClassList("kfh-test-banner-action");
-                openDemo.SetEnabled(!Application.isPlaying);
-                actions.Add(openDemo);
-            }
             var goSetup = new Button(GoToSetupTab) { text = "Open Setup tab" };
             goSetup.AddToClassList("kfh-test-banner-action");
             actions.Add(goSetup);
@@ -138,25 +128,9 @@ namespace KitforgeLabs.MobileUIKit.Editor.Hub.Test
             Refresh();
         }
 
-        private void OpenCatalogAllDemo()
-        {
-            if (!CatalogAllDemoSceneExists())
-            {
-                Debug.LogError($"[KitforgeTestLauncher] Catalog_All_Demo scene not found at '{CatalogAllDemoScenePath}'. Import 'Catalog — All — Single-import master demo' from Package Manager → Samples and run Tools → Kitforge → UI Kit → Build Catalog_All_Demo.");
-                return;
-            }
-            if (!EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo()) return;
-            EditorSceneManager.OpenScene(CatalogAllDemoScenePath, OpenSceneMode.Single);
-        }
-
         private void GoToSetupTab()
         {
             if (_hostWindow is KitforgeHubWindow hub) hub.SwitchToTab(KitforgeHubState.HubTab.Setup);
-        }
-
-        private static bool CatalogAllDemoSceneExists()
-        {
-            return File.Exists(CatalogAllDemoScenePath);
         }
 
         private void BuildElementList()
@@ -176,7 +150,7 @@ namespace KitforgeLabs.MobileUIKit.Editor.Hub.Test
             var header = new Label("Force scenarios");
             header.AddToClassList("kfh-test-section-header");
             scroll.Add(header);
-            var note = new Label("Spawn catalog popups pre-configured for specific edge cases (DTO override; no service mutation). Requires the relevant Group sample built and prefabs wired in the active scene's PopupManager — easiest path: open the demo scene from Tools → Kitforge → UI Kit → Build Group X Sample.");
+            var note = new Label("Spawn catalog popups pre-configured for specific edge cases (DTO override; no service mutation). Requires the relevant Group sample built and prefabs wired in the active scene's PopupManager — easiest path: open the demo scene from KitforgeLabs → UI Kit → Build Group X Sample.");
             note.AddToClassList("kfh-test-section-note");
             scroll.Add(note);
             foreach (var scenario in KitforgeForceScenariosRegistry.All)
@@ -284,7 +258,7 @@ namespace KitforgeLabs.MobileUIKit.Editor.Hub.Test
             var manager = UnityEngine.Object.FindAnyObjectByType<TManager>();
             if (manager == null)
             {
-                Debug.LogError($"[KitforgeTestLauncher] {typeof(TManager).Name} not found in active scene → Run Setup → Step 2 (Add Scene Root) to drop KitforgeRoot.prefab. Or open a Group X demo scene built via Tools → Kitforge → UI Kit → Build Group X Sample.");
+                Debug.LogError($"[KitforgeTestLauncher] {typeof(TManager).Name} not found in active scene → Run Setup → Step 2 (Add Scene Root) to drop KitforgeRoot.prefab. Or open a Group X demo scene built via KitforgeLabs → UI Kit → Build Group X Sample.");
                 NotifyHub($"Spawn blocked: no {typeof(TManager).Name}");
                 return;
             }
@@ -309,7 +283,7 @@ namespace KitforgeLabs.MobileUIKit.Editor.Hub.Test
             }
             catch (TargetInvocationException ex)
             {
-                Debug.LogError($"[KitforgeTestLauncher] Spawn failed for {displayName} → {ex.InnerException?.Message ?? ex.Message}. Likely cause: prefab not wired into PopupManager._popupPrefabs[] in the active scene. Open a Group X sample scene built via Tools → Kitforge → UI Kit → Build Group X Sample (those ship pre-wired).");
+                Debug.LogError($"[KitforgeTestLauncher] Spawn failed for {displayName} → {ex.InnerException?.Message ?? ex.Message}. Likely cause: prefab not wired into PopupManager._popupPrefabs[] in the active scene. Open a Group X sample scene built via KitforgeLabs → UI Kit → Build Group X Sample (those ship pre-wired).");
                 NotifyHub($"Spawn failed: {displayName}");
             }
         }

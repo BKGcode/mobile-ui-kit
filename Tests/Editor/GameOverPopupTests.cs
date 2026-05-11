@@ -1,12 +1,12 @@
 using System.Text.RegularExpressions;
-using KitforgeLabs.MobileUIKit.Catalog.GameOver;
-using KitforgeLabs.MobileUIKit.Catalog.Tests.Helpers;
-using KitforgeLabs.MobileUIKit.Services;
+using KitforgeLabs.UIKit.Catalog.GameOver;
+using KitforgeLabs.UIKit.Catalog.Tests.Helpers;
+using KitforgeLabs.UIKit.Services;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
 
-namespace KitforgeLabs.MobileUIKit.Catalog.Tests
+namespace KitforgeLabs.UIKit.Catalog.Tests
 {
     [TestFixture]
     public class GameOverPopupTests

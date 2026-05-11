@@ -1,4 +1,4 @@
-namespace KitforgeLabs.MobileUIKit.Catalog.Toasts
+namespace KitforgeLabs.UIKit.Catalog.Toasts
 {
     public enum ToastSeverity
     {

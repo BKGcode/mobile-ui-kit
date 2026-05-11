@@ -1,7 +1,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace KitforgeLabs.MobileUIKit.Editor.Hub
+namespace KitforgeLabs.UIKit.Editor.Hub
 {
     public sealed class KitforgeHubState : ScriptableObject
     {

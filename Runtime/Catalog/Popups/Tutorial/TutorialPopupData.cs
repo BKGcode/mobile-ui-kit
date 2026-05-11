@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace KitforgeLabs.MobileUIKit.Catalog.Tutorial
+namespace KitforgeLabs.UIKit.Catalog.Tutorial
 {
     [Serializable]
     public class TutorialStep

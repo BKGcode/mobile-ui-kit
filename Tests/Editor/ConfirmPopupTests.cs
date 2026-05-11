@@ -1,8 +1,8 @@
-using KitforgeLabs.MobileUIKit.Catalog.Confirm;
+using KitforgeLabs.UIKit.Catalog.Confirm;
 using NUnit.Framework;
 using UnityEngine;
 
-namespace KitforgeLabs.MobileUIKit.Catalog.Tests
+namespace KitforgeLabs.UIKit.Catalog.Tests
 {
     [TestFixture]
     public class ConfirmPopupTests

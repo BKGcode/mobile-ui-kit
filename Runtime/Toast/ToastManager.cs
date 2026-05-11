@@ -1,11 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using KitforgeLabs.MobileUIKit.Services;
-using KitforgeLabs.MobileUIKit.Theme;
+using KitforgeLabs.UIKit.Services;
+using KitforgeLabs.UIKit.Theme;
 using UnityEngine;
 
-namespace KitforgeLabs.MobileUIKit.Toast
+namespace KitforgeLabs.UIKit.Toast
 {
     [DisallowMultipleComponent]
     public sealed class ToastManager : MonoBehaviour

@@ -1,11 +1,11 @@
-using KitforgeLabs.MobileUIKit.Catalog.Screens;
-using KitforgeLabs.MobileUIKit.Catalog.Tests.Helpers;
+using KitforgeLabs.UIKit.Catalog.Screens;
+using KitforgeLabs.UIKit.Catalog.Tests.Helpers;
 using NUnit.Framework;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace KitforgeLabs.MobileUIKit.Catalog.Tests
+namespace KitforgeLabs.UIKit.Catalog.Tests
 {
     [TestFixture]
     public class LoadingScreenTests

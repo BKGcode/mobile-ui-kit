@@ -1,7 +1,6 @@
 # LoadingScreen
 
-> Status: **SPEC DRAFT 2026-05-05** — L1-L8 locked. Targets M3a (`v0.8.0-alpha` BREAKING). Element 12 (Screen) of Group E.
-> Infrastructure prerequisites: `CATALOG_GroupE_DELTA.md` § 1 (Theme slots) + § 2 (folder convention).
+> Infrastructure prerequisites: see the Theme slots and folder convention notes.
 
 ## Purpose
 
@@ -14,7 +13,7 @@ Full-screen loading overlay with optional progress bar and spinner. Shown during
 | **L1** | Progress update mechanism | **LOCKED — buyer-driven pull**: screen exposes `public void SetProgress(float 0-1)`. DTO carries initial state (`InitialProgress`, `ShowProgressBar`). Screen does NOT poll, own a task, or drive async internally. Buyer calls `SetProgress` from their boot sequence and calls `UIManager.Replace<MainMenuScreen>()` when done. | CATALOG § 3.1.3 typed payload + § 3.2.5 no PlayerPrefs/Save system = kit doesn't own boot logic. Progress is a game-specific async pipeline; kit provides the visual only. Any intrinsic async design (Func<float> in DTO, IProgress<float>, coroutine) forces a coupling to the buyer's async model. |
 | **L2** | Auto-dismiss | **LOCKED — none.** Screen has no auto-dismiss. Buyer calls `UIManager.Replace<MainMenuScreen>(data)` when ready. Optional `OnProgressComplete` C# event fires when `SetProgress(1f)` is called — buyer can wire to transition if desired. | Buyer's loading pipeline may have post-progress work (fade-in, cinematic, startup validation) before showing MainMenu. Auto-dismiss would race those. Decoupled by default; wiring is 1 line for buyers who want it. |
 | **L3** | Minimum display time | **LOCKED — advisory via event**: `_minDisplaySeconds` Inspector field (default `0f`). When > 0, fires `OnMinDisplayTimeElapsed` after `Time.unscaledTime` delta exceeds the threshold post-`OnShow`. Screen does NOT block transition. Buyer who requires minimum time waits for both `OnProgressComplete` AND `OnMinDisplayTimeElapsed` in their host. `ITimeService` NOT required — `Time.unscaledTime` suffices (loading screen is a local experience, not server-time-dependent). | Advisory is correct: kit should not block `UIManager.Replace` calls. Mobile loading screens have OS minimums (Apple App Store Review Guidelines 2.3.10) but enforcement is the game binary's concern, not a UI kit component. |
-| **L4** | Spinner | **LOCKED — optional continuous rotation tween.** `Refs.SpinnerImage` (Image). `_spinnerRpm` Inspector field (default `120f`). Tween stored in `_spinnerTween`. Started in `OnShow`, killed in `OnHide` + `OnDestroy`. `SetLink(gameObject)`. Hidden when `Refs.SpinnerImage` null. Uses `Theme.IconLoading` sprite (NEW slot per `CATALOG_GroupE_DELTA.md` § 1). | Standard mobile loading pattern. Rotation tween is 1 line; no dedicated animator needed. `_spinnerRpm` lets buyer tune perceived speed without code changes. |
+| **L4** | Spinner | **LOCKED — optional continuous rotation tween.** `Refs.SpinnerImage` (Image). `_spinnerRpm` Inspector field (default `120f`). Tween stored in `_spinnerTween`. Started in `OnShow`, killed in `OnHide` + `OnDestroy`. `SetLink(gameObject)`. Hidden when `Refs.SpinnerImage` null. Uses `Theme.IconLoading` sprite (NEW slot per the relevant infrastructure section). | Standard mobile loading pattern. Rotation tween is 1 line; no dedicated animator needed. `_spinnerRpm` lets buyer tune perceived speed without code changes. |
 | **L5** | Progress bar animation | **LOCKED — inline DOTween on `fillAmount`.** `_progressTweenDuration` Inspector field (default `0.3f`). Stored in `_progressTween`. Killed before re-fire. `SetLink(gameObject)`. `_animateProgress` bool (default `true`) — false = snap instantly (useful for pre-positioned loading bars). Fill color via `Theme.LoadingBarColor` (NEW slot). | Smooth fill conveys "loading is progressing" better than jumpy snaps. DOTween handles perfectly; no reason for a separate animator component just for fillAmount. |
 | **L6** | Back button | **LOCKED — blocked.** `OnBackPressed()` override is a no-op. No dismiss. No event. | Loading is not cancelable from the player's perspective. Android back press during boot would crash to OS; this is intentional behavior. Buyer who needs cancelable loading (e.g. PvP matchmaking lobby) overrides via subclass. |
 | **L7** | Services | **LOCKED — none required.** `IUIAudioRouter` optional: cue `UIAudioCue.Ambient` on `OnShow` (ambient loading music), stop on `OnHide`. No `IEconomyService`, `IProgressionService`, or `ITimeService` consumed. | CATALOG § 3.2 — emit events; don't own services you don't need. Boot is pre-services-ready in many architectures; requiring services on the loading screen would create a chicken-and-egg dependency. |
@@ -40,7 +39,7 @@ Full-screen loading overlay with optional progress bar and spinner. Shown during
 - `IUIAudioRouter` (optional). Cue: `UIAudioCue.Ambient` on `OnShow`, stop on `OnHide`. Off by default if router null.
 - All other services: **none consumed**. Null `Services` ref is silently tolerated.
 
-Null-service behavior follows `CATALOG_GroupE_DELTA.md` § 4 (Screen = silent degrade).
+Null-service behavior follows the "silent degrade" rule (Screen = silent degrade).
 
 ## Events emitted
 
@@ -135,8 +134,7 @@ Tests/Editor/
 
 ## Status
 
-- Code: ✅ delivered 2026-05-05 — `Runtime/Catalog/Screens/Loading/LoadingScreen.cs` with `LoadingRefs` foldout, `SetProgress`/`SetLoadingText` public API, `TickMinDisplayCheck` 1-frame polling for min-display advisory, spinner loop tween, `RealTimeProviderForTests` seam. `Runtime/Catalog/_Internal/UIAnimScreenBase.cs` new base (shared with future MainMenuScreen). `UIAnim_LoadingScreen` trivial subclass.
+- Code: ✅ `Runtime/Catalog/Screens/Loading/LoadingScreen.cs` with `LoadingRefs` foldout, `SetProgress`/`SetLoadingText` public API, `TickMinDisplayCheck` 1-frame polling for min-display advisory, spinner loop tween, `RealTimeProviderForTests` seam. `Runtime/Catalog/_Internal/UIAnimScreenBase.cs` new base (shared with future MainMenuScreen). `UIAnim_LoadingScreen` trivial subclass.
 - Spec: ✅ this document (2026-05-05)
-- Tests: ✅ delivered 2026-05-05 — `Tests/Editor/LoadingScreenTests.cs` 14 tests covering DTO defaults / Bind null fallback / InitialProgress snap / SetProgress stores / OnProgressComplete fires at 1f / does not refire / Bind clears subscription / MinDisplaySeconds=0 silent / fires after elapsed / fires once / hidden ignored / OnBackPressed no-op / ShowProgressBar false / ShowSpinner false / SetLoadingText hides empty labels.
-- Prefab: ✅ delivered — `CatalogGroupEBuilder.BuildLoadingScreen` (run `Tools/Kitforge/UI Kit/Build Group E Sample` to generate `Catalog_GroupE_Demo/Prefabs/LoadingScreen.prefab`)
+- Tests: ✅ `Tests/Editor/LoadingScreenTests.cs` 14 tests covering DTO defaults / Bind null fallback / InitialProgress snap / SetProgress stores / OnProgressComplete fires at 1f / does not refire / Bind clears subscription / MinDisplaySeconds=0 silent / fires after elapsed / fires once / hidden ignored / OnBackPressed no-op / ShowProgressBar false / ShowSpinner false / SetLoadingText hides empty labels.
 - Demo scene entry: ✅ delivered — `GroupE_BootDemo.unity` built by `CatalogGroupEBuilder.BuildDemoScene`

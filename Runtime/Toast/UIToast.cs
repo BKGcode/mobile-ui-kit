@@ -1,4 +1,4 @@
-namespace KitforgeLabs.MobileUIKit.Toast
+namespace KitforgeLabs.UIKit.Toast
 {
     public abstract class UIToast<TData> : UIToastBase
     {

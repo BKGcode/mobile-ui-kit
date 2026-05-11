@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace KitforgeLabs.MobileUIKit.Services
+namespace KitforgeLabs.UIKit.Services
 {
     public interface IShopDataProvider
     {

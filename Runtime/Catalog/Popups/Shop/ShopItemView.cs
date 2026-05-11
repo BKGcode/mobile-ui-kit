@@ -1,10 +1,10 @@
 using System;
-using KitforgeLabs.MobileUIKit.Services;
+using KitforgeLabs.UIKit.Services;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace KitforgeLabs.MobileUIKit.Catalog.Shop
+namespace KitforgeLabs.UIKit.Catalog.Shop
 {
     [DisallowMultipleComponent]
     public sealed class ShopItemView : MonoBehaviour

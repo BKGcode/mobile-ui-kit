@@ -1,21 +1,21 @@
 using System;
 using System.Globalization;
 using DG.Tweening;
-using KitforgeLabs.MobileUIKit.HUD;
-using KitforgeLabs.MobileUIKit.Services;
+using KitforgeLabs.UIKit.HUD;
+using KitforgeLabs.UIKit.Services;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-namespace KitforgeLabs.MobileUIKit.Catalog.HUD
+namespace KitforgeLabs.UIKit.Catalog.HUD
 {
     /// <summary>
     /// Live timer label HUD with three modes (<see cref="TimerMode"/>): countdown to a UTC target,
     /// countup since a UTC start, or local stopwatch driven by <c>Time.unscaledTime</c>. Mode is
-    /// immutable post-OnEnable per FQ6 — buyers swap modes via disable→set→enable cycle. Null
-    /// service behavior follows CATALOG_GroupC_DELTA § 4.5 (HUD = silent degrade — UTC modes
-    /// without an <see cref="ITimeService"/> render <c>"--:--"</c> with no LogError). Local
+    /// immutable post-OnEnable — swap modes via disable→set→enable cycle. Without an
+    /// <see cref="ITimeService"/>, UTC modes render <c>"--:--"</c> with no LogError; local
+    /// stopwatch always works.
     /// </summary>
     [DisallowMultipleComponent]
     public sealed class HUDTimer : UIHUDBase

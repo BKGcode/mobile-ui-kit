@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace KitforgeLabs.MobileUIKit.Theme
+namespace KitforgeLabs.UIKit.Theme
 {
     [DisallowMultipleComponent]
     [RequireComponent(typeof(Image))]

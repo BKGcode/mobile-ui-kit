@@ -1,9 +1,9 @@
 using System.Collections.Generic;
-using KitforgeLabs.MobileUIKit.Services;
-using KitforgeLabs.MobileUIKit.Theme;
+using KitforgeLabs.UIKit.Services;
+using KitforgeLabs.UIKit.Theme;
 using UnityEngine;
 
-namespace KitforgeLabs.MobileUIKit.Core
+namespace KitforgeLabs.UIKit.Core
 {
     [DisallowMultipleComponent]
     public sealed class UIManager : MonoBehaviour

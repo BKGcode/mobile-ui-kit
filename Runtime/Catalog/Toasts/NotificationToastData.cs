@@ -1,6 +1,6 @@
 using System;
 
-namespace KitforgeLabs.MobileUIKit.Catalog.Toasts
+namespace KitforgeLabs.UIKit.Catalog.Toasts
 {
     [Serializable]
     public class NotificationToastData

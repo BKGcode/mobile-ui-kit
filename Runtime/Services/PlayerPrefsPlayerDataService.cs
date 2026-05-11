@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace KitforgeLabs.MobileUIKit.Services
+namespace KitforgeLabs.UIKit.Services
 {
     [DisallowMultipleComponent]
     public sealed class PlayerPrefsPlayerDataService : MonoBehaviour, IPlayerDataService

@@ -1,7 +1,7 @@
 using System;
-using KitforgeLabs.MobileUIKit.Catalog.Reward;
+using KitforgeLabs.UIKit.Catalog.Reward;
 
-namespace KitforgeLabs.MobileUIKit.Catalog.DailyLogin
+namespace KitforgeLabs.UIKit.Catalog.DailyLogin
 {
     [Serializable]
     public class DailyLoginRewardEntry

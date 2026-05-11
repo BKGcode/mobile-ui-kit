@@ -1,21 +1,19 @@
 # IPlayerDataService
 
-> Status: **CONFIRMED 2026-05-04** — D1-D9 locked + Q1 resolved (retro-fit DailyLogin at M2).
-> Targets M2 (`v0.7.0-alpha`). Backs `SettingsPopup` + DailyLoginPopup persistence and any future popup needing persistent state.
 
 ## Purpose
 
 Persistence service for primitive key-value player data. Spec-1 of UI Kit Services namespace.
 
-Backs `SettingsPopup` (volumes, language, toggles) at M2, and is the canonical persistence path for any kit popup needing cross-session state. Buyer with a custom save system implements the interface over their backing store; default implementations cover dev (`InMemory`) and prod (`PlayerPrefs`).
+Backs `SettingsPopup` (volumes, language, toggles), and is the canonical persistence path for any kit popup needing cross-session state. Buyer with a custom save system implements the interface over their backing store; default implementations cover dev (`InMemory`) and prod (`PlayerPrefs`).
 
 ## Decisions to confirm
 
 | # | Decision | Proposal | Rationale |
 |---|---|---|---|
 | D1 | Surface shape | Method-per-type primitives (`GetInt/SetInt/GetFloat/SetFloat/GetString/SetString/GetBool/SetBool/Has/Delete/Save/Reload`) | Mirrors `PlayerPrefs` API. Zero reflection, zero boxing, zero generic dispatch. Buyer with custom SaveSystem implements 12 trivial methods. |
-| D2 | Generic `T Get<T>` rejected | NO — primitives only | Generic surface forces JSON layer (Newtonsoft dep) or runtime type-switch (smell + silent-fallback risk). Capability-gate fail: 0 use cases in M2 need non-primitive persistence. |
-| D3 | Implementations shipping at M2 close | (a) `PlayerPrefsPlayerDataService` Runtime default; (b) `InMemoryPlayerDataService` Sample stub (test seam) | Buyer with custom SaveSystem implements interface themselves. Two stock impls cover dev (memory, hermetic tests) + prod (PlayerPrefs, persistent). |
+| D2 | Generic `T Get<T>` rejected | NO — primitives only | Generic surface forces JSON layer (Newtonsoft dep) or runtime type-switch (smell + silent-fallback risk). Capability-gate fail: No catalog popup needs non-primitive persistence. |
+| D3 | Implementations shipping | (a) `PlayerPrefsPlayerDataService` Runtime default; (b) `InMemoryPlayerDataService` Sample stub (test seam) | Buyer with custom SaveSystem implements interface themselves. Two stock impls cover dev (memory, hermetic tests) + prod (PlayerPrefs, persistent). |
 | D4 | Key namespace | `kfmui.<scope>.<name>` (e.g. `kfmui.settings.musicVolume`) | Short (5 chars), unique across hypothetical Kitforge packages (`kfecon`, `kftutor`…), readable in PlayerPrefs registry browser. Avoids collision with buyer's existing keys. |
 | D5 | Save semantics | `Set*` updates in-memory only; explicit `Save()` flushes to backing store; **Unity's PlayerPrefs lifecycle auto-flush on app pause/quit covers normal app lifecycle so buyer rarely calls `Save()` explicitly** — typical buyer pattern: 1 `Save()` call in `SettingsPopup.OnHide` (belt-and-braces flush before player navigates away) | Mirrors PlayerPrefs behavior (Set is fire-and-forget). Slider drag at 60fps = 60 in-memory writes, 0 disk flushes. Auto-save-on-Set rejected: ~5-50ms PlayerPrefs.Save() per call on Android = 300ms-3000ms frame stalls during slider drag (unacceptable). Manual `Save()` for "flush now" scenarios (pre-IAP transaction, before risky op, popup close belt-and-braces). |
 | D6 | Reload semantics | `Reload()` discards in-memory cache, re-reads from store | Test scenario: simulate "app restart" without Domain Reload. PlayerPrefs impl just re-Gets on demand (no in-memory cache distinct from disk); InMemory impl resets to backing dictionary initial state. |
@@ -26,7 +24,7 @@ Backs `SettingsPopup` (volumes, language, toggles) at M2, and is the canonical p
 ## Surface
 
 ```csharp
-namespace KitforgeLabs.MobileUIKit.Services
+namespace KitforgeLabs.UIKit.Services
 {
     public interface IPlayerDataService
     {
@@ -48,7 +46,7 @@ namespace KitforgeLabs.MobileUIKit.Services
 
 12 methods total. No events. No async.
 
-## Implementations shipping at M2 close
+## Implementations shipping
 
 ### `PlayerPrefsPlayerDataService` (Runtime, default)
 - Wraps `UnityEngine.PlayerPrefs`. `GetBool` ↔ `GetInt(0|1)` mapping internal.
@@ -61,7 +59,7 @@ namespace KitforgeLabs.MobileUIKit.Services
 - Backing `Dictionary<string, object>`.
 - `Save()` is no-op.
 - `Reload()` clears the dictionary (resets to empty initial state — simulates "fresh app launch").
-- Path: `Samples~/Catalog_GroupD_PlayerData/Stubs/InMemoryPlayerDataService.cs` (mirrors Group B/C stub layout).
+- Path: `Samples (deprecated)/InMemoryPlayerDataService.cs` (mirrors Group B/C stub layout).
 - Used by every `IPlayerDataService` test (test seam — keeps EditMode tests hermetic; no PlayerPrefs touch).
 
 ## Kit-side canonical keys (frozen at `v1.0.0-rc`)
@@ -73,7 +71,7 @@ namespace KitforgeLabs.MobileUIKit.Services
 | `kfmui.settings.language` | string | `""` | SettingsPopup | Empty = system locale fallback. ISO 639-1 codes when set (`"en"`, `"es"`, …). |
 | `kfmui.settings.notifications` | bool | true | SettingsPopup | Push notification opt-in. |
 | `kfmui.settings.haptics` | bool | true | SettingsPopup | Vibration / haptic feedback opt-in. |
-| `kfmui.dailylogin.lastClaimedDay` | int | -1 | DailyLoginPopup | 1-7 indexed day of last claim. `-1` = never claimed. Retro-fit at M2 — see Q1 resolved below. |
+| `kfmui.dailylogin.lastClaimedDay` | int | -1 | DailyLoginPopup | 1-7 indexed day of last claim. `-1` = never claimed. Retro-fit applied. see Q1 resolved below. |
 | `kfmui.dailylogin.streak` | int | 0 | DailyLoginPopup | Current consecutive-days streak counter. Resets on missed day. |
 | `kfmui.dailylogin.lastSeenDay` | int | -1 | DailyLoginPopup | Day-of-year (or app-day index) of last popup view — drives "first time today" gating. `-1` = never seen. |
 
@@ -97,7 +95,7 @@ namespace KitforgeLabs.MobileUIKit.Services
   - 4 edge cases: default fallback, `Has` after `Delete`, `Reload` clears, type mismatch on InMemory throws.
 - PlayerPrefs impl has 1 PlayMode smoke test wired via `[ContextMenu]` — NOT EditMode (PlayerPrefs is process-global state; would leak between tests).
 
-## Buyer extension patterns (M4 QUICKSTART entries)
+## Buyer extension patterns (Buyer integration patterns)
 
 ### Pattern 1 — Restore defaults (~5 lines)
 ```csharp
@@ -124,7 +122,7 @@ Buyer uses ANY prefix EXCEPT `kfmui.` (reserved). E.g. `mygame.player.coins`. Ki
 ## Migration policy
 
 - Kit-side keys (table above) are FROZEN at `v1.0.0-rc`. New v1.x keys are **additive only** — no rename, no type change, no default change.
-- v0.x → v1.0 buyers: dev-time data shipped before freeze is "as-is" — buyers running v0.x in production may lose data on v1.0 upgrade (acceptable for alpha→stable transition; documented in MIGRATION.md at M4).
+- v0.x → v1.0 buyers: dev-time data shipped before freeze is "as-is" — buyers running v0.x in production may lose data on v1.0 upgrade (acceptable for alpha→stable transition; ).
 - Buyer-side keys: buyer's responsibility. Kit does NOT migrate, validate, or version buyer-prefixed keys.
 
 ## Out of scope
@@ -134,19 +132,5 @@ Buyer uses ANY prefix EXCEPT `kfmui.` (reserved). E.g. `mygame.player.coins`. Ki
 - Cloud sync (Game Center, Play Games, custom backend — buyer responsibility).
 - Schema migration framework (kit keys frozen; buyer keys = buyer's domain).
 - Generic `T Get<T>` surface (rejected — see D2).
-- `OnKeyChanged` / `OnSaved` events (no use case in M2; SettingsPopup pulls on `OnShow`, pushes on slider change; runtime state propagation is the audio/locale services' job, not the persistence service's).
+- `OnKeyChanged` / `OnSaved` events (no catalog popup needs them; SettingsPopup pulls on `OnShow`, pushes on slider change; runtime state propagation is the audio/locale services' job, not the persistence service's).
 
-## Resolved questions (locked 2026-05-04)
-
-### Q1 — DailyLoginPopup persistence retro-fit at M2 → ✅ **RETRO-FIT (option a)**
-
-DailyLoginPopup (shipped M1, `v0.6.0-alpha`) currently consumes `IProgressionService` (Group C sample stub `InMemoryProgressionService`) for `lastClaimedDay` / `streak` / `lastSeenDay`. At M2 the `InMemoryProgressionService` stub gets retro-fitted to back those 3 fields with `IPlayerDataService.GetInt/SetInt`. Adds 3 keys to canonical list (rows above).
-
-**Why retro-fit (lens: most common in mobile games + most comfortable for player and dev team)**:
-- 100% of mobile games with daily-login persist streak. Without it the popup looks broken.
-- Buyer evaluating the kit imports DailyLogin sample → presses Play → claims Day 1 → stops Play → re-presses Play. Without persistence: Day 1 still claimable. **Demo fails first-impression test** (per `/_checker as user` "fresh import smoke test" lens).
-- Dev cost: ~30-60 min (3 calls in `InMemoryProgressionService`). Fits M2 budget.
-
-**Risk gate**: if retro-fit ripples through `IProgressionService` interface (>1hr work), revert to v1.x additive deferral and document in CHANGELOG. Validate at M2 mid-point.
-
-**Trade-off accepted**: `v1.0.0-rc` canonical list grows from 5 to 8 keys. Backwards-compat story unchanged (additive policy applies equally to 5 or 8 frozen keys).

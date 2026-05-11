@@ -1,19 +1,19 @@
 using System.Collections.Generic;
-using KitforgeLabs.MobileUIKit.Catalog.Confirm;
-using KitforgeLabs.MobileUIKit.Catalog.DailyLogin;
-using KitforgeLabs.MobileUIKit.Catalog.GameOver;
-using KitforgeLabs.MobileUIKit.Catalog.HUD;
-using KitforgeLabs.MobileUIKit.Catalog.LevelComplete;
-using KitforgeLabs.MobileUIKit.Catalog.NotEnough;
-using KitforgeLabs.MobileUIKit.Catalog.Pause;
-using KitforgeLabs.MobileUIKit.Catalog.Reward;
-using KitforgeLabs.MobileUIKit.Catalog.Screens;
-using KitforgeLabs.MobileUIKit.Catalog.Settings;
-using KitforgeLabs.MobileUIKit.Catalog.Shop;
-using KitforgeLabs.MobileUIKit.Catalog.Toasts;
-using KitforgeLabs.MobileUIKit.Catalog.Tutorial;
+using KitforgeLabs.UIKit.Catalog.Confirm;
+using KitforgeLabs.UIKit.Catalog.DailyLogin;
+using KitforgeLabs.UIKit.Catalog.GameOver;
+using KitforgeLabs.UIKit.Catalog.HUD;
+using KitforgeLabs.UIKit.Catalog.LevelComplete;
+using KitforgeLabs.UIKit.Catalog.NotEnough;
+using KitforgeLabs.UIKit.Catalog.Pause;
+using KitforgeLabs.UIKit.Catalog.Reward;
+using KitforgeLabs.UIKit.Catalog.Screens;
+using KitforgeLabs.UIKit.Catalog.Settings;
+using KitforgeLabs.UIKit.Catalog.Shop;
+using KitforgeLabs.UIKit.Catalog.Toasts;
+using KitforgeLabs.UIKit.Catalog.Tutorial;
 
-namespace KitforgeLabs.MobileUIKit.Editor.Hub.Catalog
+namespace KitforgeLabs.UIKit.Editor.Hub.Catalog
 {
     public static class KitforgeCatalogRegistry
     {

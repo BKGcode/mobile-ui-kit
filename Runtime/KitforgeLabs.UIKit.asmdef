@@ -1,9 +1,7 @@
 {
-    "name": "KitforgeLabs.MobileUIKit.Samples.CatalogGroupD",
-    "rootNamespace": "KitforgeLabs.MobileUIKit.Samples.CatalogGroupD",
+    "name": "KitforgeLabs.UIKit",
+    "rootNamespace": "KitforgeLabs.UIKit",
     "references": [
-        "KitforgeLabs.MobileUIKit",
-        "KitforgeLabs.MobileUIKit.Catalog",
         "Unity.TextMeshPro"
     ],
     "includePlatforms": [],

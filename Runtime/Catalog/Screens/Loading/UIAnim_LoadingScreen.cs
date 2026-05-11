@@ -1,6 +1,6 @@
-using KitforgeLabs.MobileUIKit.Catalog.Internal;
+using KitforgeLabs.UIKit.Catalog.Internal;
 
-namespace KitforgeLabs.MobileUIKit.Catalog.Screens
+namespace KitforgeLabs.UIKit.Catalog.Screens
 {
     public sealed class UIAnim_LoadingScreen : UIAnimScreenBase { }
 }

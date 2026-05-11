@@ -1,11 +1,11 @@
 using System.Reflection;
-using KitforgeLabs.MobileUIKit.Catalog.Toasts;
-using KitforgeLabs.MobileUIKit.Services;
-using KitforgeLabs.MobileUIKit.Theme;
+using KitforgeLabs.UIKit.Catalog.Toasts;
+using KitforgeLabs.UIKit.Services;
+using KitforgeLabs.UIKit.Theme;
 using NUnit.Framework;
 using UnityEngine;
 
-namespace KitforgeLabs.MobileUIKit.Catalog.Tests
+namespace KitforgeLabs.UIKit.Catalog.Tests
 {
     [TestFixture]
     public class NotificationToastTests

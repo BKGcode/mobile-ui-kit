@@ -29,7 +29,7 @@ Bloating `HUDCurrency` with optional `_showRegen` / `_showCap` Inspector fields 
 **No DTO**. HUD elements are Inspector + Theme + service-driven, NOT modules with `Bind/OnShow/OnHide`. Same as HUDCoins/HUDGems (now HUDCurrency).
 
 ## Service binding
-Null-service behavior follows `CATALOG_GroupC_DELTA.md` § 4.5 (HUD = silent degrade — see Edge cases for per-service fallback).
+Null-service behavior follows the "silent degrade" rule (HUD = silent degrade — see Edge cases for per-service fallback).
 
 - `IEconomyService` (REQUIRED via `_services` ref). Subscribes to `OnChanged(CurrencyType, int)` filtered to `Energy`. Reads `Get(CurrencyType.Energy)` in `Refresh()`.
 - `IProgressionService` (REQUIRED via `_services` ref — new requirement vs Coins/Gems). Polled per E3.
@@ -88,7 +88,7 @@ Triggered from a Demo scene host MonoBehaviour via `[ContextMenu]`:
 13. `Overcap — 7/5` (verify display + tint).
 
 ## Pre-flight infrastructure
-See `CATALOG_GroupC_DELTA.md` — `IProgressionService.GetEnergyRegenState()` extension, `EnergyRegenState` struct, `IconEnergy` Theme slot, `CurrencyType.Energy` enum value, and `HUDCurrency` parameterized base class are all required before delivery.
+Required infrastructure: `IProgressionService.GetEnergyRegenState()` extension, `EnergyRegenState` struct, `IconEnergy` Theme slot, `CurrencyType.Energy` enum value, and `HUDCurrency` parameterized base class are all required before delivery.
 
 ## Files
 ```
@@ -103,8 +103,8 @@ Tests/Editor/
 (`HUDCurrency.cs` itself is delivered alongside Q1 v2 migration — see Phase 0 lock.)
 
 ## Status
-- Code: ✅ delivered 2026-05-03 — `Runtime/Catalog/HUD/HUDEnergy.cs` extends base with `EnergyRefs` (RegenCountdownLabel + MaxCapLabel + EnergyBarFill), `_capFormatString`/`_regenFormatString`/`_regenReadyText`, at-max flash (`_atMaxFlashColor`/`_atMaxFlashDuration`/`_atMaxFlashEnabled`), 1Hz `IProgressionService.GetEnergyRegenState()` poll via `Update() → TickRegenPoll()` (M3 sweep: workaround indirection removed), Subscribe/Unsubscribe override registers auxiliary `HandleEconomyChangedForRegen` for spec E3 "polled on every OnChanged event". Empty pulse (E8) and overcap tint deferred to M3 polish.
+- Code: ✅ `Runtime/Catalog/HUD/HUDEnergy.cs` extends base with `EnergyRefs` (RegenCountdownLabel + MaxCapLabel + EnergyBarFill), `_capFormatString`/`_regenFormatString`/`_regenReadyText`, at-max flash (`_atMaxFlashColor`/`_atMaxFlashDuration`/`_atMaxFlashEnabled`), 1Hz `IProgressionService.GetEnergyRegenState()` poll via `Update() → TickRegenPoll()` , Subscribe/Unsubscribe override registers auxiliary `HandleEconomyChangedForRegen` for spec E3 "polled on every OnChanged event". Empty pulse (E8) and overcap tint deferred for a future release.
 - Spec: ✅ this document
-- Tests: ✅ delivered 2026-05-03 — `Tests/Editor/HUDEnergyTests.cs` 10 tests covering initial state read / null-progression silent degrade (§ 4.5) / cap suffix bounded / cap hidden when IsFull / cap hidden when Max≤0 / regen "+1 ready" when overdue / regen hidden when IsFull / bar fill amount / E1 sealing (Inspector field ignored) / OnChanged(Energy) triggers regen poll. **189/189 tests verde sobre fresh compile.**
+- Tests: ✅ `Tests/Editor/HUDEnergyTests.cs` 10 tests covering initial state read / null-progression silent degrade (§ 4.5) / cap suffix bounded / cap hidden when IsFull / cap hidden when Max≤0 / regen "+1 ready" when overdue / regen hidden when IsFull / bar fill amount / E1 sealing (Inspector field ignored) / OnChanged(Energy) triggers regen poll. **189/189 tests verde sobre fresh compile.**
 - Prefab: ⏳ pending (`CatalogGroupCBuilder.BuildHUDEnergy` — preset with `_currency=Energy` sealed)
 - Demo scene entry: ⏳ pending (HUD lives on persistent canvas, not spawned by ContextMenu)

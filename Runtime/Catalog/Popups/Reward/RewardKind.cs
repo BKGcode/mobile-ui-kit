@@ -1,4 +1,4 @@
-namespace KitforgeLabs.MobileUIKit.Catalog.Reward
+namespace KitforgeLabs.UIKit.Catalog.Reward
 {
     public enum RewardKind
     {

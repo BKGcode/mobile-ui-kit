@@ -1,7 +1,7 @@
 using TMPro;
 using UnityEngine;
 
-namespace KitforgeLabs.MobileUIKit.Theme
+namespace KitforgeLabs.UIKit.Theme
 {
     [DisallowMultipleComponent]
     [RequireComponent(typeof(TMP_Text))]

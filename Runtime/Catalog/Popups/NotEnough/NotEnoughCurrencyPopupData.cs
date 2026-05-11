@@ -1,7 +1,7 @@
 using System;
-using KitforgeLabs.MobileUIKit.Services;
+using KitforgeLabs.UIKit.Services;
 
-namespace KitforgeLabs.MobileUIKit.Catalog.NotEnough
+namespace KitforgeLabs.UIKit.Catalog.NotEnough
 {
     [Serializable]
     public class NotEnoughCurrencyPopupData

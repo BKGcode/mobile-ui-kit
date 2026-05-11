@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-namespace KitforgeLabs.MobileUIKit.Catalog.HUD
+namespace KitforgeLabs.UIKit.Catalog.HUD
 {
     public enum HUDTimerSimpleMode
     {

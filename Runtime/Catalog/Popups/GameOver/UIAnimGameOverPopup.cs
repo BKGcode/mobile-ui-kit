@@ -1,6 +1,6 @@
-using KitforgeLabs.MobileUIKit.Catalog.Internal;
+using KitforgeLabs.UIKit.Catalog.Internal;
 
-namespace KitforgeLabs.MobileUIKit.Catalog.GameOver
+namespace KitforgeLabs.UIKit.Catalog.GameOver
 {
     public sealed class UIAnimGameOverPopup : UIAnimPopupBase { }
 }

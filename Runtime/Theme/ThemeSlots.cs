@@ -1,4 +1,4 @@
-namespace KitforgeLabs.MobileUIKit.Theme
+namespace KitforgeLabs.UIKit.Theme
 {
     public enum ThemeSpriteSlot
     {

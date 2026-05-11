@@ -1,8 +1,8 @@
 using UnityEngine;
 
-namespace KitforgeLabs.MobileUIKit.Animation
+namespace KitforgeLabs.UIKit.Animation
 {
-    [CreateAssetMenu(menuName = "Kitforge/UI Kit/Anim Preset", fileName = "UIAnimPreset", order = 10)]
+    [CreateAssetMenu(menuName = "KitforgeLabs/UI Kit/Anim Preset", fileName = "UIAnimPreset", order = 10)]
     public class UIAnimPreset : ScriptableObject
     {
         [Header("Show")]

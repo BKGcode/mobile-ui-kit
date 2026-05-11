@@ -1,7 +1,7 @@
-using KitforgeLabs.MobileUIKit.Services;
+using KitforgeLabs.UIKit.Services;
 using UnityEngine;
 
-namespace KitforgeLabs.MobileUIKit.HUD
+namespace KitforgeLabs.UIKit.HUD
 {
     public abstract class UIHUDBase : MonoBehaviour
     {

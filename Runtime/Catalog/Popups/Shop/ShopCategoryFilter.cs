@@ -1,7 +1,7 @@
 using System;
-using KitforgeLabs.MobileUIKit.Services;
+using KitforgeLabs.UIKit.Services;
 
-namespace KitforgeLabs.MobileUIKit.Catalog.Shop
+namespace KitforgeLabs.UIKit.Catalog.Shop
 {
     [Serializable]
     public struct ShopCategoryFilter

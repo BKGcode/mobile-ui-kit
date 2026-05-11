@@ -1,7 +1,7 @@
 using System;
-using KitforgeLabs.MobileUIKit.Editor.Hub.Catalog;
+using KitforgeLabs.UIKit.Editor.Hub.Catalog;
 
-namespace KitforgeLabs.MobileUIKit.Editor.Hub.Test
+namespace KitforgeLabs.UIKit.Editor.Hub.Test
 {
     public sealed class KitforgeForceScenario
     {

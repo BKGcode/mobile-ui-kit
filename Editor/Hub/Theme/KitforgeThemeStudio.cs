@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using KitforgeLabs.MobileUIKit.Theme;
+using KitforgeLabs.UIKit.Theme;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace KitforgeLabs.MobileUIKit.Editor.Hub.Theme
+namespace KitforgeLabs.UIKit.Editor.Hub.Theme
 {
     internal sealed class KitforgeThemeStudio
     {
@@ -40,8 +40,7 @@ namespace KitforgeLabs.MobileUIKit.Editor.Hub.Theme
             toolbar.AddToClassList("kfh-theme-toolbar");
             _dropdown = BuildDropdown();
             toolbar.Add(_dropdown);
-            toolbar.Add(BuildPlaceholderToolbarButton("New Theme", "Coming in M5.4.D (delegates to Assets → Create → Kitforge → Theme)."));
-            toolbar.Add(BuildPlaceholderToolbarButton("Capture All Snapshots", "Coming in M5.4.D (delegates to PrefabSnapshotCapture pipeline)."));
+            toolbar.Add(BuildPlaceholderToolbarButton("New Theme", "Use Assets → Create → KitforgeLabs → Theme to author a new UIThemeConfig asset."));
             _root.Add(toolbar);
         }
 
@@ -130,7 +129,7 @@ namespace KitforgeLabs.MobileUIKit.Editor.Hub.Theme
 
         private Label BuildEmptyHint()
         {
-            var label = new Label("No UIThemeConfig assets found. Run Tools → Kitforge → UI Kit → Bootstrap Defaults to create Theme_Default, or right-click in Project → Create → Kitforge → Theme to create your own.");
+            var label = new Label("No UIThemeConfig assets found. Run KitforgeLabs → UI Kit → Bootstrap Defaults to create Theme_Default, or right-click in Project → Create → KitforgeLabs → Theme to create your own.");
             label.AddToClassList("kfh-theme-detail-hint");
             return label;
         }
@@ -150,7 +149,7 @@ namespace KitforgeLabs.MobileUIKit.Editor.Hub.Theme
 
         private Label BuildPlaceholderStatus()
         {
-            var label = new Label("Live preview · slot editing · Capture All Snapshots — coming in M5.4.B / .C / .D.");
+            var label = new Label("Theme summary above. Edit slots directly on the UIThemeConfig asset (Project window) — Inspector shows the full slot grid with color previews.");
             label.AddToClassList("kfh-theme-detail-status");
             return label;
         }

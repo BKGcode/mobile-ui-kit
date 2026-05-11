@@ -2,7 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace KitforgeLabs.MobileUIKit.Catalog.HUD
+namespace KitforgeLabs.UIKit.Catalog.HUD
 {
     [DisallowMultipleComponent]
     public sealed class HUDEnergySimple : HUDSimple

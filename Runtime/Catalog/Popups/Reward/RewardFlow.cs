@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
-using KitforgeLabs.MobileUIKit.Core;
-using KitforgeLabs.MobileUIKit.Services;
+using KitforgeLabs.UIKit.Core;
+using KitforgeLabs.UIKit.Services;
 using UnityEngine;
 
-namespace KitforgeLabs.MobileUIKit.Catalog.Reward
+namespace KitforgeLabs.UIKit.Catalog.Reward
 {
     /// <summary>
     /// Convenience helpers that show <see cref="RewardPopup"/> instances and credit the

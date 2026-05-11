@@ -1,6 +1,6 @@
-using KitforgeLabs.MobileUIKit.Catalog.Internal;
+using KitforgeLabs.UIKit.Catalog.Internal;
 
-namespace KitforgeLabs.MobileUIKit.Catalog.Shop
+namespace KitforgeLabs.UIKit.Catalog.Shop
 {
     public sealed class UIAnimShopPopup : UIAnimPopupBase { }
 }

@@ -1,7 +1,7 @@
 using System;
-using KitforgeLabs.MobileUIKit.Animation;
+using KitforgeLabs.UIKit.Animation;
 
-namespace KitforgeLabs.MobileUIKit.Catalog.Tests.Helpers
+namespace KitforgeLabs.UIKit.Catalog.Tests.Helpers
 {
     internal sealed class NullAnimator : IUIAnimator
     {

@@ -1,7 +1,7 @@
 using System;
-using KitforgeLabs.MobileUIKit.Catalog.Reward;
+using KitforgeLabs.UIKit.Catalog.Reward;
 
-namespace KitforgeLabs.MobileUIKit.Catalog.LevelComplete
+namespace KitforgeLabs.UIKit.Catalog.LevelComplete
 {
     [Serializable]
     public class LevelCompletePopupData

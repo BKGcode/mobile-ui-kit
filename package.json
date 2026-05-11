@@ -1,71 +1,22 @@
 {
   "name": "com.kitforgelabs.mobile-ui-kit",
-  "displayName": "Kitforge Mobile UI Kit",
-  "version": "1.0.1",
+  "displayName": "KitforgeLabs · UI Kit",
+  "version": "1.1.0",
   "unity": "6000.1",
-  "description": "Opinionated UGUI router, popup queue, theme contract AND a catalog of 17 mid-core mobile UI elements (10 popups + 1 toast + 2 screens + 4 HUDs + 3 service-free HUDSimple variants) PLUS a Kitforge Hub Editor window (Tools → Kitforge → Hub) covering Setup wizard / Catalog browser / Theme Studio / Test launcher / inline cheatsheet. Stack-based screens, priority-aware popups, one ScriptableObject theme — wire it in five minutes, skin it once, ship it.",
+  "description": "Mobile UGUI kit for hybrid-casual games: UIManager (stack), PopupManager (priority queue), UIThemeConfig (one ScriptableObject reskins everything) + a catalog of 17 ready-to-use elements (popups, toasts, screens, HUDs) and the KitforgeLabs Hub editor window for setup, theme studio, catalog browser and inline cheatsheet. Wire it in five minutes, skin it once, ship it.",
   "keywords": [
     "ui",
     "ugui",
     "mobile",
-    "router",
-    "theme",
     "popup",
     "menu",
-    "kitforge",
-    "editor",
-    "hub"
+    "theme",
+    "router",
+    "kitforgelabs"
   ],
   "author": {
-    "name": "Kitforge Labs",
+    "name": "KitforgeLabs",
     "url": "https://github.com/BKGcode"
   },
-  "dependencies": {},
-  "samples": [
-    {
-      "displayName": "Quickstart",
-      "description": "Zero-dependency bootstrap: a UIManager + PopupManager pair driven by [ContextMenu] entries. No VContainer, no DI — drop the prefab in a scene and press Play.",
-      "path": "Samples~/Quickstart"
-    },
-    {
-      "displayName": "Catalog — Group A — Pure UI",
-      "description": "ConfirmPopup, PausePopup, TutorialPopup, NotificationToast. After importing, run Tools → Kitforge → UI Kit → Build Group A Sample to materialize the 4 prefabs and a Demo scene with [ContextMenu] triggers.",
-      "path": "Samples~/Catalog_GroupA_PureUI"
-    },
-    {
-      "displayName": "Catalog — Group B — Currency",
-      "description": "RewardPopup, ShopPopup, NotEnoughCurrencyPopup, HUDCoins, HUDGems plus 3 in-memory service stubs (Economy / Shop / Ads). After importing, run Tools → Kitforge → UI Kit → Build Group B Sample to materialize the 5 prefabs and a Demo scene with [ContextMenu] triggers — try 'Chain — Shop → NotEnough → Ad → Reward' to see the full monetization loop.",
-      "path": "Samples~/Catalog_GroupB_Currency"
-    },
-    {
-      "displayName": "Catalog — Group C — Progression",
-      "description": "DailyLoginPopup, LevelCompletePopup, GameOverPopup, HUDEnergy, HUDTimer plus 2 in-memory service stubs (Time / Progression — wires into Group B's Economy / Shop / Ads). Requires Group B sample for the LevelComplete → Reward sequence chain. After importing, run Tools → Kitforge → UI Kit → Build Group C Sample to materialize the 5 prefabs and a Demo scene with [ContextMenu] triggers — try 'Chain — LevelComplete → Reward sequence (3 rewards)' to see post-level reward flow.",
-      "path": "Samples~/Catalog_GroupC_Progression"
-    },
-    {
-      "displayName": "Catalog — Group D — Player Data",
-      "description": "SettingsPopup (5 controls: music / sfx volume sliders + language picker + notifications / haptics toggles) backed by IPlayerDataService for cross-session persistence + IUILocalizationService for live re-skin trigger. Includes 2 in-memory sample stubs (Player Data / Localization). After importing, run Tools → Kitforge → UI Kit → Build Group D Sample to materialize the SettingsPopup prefab and a Demo scene with [ContextMenu] triggers — try 'Settings — Show all', then 'PlayerData — Print all kfmui.settings.* values' to verify persistence across Play sessions.",
-      "path": "Samples~/Catalog_GroupD_PlayerData"
-    },
-    {
-      "displayName": "Catalog — Group E — Screens",
-      "description": "LoadingScreen + MainMenuScreen — the two entry-point screens of the boot flow. GroupEDemoHost drives the full chain: Loading (simulated progress) → Replace to MainMenu → DailyLogin auto-trigger after MainMenu show animation completes (via OnShown event). Requires Group C sample for InMemoryProgressionService (daily dot + auto-trigger) and DailyLoginPopup prefab. After importing, run Tools → Kitforge → UI Kit → Build Group E Sample to materialize the 2 prefabs and GroupE_BootDemo.unity — right-click GroupEDemoHost in Hierarchy → Boot Demo to see the full boot chain. MainMenu Settings/Shop/Play/Back buttons log to Console with guidance — register Group D's SettingsPopup or Group B's ShopPopup prefabs in PopupManager to wire them to visible popups in your own host.",
-      "path": "Samples~/Catalog_GroupE_Screens"
-    },
-    {
-      "displayName": "Catalog — M4.1 — Theme Presets",
-      "description": "Reskin demo for the kit's 'skin it once' contract. Ships Theme_Casual.asset (bright/saturated, Royal Match vibe) + Theme_Premium.asset (dark/desaturated, Hades vibe) + a runtime dropdown that re-skins GameOver + LevelComplete popups across 3 themes (Default / Casual / Premium). Casual + Premium clone the Default theme's sprites/fonts/audio at build time — only colors differ, validating the contract that swapping a single ScriptableObject re-skins the kit. Requires Group B (Economy / Ads stubs) + Group C samples (GameOver / LevelComplete prefabs + Time / Progression stubs). After importing, run Tools/Kitforge/UI Kit/Build M4.1 — Theme Presets.",
-      "path": "Samples~/Catalog_M4_ThemePresets"
-    },
-    {
-      "displayName": "Catalog — All — Single-import master demo",
-      "description": "Workshop-drawer demo: single scene wiring every catalog popup (10 + 1 toast) + 2 screens + theme dropdown into ONE scene with buttons-per-element. Requires the 5 group catalog samples + M4.1 Theme Presets imported and built first. After that, run Tools → Kitforge → UI Kit → Build Catalog_All_Demo — open AllDemo.unity, press Play, click any button to spawn the corresponding element across 3 themes (Default / Casual / Premium). Demonstrates the canonical PopupManager.Show<T>(dto) / UIManager.Push<T>(dto) / ToastManager.Show<T>(dto) pattern documented in Quickstart §Manual prefab registration.",
-      "path": "Samples~/Catalog_All_Demo"
-    },
-    {
-      "displayName": "Game Wiring (VContainer)",
-      "description": "VContainer LifetimeScope + 8 in-memory Stub* implementations of the kit service interfaces (Economy / PlayerData / Progression / ShopData / Ads / Time / Audio / Localization). Reference for VContainer-first host projects — replace each Stub* registration with your real implementation. Includes a UIServicesBinder pattern (in README) that bridges VContainer-resolved services to the kit's UIServices MonoBehaviour container.",
-      "path": "Samples~/GameWiring"
-    }
-  ]
+  "dependencies": {}
 }

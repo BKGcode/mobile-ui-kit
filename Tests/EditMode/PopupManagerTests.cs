@@ -1,10 +1,10 @@
 using System.Reflection;
-using KitforgeLabs.MobileUIKit.Core;
+using KitforgeLabs.UIKit.Core;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
 
-namespace KitforgeLabs.MobileUIKit.Tests.EditMode
+namespace KitforgeLabs.UIKit.Tests.EditMode
 {
     public sealed class PopupManagerTests
     {

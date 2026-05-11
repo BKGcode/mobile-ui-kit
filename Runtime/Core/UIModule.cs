@@ -1,4 +1,4 @@
-namespace KitforgeLabs.MobileUIKit.Core
+namespace KitforgeLabs.UIKit.Core
 {
     public abstract class UIModule<TData> : UIModuleBase
     {

@@ -1,12 +1,14 @@
 {
-    "name": "KitforgeLabs.MobileUIKit.Samples.CatalogM41ThemePresets",
-    "rootNamespace": "KitforgeLabs.MobileUIKit.Samples.CatalogM41ThemePresets",
+    "name": "KitforgeLabs.UIKit.Editor",
+    "rootNamespace": "KitforgeLabs.UIKit.Editor",
     "references": [
-        "KitforgeLabs.MobileUIKit",
-        "KitforgeLabs.MobileUIKit.Catalog",
+        "KitforgeLabs.UIKit",
+        "KitforgeLabs.UIKit.Catalog",
         "Unity.TextMeshPro"
     ],
-    "includePlatforms": [],
+    "includePlatforms": [
+        "Editor"
+    ],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": false,

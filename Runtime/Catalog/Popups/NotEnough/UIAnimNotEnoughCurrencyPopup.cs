@@ -1,6 +1,6 @@
-using KitforgeLabs.MobileUIKit.Catalog.Internal;
+using KitforgeLabs.UIKit.Catalog.Internal;
 
-namespace KitforgeLabs.MobileUIKit.Catalog.NotEnough
+namespace KitforgeLabs.UIKit.Catalog.NotEnough
 {
     public sealed class UIAnimNotEnoughCurrencyPopup : UIAnimPopupBase { }
 }

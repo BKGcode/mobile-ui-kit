@@ -1,13 +1,13 @@
 using System;
 using System.Collections.Generic;
-using KitforgeLabs.MobileUIKit.Catalog.DailyLogin;
-using KitforgeLabs.MobileUIKit.Catalog.GameOver;
-using KitforgeLabs.MobileUIKit.Catalog.LevelComplete;
-using KitforgeLabs.MobileUIKit.Catalog.NotEnough;
-using KitforgeLabs.MobileUIKit.Editor.Hub.Catalog;
-using KitforgeLabs.MobileUIKit.Services;
+using KitforgeLabs.UIKit.Catalog.DailyLogin;
+using KitforgeLabs.UIKit.Catalog.GameOver;
+using KitforgeLabs.UIKit.Catalog.LevelComplete;
+using KitforgeLabs.UIKit.Catalog.NotEnough;
+using KitforgeLabs.UIKit.Editor.Hub.Catalog;
+using KitforgeLabs.UIKit.Services;
 
-namespace KitforgeLabs.MobileUIKit.Editor.Hub.Test
+namespace KitforgeLabs.UIKit.Editor.Hub.Test
 {
     public static class KitforgeForceScenariosRegistry
     {

@@ -1,6 +1,6 @@
 using System;
 
-namespace KitforgeLabs.MobileUIKit.Catalog.Confirm
+namespace KitforgeLabs.UIKit.Catalog.Confirm
 {
     [Serializable]
     public class ConfirmPopupData

@@ -1,13 +1,13 @@
 using System;
 using System.Collections.Generic;
-using KitforgeLabs.MobileUIKit.Animation;
-using KitforgeLabs.MobileUIKit.Core;
-using KitforgeLabs.MobileUIKit.Services;
+using KitforgeLabs.UIKit.Animation;
+using KitforgeLabs.UIKit.Core;
+using KitforgeLabs.UIKit.Services;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace KitforgeLabs.MobileUIKit.Catalog.Shop
+namespace KitforgeLabs.UIKit.Catalog.Shop
 {
     [DisallowMultipleComponent]
     [RequireComponent(typeof(UIAnimShopPopup))]
@@ -229,7 +229,7 @@ namespace KitforgeLabs.MobileUIKit.Catalog.Shop
         {
             if (_refs.CellTemplate == null || _refs.GridContainer == null)
             {
-                Debug.LogError("[ShopPopup] CellTemplate or GridContainer not assigned. Cannot spawn cells. Run 'Tools/Kitforge/UI Kit/Build Group B Sample' to regenerate the prefab, or wire both fields manually in the Inspector.", this);
+                Debug.LogError("[ShopPopup] CellTemplate or GridContainer not assigned. Cannot spawn cells. Run 'KitforgeLabs/UI Kit/Build Group B Sample' to regenerate the prefab, or wire both fields manually in the Inspector.", this);
                 return;
             }
             var cell = Instantiate(_refs.CellTemplate, _refs.GridContainer, false);

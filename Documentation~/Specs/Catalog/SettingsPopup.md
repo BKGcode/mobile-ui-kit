@@ -1,7 +1,5 @@
 # SettingsPopup
 
-> Status: **CONFIRMED 2026-05-04** — S1-S12 locked.
-> Targets M2 (`v0.7.0-alpha`). Element 1/1 of Group D (Player Data).
 > Consumes [IPlayerDataService](../Services/IPlayerDataService.md) + [IUILocalizationService](../Services/IUILocalizationService.md).
 
 ## Purpose
