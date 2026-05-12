@@ -2,6 +2,13 @@
 
 All notable changes to this package are documented here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Changed
+
+- **Hub Catalog tab filter chips** — chips now scope by spawn pattern (Popup / Toast / Screen / HUD) instead of internal group letters (A / B / C / D / E). Cell layout simplified: group badge removed, detail meta no longer mentions group. Internal `KitforgeCatalogEntry.Group` field retained for kit-author tooling but no longer surfaced in buyer-facing Hub UI. `KitforgeHubState.CatalogGroupFilter` renamed to `CatalogPatternFilter` (serialized field `_catalogGroupFilter` → `_catalogPatternFilter`; one-time reset of persisted filter on first launch after upgrade — semantic value changed from group letter to pattern name).
+- **Hub Theme Studio "New Theme" button** — activated (previously placeholder, disabled). Click creates a new `UIThemeConfig` at `Assets/Settings/Themes/Theme_New.asset` (subtree auto-created if absent) with inline rename in Project window. Replaces the prior "use Assets → Create → KitforgeLabs → Theme" tooltip workaround.
+
 ## [1.2.0] — 2026-05-11
 
 Catalog prefabs now ship with the package and the kit boots out-of-box on a clean install. Service contract reworked around Null Object defaults so buyers never see "service not registered" errors before wiring their own implementations. EditMode smoke test covers all 13 manager-driven catalog elements.
