@@ -11,6 +11,7 @@ namespace KitforgeLabs.UIKit.Editor.Hub.Theme
     internal sealed class KitforgeThemeStudio
     {
         private const string EmptyDropdownPlaceholder = "(no themes found)";
+        private const string DefaultThemeFolder = "Assets/Settings/Themes";
 
         private readonly KitforgeHubState _state;
         private readonly List<string> _themePaths = new();
@@ -82,14 +83,22 @@ namespace KitforgeLabs.UIKit.Editor.Hub.Theme
         {
             var btn = new Button(CreateNewThemeAsset) { text = "New Theme" };
             btn.AddToClassList("kfh-theme-toolbar-button");
-            btn.tooltip = "Create a new UIThemeConfig asset in the currently-selected Project folder. Rename inline, then edit slots on the Inspector.";
+            btn.tooltip = $"Create a new UIThemeConfig at {DefaultThemeFolder}/. Rename inline, then edit slots on the Inspector.";
             return btn;
         }
 
         private static void CreateNewThemeAsset()
         {
+            EnsureDefaultThemeFolder();
             var asset = ScriptableObject.CreateInstance<UIThemeConfig>();
-            ProjectWindowUtil.CreateAsset(asset, "Theme_New.asset");
+            var path = AssetDatabase.GenerateUniqueAssetPath(DefaultThemeFolder + "/Theme_New.asset");
+            ProjectWindowUtil.CreateAsset(asset, path);
+        }
+
+        private static void EnsureDefaultThemeFolder()
+        {
+            if (!AssetDatabase.IsValidFolder("Assets/Settings")) AssetDatabase.CreateFolder("Assets", "Settings");
+            if (!AssetDatabase.IsValidFolder(DefaultThemeFolder)) AssetDatabase.CreateFolder("Assets/Settings", "Themes");
         }
 
         private void DiscoverThemes()
