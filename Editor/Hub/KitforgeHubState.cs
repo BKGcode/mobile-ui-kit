@@ -21,7 +21,7 @@ namespace KitforgeLabs.UIKit.Editor.Hub
         [SerializeField] private HubTab _activeTab = HubTab.Setup;
         [SerializeField] private string _selectedCatalogKey = string.Empty;
         [SerializeField] private string _selectedThemeKey = string.Empty;
-        [SerializeField] private string _catalogGroupFilter = string.Empty;
+        [SerializeField] private string _catalogPatternFilter = string.Empty;
         [SerializeField] private string _catalogSearchQuery = string.Empty;
 
         [System.NonSerialized] private bool _isPersisted;
@@ -59,14 +59,14 @@ namespace KitforgeLabs.UIKit.Editor.Hub
             }
         }
 
-        public string CatalogGroupFilter
+        public string CatalogPatternFilter
         {
-            get => _catalogGroupFilter;
+            get => _catalogPatternFilter;
             set
             {
                 var normalized = value ?? string.Empty;
-                if (_catalogGroupFilter == normalized) return;
-                _catalogGroupFilter = normalized;
+                if (_catalogPatternFilter == normalized) return;
+                _catalogPatternFilter = normalized;
                 Persist();
             }
         }

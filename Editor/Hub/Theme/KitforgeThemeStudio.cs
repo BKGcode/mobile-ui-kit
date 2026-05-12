@@ -40,7 +40,7 @@ namespace KitforgeLabs.UIKit.Editor.Hub.Theme
             toolbar.AddToClassList("kfh-theme-toolbar");
             _dropdown = BuildDropdown();
             toolbar.Add(_dropdown);
-            toolbar.Add(BuildPlaceholderToolbarButton("New Theme", "Use Assets → Create → KitforgeLabs → Theme to author a new UIThemeConfig asset."));
+            toolbar.Add(BuildNewThemeButton());
             _root.Add(toolbar);
         }
 
@@ -78,13 +78,18 @@ namespace KitforgeLabs.UIKit.Editor.Hub.Theme
             return 0;
         }
 
-        private Button BuildPlaceholderToolbarButton(string text, string milestone)
+        private Button BuildNewThemeButton()
         {
-            var btn = new Button(() => Debug.Log($"[KitforgeThemeStudio] {text}: {milestone}")) { text = text };
+            var btn = new Button(CreateNewThemeAsset) { text = "New Theme" };
             btn.AddToClassList("kfh-theme-toolbar-button");
-            btn.SetEnabled(false);
-            btn.tooltip = milestone;
+            btn.tooltip = "Create a new UIThemeConfig asset in the currently-selected Project folder. Rename inline, then edit slots on the Inspector.";
             return btn;
+        }
+
+        private static void CreateNewThemeAsset()
+        {
+            var asset = ScriptableObject.CreateInstance<UIThemeConfig>();
+            ProjectWindowUtil.CreateAsset(asset, "Theme_New.asset");
         }
 
         private void DiscoverThemes()

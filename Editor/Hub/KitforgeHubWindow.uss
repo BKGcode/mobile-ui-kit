@@ -435,16 +435,6 @@
     min-width: 80px;
 }
 
-.kfh-catalog-cell-group {
-    font-size: 10px;
-    color: rgb(180, 180, 180);
-    align-self: flex-start;
-    background-color: rgb(40, 40, 40);
-    padding: 1px 6px;
-    border-radius: 2px;
-    margin-bottom: 6px;
-}
-
 .kfh-catalog-cell-name {
     font-size: 12px;
     -unity-font-style: bold;

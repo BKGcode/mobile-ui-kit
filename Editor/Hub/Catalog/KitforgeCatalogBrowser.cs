@@ -7,7 +7,7 @@ namespace KitforgeLabs.UIKit.Editor.Hub.Catalog
 {
     internal sealed class KitforgeCatalogBrowser
     {
-        private const string AllGroupsToken = "";
+        private const string AllPatternsToken = "";
 
         private readonly KitforgeHubState _state;
 
@@ -56,26 +56,26 @@ namespace KitforgeLabs.UIKit.Editor.Hub.Catalog
         {
             _filterChipRow = new VisualElement();
             _filterChipRow.AddToClassList("kfh-catalog-filter-chip-row");
-            AppendChip(_filterChipRow, "All", AllGroupsToken);
-            foreach (var group in CollectGroups())
+            AppendChip(_filterChipRow, "All", AllPatternsToken);
+            foreach (var pattern in CollectPatterns())
             {
-                AppendChip(_filterChipRow, group, group);
+                AppendChip(_filterChipRow, pattern, pattern);
             }
             bar.Add(_filterChipRow);
         }
 
-        private void AppendChip(VisualElement row, string label, string groupToken)
+        private void AppendChip(VisualElement row, string label, string patternToken)
         {
-            var btn = new Button(() => OnChipClicked(groupToken)) { text = label };
+            var btn = new Button(() => OnChipClicked(patternToken)) { text = label };
             btn.AddToClassList("kfh-catalog-filter-chip");
-            btn.userData = groupToken;
-            UpdateChipSelection(btn, groupToken);
+            btn.userData = patternToken;
+            UpdateChipSelection(btn, patternToken);
             row.Add(btn);
         }
 
-        private void OnChipClicked(string groupToken)
+        private void OnChipClicked(string patternToken)
         {
-            _state.CatalogGroupFilter = groupToken;
+            _state.CatalogPatternFilter = patternToken;
             UpdateAllChipSelections();
             RebuildGridContents();
         }
@@ -88,9 +88,9 @@ namespace KitforgeLabs.UIKit.Editor.Hub.Catalog
             }
         }
 
-        private void UpdateChipSelection(Button btn, string groupToken)
+        private void UpdateChipSelection(Button btn, string patternToken)
         {
-            btn.EnableInClassList("kfh-catalog-filter-chip--active", _state.CatalogGroupFilter == groupToken);
+            btn.EnableInClassList("kfh-catalog-filter-chip--active", _state.CatalogPatternFilter == patternToken);
         }
 
         private void BuildSearchField(VisualElement bar)
@@ -115,7 +115,7 @@ namespace KitforgeLabs.UIKit.Editor.Hub.Catalog
             scroll.AddToClassList("kfh-catalog-grid-scroll");
             _grid = new VisualElement();
             _grid.AddToClassList("kfh-catalog-grid");
-            _emptyResultsLabel = new Label("No catalog elements match the current filter. Try clearing the search or selecting another group.");
+            _emptyResultsLabel = new Label("No catalog elements match the current filter. Try clearing the search or selecting another pattern.");
             _emptyResultsLabel.AddToClassList("kfh-catalog-empty-results");
             scroll.Add(_grid);
             scroll.Add(_emptyResultsLabel);
@@ -144,21 +144,20 @@ namespace KitforgeLabs.UIKit.Editor.Hub.Catalog
 
         private bool EntryPassesFilters(KitforgeCatalogEntry entry)
         {
-            if (!string.IsNullOrEmpty(_state.CatalogGroupFilter) && entry.Group != _state.CatalogGroupFilter) return false;
+            if (!string.IsNullOrEmpty(_state.CatalogPatternFilter) && entry.Pattern.ToString() != _state.CatalogPatternFilter) return false;
             var query = _state.CatalogSearchQuery;
             if (string.IsNullOrEmpty(query)) return true;
             return entry.DisplayName.IndexOf(query, System.StringComparison.OrdinalIgnoreCase) >= 0;
         }
 
-        private static IEnumerable<string> CollectGroups()
+        private static IEnumerable<string> CollectPatterns()
         {
-            var seen = new HashSet<string>();
+            var seen = new HashSet<KitforgeSpawnPattern>();
             var ordered = new List<string>();
             foreach (var entry in KitforgeCatalogRegistry.All)
             {
-                if (seen.Add(entry.Group)) ordered.Add(entry.Group);
+                if (seen.Add(entry.Pattern)) ordered.Add(entry.Pattern.ToString());
             }
-            ordered.Sort(System.StringComparer.Ordinal);
             return ordered;
         }
 
@@ -167,7 +166,6 @@ namespace KitforgeLabs.UIKit.Editor.Hub.Catalog
             var cell = new VisualElement();
             cell.AddToClassList("kfh-catalog-cell");
             cell.userData = entry;
-            cell.Add(BuildCellGroupBadge(entry));
             cell.Add(BuildCellName(entry));
             cell.Add(BuildCellPattern(entry));
             cell.RegisterCallback<ClickEvent>(_ => SelectEntry(entry));
@@ -182,13 +180,6 @@ namespace KitforgeLabs.UIKit.Editor.Hub.Catalog
             cell.RegisterCallback<MouseDownEvent>(OnCellMouseDown);
             cell.RegisterCallback<MouseLeaveEvent>(_ => OnCellMouseLeave(entry));
             cell.RegisterCallback<MouseUpEvent>(_ => OnCellMouseUp());
-        }
-
-        private Label BuildCellGroupBadge(KitforgeCatalogEntry entry)
-        {
-            var label = new Label(entry.Group);
-            label.AddToClassList("kfh-catalog-cell-group");
-            return label;
         }
 
         private Label BuildCellName(KitforgeCatalogEntry entry)
@@ -304,7 +295,7 @@ namespace KitforgeLabs.UIKit.Editor.Hub.Catalog
 
         private Label BuildDetailMeta(KitforgeCatalogEntry entry)
         {
-            var meta = new Label($"{entry.Pattern} · Group {entry.Group} · {entry.ComponentType.Name}");
+            var meta = new Label($"{entry.Pattern} · {entry.ComponentType.Name}");
             meta.AddToClassList("kfh-catalog-detail-meta");
             return meta;
         }
