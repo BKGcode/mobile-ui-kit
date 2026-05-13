@@ -103,15 +103,23 @@ namespace KitforgeLabs.UIKit.Demo
 
         private void BuildOverlayPanel()
         {
-            var parent = ResolveOverlayParent();
-            if (parent == null) return;
-            var canvas = parent.GetComponentInParent<Canvas>(true);
-            if (canvas == null) return;
+            var canvas = ResolveOverlayCanvas();
+            if (canvas == null)
+            {
+                Debug.LogWarning("[DemoMenuController] No Canvas found under KitforgeRoot. Quick Spawn panel skipped.", this);
+                return;
+            }
             BuildQuickSpawnColumn(canvas.transform);
             BuildThemeCycleButton(canvas.transform);
         }
 
-        private Transform ResolveOverlayParent() => _overlayParent != null ? _overlayParent : transform;
+        private Canvas ResolveOverlayCanvas()
+        {
+            var probe = _overlayParent != null ? _overlayParent : transform;
+            var canvas = probe.GetComponentInChildren<Canvas>(true);
+            if (canvas != null) return canvas;
+            return probe.GetComponentInParent<Canvas>(true);
+        }
 
         private void BuildQuickSpawnColumn(Transform canvasRoot)
         {

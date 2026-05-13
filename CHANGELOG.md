@@ -4,6 +4,13 @@ All notable changes to this package are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+## [1.3.4] — 2026-05-13
+
+### Fixed
+
+- **`Open Demo Scene` now refuses to run during Play Mode** instead of throwing `InvalidOperationException` inside `EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo`. The menu item (and the Setup Wizard banner that proxies it) logs a warning asking the user to exit Play Mode first. Reachable from both `KitforgeLabs → UI Kit → Open Demo Scene` and the wizard CTA.
+- **Demo Scene Quick Spawn column + Cycle Theme button were never built**. `DemoMenuController.BuildOverlayPanel` resolved its Canvas with `GetComponentInParent<Canvas>` from `KitforgeRoot`, but the Canvas is a *child* of `KitforgeRoot` — the search always returned `null` and the method bailed silently, so buyers landed on `MainMenuScreen` (Play / Settings / Shop / Daily Reward) with no preview access to the other 7 popups + toast. The lookup now uses `GetComponentInChildren<Canvas>` first and falls back to `GetComponentInParent`, and logs a warning if neither finds a Canvas. Runtime-only fix — no re-bake needed; the existing `KitforgeDemoScene.unity` picks up the new behavior on next Play.
+
 ## [1.3.3] — 2026-05-13
 
 ### Added

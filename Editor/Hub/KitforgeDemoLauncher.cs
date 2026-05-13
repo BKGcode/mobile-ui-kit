@@ -11,6 +11,11 @@ namespace KitforgeLabs.UIKit.Editor.Hub
         [MenuItem("KitforgeLabs/UI Kit/Open Demo Scene", priority = 10)]
         public static void OpenDemoScene()
         {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                Debug.LogWarning("[KitforgeDemoLauncher] Exit Play Mode before opening the Demo Scene.");
+                return;
+            }
             if (!EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo()) return;
             var sceneAsset = AssetDatabase.LoadAssetAtPath<SceneAsset>(DemoScenePath);
             if (sceneAsset == null)
