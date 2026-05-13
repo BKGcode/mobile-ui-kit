@@ -143,7 +143,7 @@ namespace KitforgeLabs.UIKit.Editor.Hub.Theme
 
         private Label BuildEmptyHint()
         {
-            var label = new Label("No UIThemeConfig assets found. Run KitforgeLabs → UI Kit → Bootstrap Defaults to create Theme_Default, or right-click in Project → Create → KitforgeLabs → Theme to create your own.");
+            var label = new Label("No UIThemeConfig assets found. Reinstall the KitforgeLabs UI Kit package (3 themes ship in Runtime/Theme/Presets/), or right-click in Project → Create → KitforgeLabs → Theme to create your own.");
             label.AddToClassList("kfh-theme-detail-hint");
             return label;
         }

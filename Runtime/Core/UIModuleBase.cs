@@ -38,7 +38,7 @@ namespace KitforgeLabs.UIKit.Core
             if (preset == null && !_presetWarningLogged)
             {
                 _presetWarningLogged = true;
-                Debug.LogWarning($"[{GetType().Name}] No animation preset resolved — popup will appear without animation. Run 'KitforgeLabs/UI Kit/Bootstrap Defaults' or assign UIThemeConfig.DefaultAnimPreset.", this);
+                Debug.LogWarning($"[{GetType().Name}] No animation preset resolved — popup will appear without animation. Assign a UIAnimPreset asset to UIThemeConfig.DefaultAnimPreset (Theme_Default ships pre-wired to UIAnimPreset_Playful).", this);
             }
             return preset;
         }

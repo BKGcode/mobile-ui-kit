@@ -4,11 +4,24 @@ All notable changes to this package are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+## [1.3.2] — 2026-05-13
+
+### Removed
+
+- **`KitforgeLabs/UI Kit/Bootstrap Defaults` menu** and its backing class `DefaultUIAnimPresetsCreator`. The kit no longer asks buyers to run a setup tool before animations work. `UIAnimPreset_Playful.asset` ships in `Runtime/Animation/Presets/` and the 3 stock themes (`Theme_Default`, `Theme_Casual`, `Theme_Premium`) are pre-wired to it. Buyers who want extra presets create them via `Assets → Create → KitforgeLabs → UI Kit → Anim Preset` (existing menu, unchanged).
+- **Setup Wizard Step 1 ("Bootstrap Defaults")** — wizard now has 2 steps: Add Scene Root, Browse Catalog. The recommended-path Demo Scene banner is unchanged.
+
+### Changed
+
+- **Buyer-visible warnings** in `UIModuleBase.ResolveAnimPreset` and `UIToastBase.ResolveAnimPreset` no longer reference the deleted Bootstrap Defaults menu — they point at `UIThemeConfig.DefaultAnimPreset` directly.
+- **Hub Theme Studio empty-hint** updated: instead of "Run Bootstrap Defaults" it points at "Reinstall the package (3 themes ship in Runtime/Theme/Presets/)" or the Create menu.
+- **`Documentation~/CHEATSHEET.md`** friction table + "Going deeper" section updated to reflect the new flow (no Bootstrap Defaults).
+
 ## [1.3.1] — 2026-05-13
 
 ### Changed
 
-- **Maintenance menus relocated** from `KitforgeLabs/UI Kit/Maintenance/...` to `Tools/KitforgeLabs/Test/...`. The kit's top-level `KitforgeLabs/UI Kit/` menu is buyer-facing only (Hub · Open Demo Scene · Bootstrap Defaults). Kit-author tooling (Bake Demo Scene · Bake Catalog Screenshots · Regenerate Catalog Prefabs · Wire Catalog Into KitforgeRoot) now lives under `Tools/KitforgeLabs/Test/` to make the separation explicit. `(Dev)` suffix removed from labels — the path already conveys it. Compile-gate remains `KITFORGE_DEV_MAINTENANCE`.
+- **Maintenance menus relocated** from `KitforgeLabs/UI Kit/Maintenance/...` to `Tools/KitforgeLabs/Test/...`. The kit's top-level `KitforgeLabs/UI Kit/` menu is buyer-facing only (Hub · Open Demo Scene). Kit-author tooling (Bake Demo Scene · Bake Catalog Screenshots · Regenerate Catalog Prefabs · Wire Catalog Into KitforgeRoot) now lives under `Tools/KitforgeLabs/Test/` to make the separation explicit. `(Dev)` suffix removed from labels — the path already conveys it. Compile-gate remains `KITFORGE_DEV_MAINTENANCE`.
 
 ## [1.3.0] — 2026-05-13
 

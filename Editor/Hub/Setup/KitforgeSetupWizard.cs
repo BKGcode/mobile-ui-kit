@@ -1,5 +1,4 @@
 using System;
-using KitforgeLabs.UIKit.Animation;
 using KitforgeLabs.UIKit.Bootstrap;
 using UnityEditor;
 using UnityEngine;
@@ -10,9 +9,8 @@ namespace KitforgeLabs.UIKit.Editor.Hub.Setup
     internal sealed class KitforgeSetupWizard
     {
         private const string KitforgeRootPrefabPath = "Packages/com.kitforgelabs.mobile-ui-kit/Runtime/Bootstrap/KitforgeRoot.prefab";
-        private const string BootstrapDefaultsMenuPath = "KitforgeLabs/UI Kit/Bootstrap Defaults";
         private const string OpenDemoSceneMenuPath = "KitforgeLabs/UI Kit/Open Demo Scene";
-        private const string Step3DoneEditorPrefKey = "kf.hub.setup.step3.catalog_visited";
+        private const string Step2DoneEditorPrefKey = "kf.hub.setup.step2.catalog_visited";
 
         private readonly KitforgeHubWindow _hostWindow;
 
@@ -20,7 +18,6 @@ namespace KitforgeLabs.UIKit.Editor.Hub.Setup
         private VisualElement _demoBanner;
         private VisualElement _step1Card;
         private VisualElement _step2Card;
-        private VisualElement _step3Card;
         private Label _summaryLabel;
 
         public KitforgeSetupWizard(KitforgeHubWindow hostWindow)
@@ -35,13 +32,11 @@ namespace KitforgeLabs.UIKit.Editor.Hub.Setup
             _root = new VisualElement();
             _root.AddToClassList("kfh-wizard");
             _demoBanner = BuildDemoBanner();
-            _step1Card = BuildStepCard(1, "Bootstrap Defaults", BuildStep1Description(), "Run Bootstrap Defaults", RunStep1);
-            _step2Card = BuildStepCard(2, "Add Scene Root", BuildStep2Description(), "Add Scene Root", RunStep2);
-            _step3Card = BuildStepCard(3, "Browse Catalog", BuildStep3Description(), "Open Catalog Tab", RunStep3);
+            _step1Card = BuildStepCard(1, "Add Scene Root", BuildStep1Description(), "Add Scene Root", RunStep1);
+            _step2Card = BuildStepCard(2, "Browse Catalog", BuildStep2Description(), "Open Catalog Tab", RunStep2);
             _root.Add(_demoBanner);
             _root.Add(_step1Card);
             _root.Add(_step2Card);
-            _root.Add(_step3Card);
             _summaryLabel = new Label(string.Empty);
             _summaryLabel.AddToClassList("kfh-wizard-summary");
             _root.Add(_summaryLabel);
@@ -56,7 +51,7 @@ namespace KitforgeLabs.UIKit.Editor.Hub.Setup
             var title = new Label("Recommended path — Open the Demo Scene");
             title.AddToClassList("kfh-wizard-banner-title");
             banner.Add(title);
-            var description = new Label("KitforgeDemoScene.unity ships pre-wired with the 17-element catalog, demo services and theme cycling. Press Play and explore. The 3 steps below are for starting from a blank scene.");
+            var description = new Label("KitforgeDemoScene.unity ships pre-wired with the 17-element catalog, demo services and theme cycling. Press Play and explore. The 2 steps below are for starting from a blank scene.");
             description.AddToClassList("kfh-wizard-banner-description");
             banner.Add(description);
             var button = new Button(OpenDemoScene) { text = "Open Demo Scene" };
@@ -77,7 +72,6 @@ namespace KitforgeLabs.UIKit.Editor.Hub.Setup
         {
             RefreshStep(_step1Card, IsStep1Done());
             RefreshStep(_step2Card, IsStep2Done());
-            RefreshStep(_step3Card, IsStep3Done());
             _summaryLabel.text = AllStepsDone() ? "Setup complete — your scene is wired and you visited the Catalog. Copy spawn snippets and paste into your game code." : string.Empty;
         }
 
@@ -116,29 +110,21 @@ namespace KitforgeLabs.UIKit.Editor.Hub.Setup
             status.EnableInClassList("kfh-wizard-card-status--done", isDone);
         }
 
-        private bool AllStepsDone() => IsStep1Done() && IsStep2Done() && IsStep3Done();
+        private bool AllStepsDone() => IsStep1Done() && IsStep2Done();
 
         private bool IsStep1Done()
-        {
-            var guids = AssetDatabase.FindAssets($"t:{nameof(UIAnimPreset)}");
-            return guids != null && guids.Length >= 10;
-        }
-
-        private bool IsStep2Done()
         {
             var binders = UnityEngine.Object.FindObjectsByType<KitforgeThemeBinder>(FindObjectsInactive.Include, FindObjectsSortMode.None);
             return binders != null && binders.Length > 0;
         }
 
-        private bool IsStep3Done() => EditorPrefs.GetBool(Step3DoneEditorPrefKey, false);
+        private bool IsStep2Done() => EditorPrefs.GetBool(Step2DoneEditorPrefKey, false);
 
-        private void RunStep1() => InvokeMenu(BootstrapDefaultsMenuPath);
+        private void RunStep1() => AddSceneRootToActiveScene();
 
-        private void RunStep2() => AddSceneRootToActiveScene();
-
-        private void RunStep3()
+        private void RunStep2()
         {
-            EditorPrefs.SetBool(Step3DoneEditorPrefKey, true);
+            EditorPrefs.SetBool(Step2DoneEditorPrefKey, true);
             if (_hostWindow != null) _hostWindow.SwitchToTab(KitforgeHubState.HubTab.Catalog);
         }
 
@@ -172,25 +158,12 @@ namespace KitforgeLabs.UIKit.Editor.Hub.Setup
             EditorGUIUtility.PingObject(instance);
         }
 
-        private void InvokeMenu(string path)
-        {
-            if (!EditorApplication.ExecuteMenuItem(path))
-            {
-                Debug.LogError($"[KitforgeSetupWizard] Menu '{path}' not found. Package may be partially installed; reinstall the KitforgeLabs UI Kit.");
-            }
-        }
-
         private string BuildStep1Description()
-        {
-            return "Generates 10 UIAnimPreset assets at Assets/KitforgeLabs/UI Kit/Settings/UIAnimPresets/. Required once per project. Idempotent — safe to re-run.";
-        }
-
-        private string BuildStep2Description()
         {
             return "Drops KitforgeRoot.prefab into the active scene. Pre-wires 3 managers + UIServices + EventSystem + PopupBackdrop + Theme_Default. Press Play to verify zero LogError.";
         }
 
-        private string BuildStep3Description()
+        private string BuildStep2Description()
         {
             return "Switches to the Catalog tab. Search any of the 17 catalog elements, copy the canonical Show<T>(dto) / Push<T>(dto) snippet, paste into your game code.";
         }

@@ -128,7 +128,7 @@ Game-state save (level progress / inventory) is your responsibility — implemen
 | Unity warns "Multiple EventSystems" | Delete the duplicate (`KitforgeRoot` ships its own) |
 | HUDEnergy regen countdown hidden | Wire `IProgressionService` (otherwise silent degrade) |
 | HUDTimer shows `--:--` | Wire `ITimeService` (UTC modes only); `LocalStopwatch` mode works without |
-| Popup spawns but no animation | Run `KitforgeLabs → UI Kit → Bootstrap Defaults` once, then assign a preset to `Theme._defaultAnimPreset` |
+| Popup spawns but no animation | Assign a `UIAnimPreset` asset to `Theme._defaultAnimPreset` (Theme_Default ships pre-wired to `UIAnimPreset_Playful`) |
 | DailyLoginPopup doesn't trigger on first launch | `DailyLoginFlow.ShowIfDue` treats missing key as "due" — wire `IPlayerDataService` |
 | Input System exception on Play | Resolved in v1.0.1+: the kit swaps the legacy input module automatically |
 
@@ -140,4 +140,4 @@ Game-state save (level progress / inventory) is your responsibility — implemen
 - **Per-element specs**: [Specs/Catalog/](Specs/Catalog/)
 - **Service interfaces**: [Specs/Services/](Specs/Services/)
 - **Hub** (`KitforgeLabs → UI Kit → Hub`): Setup / Catalog browser / Theme Studio / Test launcher / inline Cheatsheet
-- **Bootstrap Defaults** (`KitforgeLabs → UI Kit → Bootstrap Defaults`): generates 10 `UIAnimPreset` assets at `Assets/KitforgeLabs/UI Kit/Settings/UIAnimPresets/`
+- **Anim Presets**: `UIAnimPreset_Playful` ships in `Runtime/Animation/Presets/` and is wired into the 3 themes by default. Author your own variants via `Assets → Create → KitforgeLabs → UI Kit → Anim Preset`.
