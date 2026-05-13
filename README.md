@@ -24,7 +24,7 @@
 
 1. **Install the package.** Add to `Packages/manifest.json`:
    ```json
-   "com.kitforgelabs.mobile-ui-kit": "https://github.com/BKGcode/mobile-ui-kit.git#v1.3.0"
+   "com.kitforgelabs.mobile-ui-kit": "https://github.com/BKGcode/mobile-ui-kit.git#v1.3.4"
    ```
    Or via Package Manager → **Add package from git URL…**
 
