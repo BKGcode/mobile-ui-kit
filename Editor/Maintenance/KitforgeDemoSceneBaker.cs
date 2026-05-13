@@ -19,6 +19,10 @@ namespace KitforgeLabs.UIKit.Editor.Maintenance
         private const string ThemeDefaultPath = "Packages/com.kitforgelabs.mobile-ui-kit/Runtime/Theme/Presets/Theme_Default.asset";
         private const string ThemeCasualPath = "Packages/com.kitforgelabs.mobile-ui-kit/Runtime/Theme/Presets/Theme_Casual.asset";
         private const string ThemePremiumPath = "Packages/com.kitforgelabs.mobile-ui-kit/Runtime/Theme/Presets/Theme_Premium.asset";
+        private const string HUDCoinsPath = "Packages/com.kitforgelabs.mobile-ui-kit/Runtime/Catalog/Prefabs/HUDCoins.prefab";
+        private const string HUDGemsPath = "Packages/com.kitforgelabs.mobile-ui-kit/Runtime/Catalog/Prefabs/HUDGems.prefab";
+        private const string HUDEnergyPath = "Packages/com.kitforgelabs.mobile-ui-kit/Runtime/Catalog/Prefabs/HUDEnergy.prefab";
+        private const string HUDTimerPath = "Packages/com.kitforgelabs.mobile-ui-kit/Runtime/Catalog/Prefabs/HUDTimer.prefab";
 
         [MenuItem("Tools/KitforgeLabs/Test/Bake Demo Scene")]
         public static void Bake()
@@ -128,6 +132,10 @@ namespace KitforgeLabs.UIKit.Editor.Maintenance
             so.FindProperty("_themes.Default").objectReferenceValue = themes[0];
             so.FindProperty("_themes.Casual").objectReferenceValue = themes[1];
             so.FindProperty("_themes.Premium").objectReferenceValue = themes[2];
+            so.FindProperty("_hudPrefabs.Coins").objectReferenceValue = AssetDatabase.LoadAssetAtPath<GameObject>(HUDCoinsPath);
+            so.FindProperty("_hudPrefabs.Gems").objectReferenceValue = AssetDatabase.LoadAssetAtPath<GameObject>(HUDGemsPath);
+            so.FindProperty("_hudPrefabs.Energy").objectReferenceValue = AssetDatabase.LoadAssetAtPath<GameObject>(HUDEnergyPath);
+            so.FindProperty("_hudPrefabs.Timer").objectReferenceValue = AssetDatabase.LoadAssetAtPath<GameObject>(HUDTimerPath);
             so.FindProperty("_overlayParent").objectReferenceValue = root.transform;
             so.ApplyModifiedPropertiesWithoutUndo();
         }
