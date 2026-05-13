@@ -4,6 +4,12 @@ All notable changes to this package are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+## [1.3.1] — 2026-05-13
+
+### Changed
+
+- **Maintenance menus relocated** from `KitforgeLabs/UI Kit/Maintenance/...` to `Tools/KitforgeLabs/Test/...`. The kit's top-level `KitforgeLabs/UI Kit/` menu is buyer-facing only (Hub · Open Demo Scene · Bootstrap Defaults). Kit-author tooling (Bake Demo Scene · Bake Catalog Screenshots · Regenerate Catalog Prefabs · Wire Catalog Into KitforgeRoot) now lives under `Tools/KitforgeLabs/Test/` to make the separation explicit. `(Dev)` suffix removed from labels — the path already conveys it. Compile-gate remains `KITFORGE_DEV_MAINTENANCE`.
+
 ## [1.3.0] — 2026-05-13
 
 Click & Play: the kit now ships a ready-to-run demo scene with mock services for every contract, so buyers see all 17 catalog elements working live before writing any code. The Setup Wizard surfaces the demo scene as the recommended path; the 3-step wizard remains for blank-scene workflows. Spawn snippets now include `using` imports and field declarations.
@@ -46,7 +52,7 @@ Catalog prefabs now ship with the package and the kit boots out-of-box on a clea
 - **Null Object service defaults** in `Runtime/Services/Null/`. `UIServices` now auto-instantiates `NullEconomyService`, `NullPlayerDataService`, `NullProgressionService`, `NullShopDataProvider`, `NullAdsService`, `NullTimeService`, `NullAudioRouter` and `NullLocalizationService` in `Awake` when the corresponding Inspector slot is empty. The kit always boots; buyers swap in production services via the Inspector when ready. A single warning logs at startup if any Null defaults are used.
 - **`TryShow<T>(out T popup, out ShowFailureReason reason)` API** on `PopupManager` and `ToastManager`, plus `TryPush<T>(out T screen, out ShowFailureReason reason)` on `UIManager`. The new methods replace the ambiguous `null` return of legacy `Show<T>` / `Push<T>` with a structured failure reason (`PrefabMissing`, `Queued`, `InitializationFailed`, `ManagerUnavailable`). Legacy methods remain for backwards compatibility.
 - **EditMode smoke test suite** at `Tests/Editor/Smoke/KitforgeRootSmokeTests.cs`. Spawns the `KitforgeRoot.prefab` in a temp scene and asserts every catalog popup / screen / toast opens cleanly with the Null Object defaults — no errors, no warnings. Gates v1.2.0+ releases against silent regressions.
-- **Editor menus** `KitforgeLabs/UI Kit/Maintenance/Regenerate Catalog Prefabs (Dev)` and `... /Wire Catalog Into KitforgeRoot (Dev)` for the package maintainer to rebuild and re-wire the catalog when the kit evolves. Both are dev-only and refuse to write into a read-only (Git-installed) package — embed the package first.
+- **Editor menus** `Tools/KitforgeLabs/Test/Regenerate Catalog Prefabs` and `... /Wire Catalog Into KitforgeRoot` for the package maintainer to rebuild and re-wire the catalog when the kit evolves. Both are dev-only (compile-gated by `KITFORGE_DEV_MAINTENANCE`) and refuse to write into a read-only (Git-installed) package — embed the package first.
 
 ### Changed
 

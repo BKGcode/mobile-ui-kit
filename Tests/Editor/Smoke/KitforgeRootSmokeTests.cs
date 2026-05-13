@@ -46,7 +46,7 @@ namespace KitforgeLabs.UIKit.Catalog.Tests.Smoke
         {
             var manager = _prefab.GetComponentInChildren<PopupManager>(true);
             Assert.IsNotNull(manager, "PopupManager not found in KitforgeRoot");
-            Assert.IsTrue(manager.IsRegistered(popupType), $"{popupType.Name} is not registered in PopupManager._popupPrefabs[] — run Maintenance/Wire Catalog Into KitforgeRoot");
+            Assert.IsTrue(manager.IsRegistered(popupType), $"{popupType.Name} is not registered in PopupManager._popupPrefabs[] — run Tools/KitforgeLabs/Test/Wire Catalog Into KitforgeRoot");
         }
 
         [TestCase(typeof(LoadingScreen))]
@@ -55,7 +55,7 @@ namespace KitforgeLabs.UIKit.Catalog.Tests.Smoke
         {
             var manager = _prefab.GetComponentInChildren<UIManager>(true);
             Assert.IsNotNull(manager, "UIManager not found in KitforgeRoot");
-            Assert.IsTrue(manager.IsRegistered(screenType), $"{screenType.Name} is not registered in UIManager._screenPrefabs[] — run Maintenance/Wire Catalog Into KitforgeRoot");
+            Assert.IsTrue(manager.IsRegistered(screenType), $"{screenType.Name} is not registered in UIManager._screenPrefabs[] — run Tools/KitforgeLabs/Test/Wire Catalog Into KitforgeRoot");
         }
 
         [TestCase(typeof(NotificationToast))]
@@ -63,7 +63,7 @@ namespace KitforgeLabs.UIKit.Catalog.Tests.Smoke
         {
             var manager = _prefab.GetComponentInChildren<ToastManager>(true);
             Assert.IsNotNull(manager, "ToastManager not found in KitforgeRoot");
-            Assert.IsTrue(manager.IsRegistered(toastType), $"{toastType.Name} is not registered in ToastManager._toastPrefabs[] — run Maintenance/Wire Catalog Into KitforgeRoot");
+            Assert.IsTrue(manager.IsRegistered(toastType), $"{toastType.Name} is not registered in ToastManager._toastPrefabs[] — run Tools/KitforgeLabs/Test/Wire Catalog Into KitforgeRoot");
         }
     }
 }

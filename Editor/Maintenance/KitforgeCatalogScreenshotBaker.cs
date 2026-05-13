@@ -33,7 +33,7 @@ namespace KitforgeLabs.UIKit.Editor.Maintenance
 
         private static readonly MethodInfo BindUntypedMethod = typeof(UIModuleBase).GetMethod("BindUntyped", BindingFlags.Instance | BindingFlags.NonPublic);
 
-        [MenuItem("KitforgeLabs/UI Kit/Maintenance/Bake Catalog Screenshots (Dev)")]
+        [MenuItem("Tools/KitforgeLabs/Test/Bake Catalog Screenshots")]
         public static void Bake()
         {
             if (!EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo()) return;

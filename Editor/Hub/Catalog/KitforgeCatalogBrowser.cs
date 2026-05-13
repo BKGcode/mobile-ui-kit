@@ -322,7 +322,7 @@ namespace KitforgeLabs.UIKit.Editor.Hub.Catalog
             var prefab = KitforgeCatalogPrefabResolver.LoadPrefab(entry);
             if (prefab == null)
             {
-                return "Catalog prefab not found in the package — reinstall the kit or run KitforgeLabs → UI Kit → Maintenance → Regenerate Catalog Prefabs (Dev) from a source checkout.";
+                return "Catalog prefab not found in the package — reinstall the kit or run Tools → KitforgeLabs → Test → Regenerate Catalog Prefabs from a source checkout.";
             }
             return "Drag the cell into KitforgeRoot/UICanvas/ScreenRoot. HUDs auto-bind to required services on enable.";
         }

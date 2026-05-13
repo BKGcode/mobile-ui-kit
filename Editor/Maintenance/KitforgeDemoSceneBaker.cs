@@ -20,7 +20,7 @@ namespace KitforgeLabs.UIKit.Editor.Maintenance
         private const string ThemeCasualPath = "Packages/com.kitforgelabs.mobile-ui-kit/Runtime/Theme/Presets/Theme_Casual.asset";
         private const string ThemePremiumPath = "Packages/com.kitforgelabs.mobile-ui-kit/Runtime/Theme/Presets/Theme_Premium.asset";
 
-        [MenuItem("KitforgeLabs/UI Kit/Maintenance/Bake Demo Scene (Dev)")]
+        [MenuItem("Tools/KitforgeLabs/Test/Bake Demo Scene")]
         public static void Bake()
         {
             if (!ValidateWritable()) return;

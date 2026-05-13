@@ -72,7 +72,7 @@ namespace KitforgeLabs.UIKit.Demo
         private bool ValidateRefs()
         {
             if (_managers.Popups != null && _managers.Screens != null && _managers.Toasts != null) return true;
-            Debug.LogError("[DemoMenuController] Manager references missing. Re-bake the demo scene from KitforgeLabs → UI Kit → Maintenance.", this);
+            Debug.LogError("[DemoMenuController] Manager references missing. Re-bake the demo scene from Tools → KitforgeLabs → Test → Bake Demo Scene.", this);
             return false;
         }
 

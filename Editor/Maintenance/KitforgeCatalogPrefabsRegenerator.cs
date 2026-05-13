@@ -6,7 +6,7 @@ namespace KitforgeLabs.UIKit.Editor.Maintenance
 {
     internal static class KitforgeCatalogPrefabsRegenerator
     {
-        [MenuItem("KitforgeLabs/UI Kit/Maintenance/Regenerate Catalog Prefabs (Dev)")]
+        [MenuItem("Tools/KitforgeLabs/Test/Regenerate Catalog Prefabs")]
         public static void RegenerateAll()
         {
             var folder = CatalogGroupBuilderShared.ResolvePrefabsFolder();

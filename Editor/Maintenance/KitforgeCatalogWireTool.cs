@@ -12,7 +12,7 @@ namespace KitforgeLabs.UIKit.Editor.Maintenance
     {
         private const string KitforgeRootPath = "Packages/com.kitforgelabs.mobile-ui-kit/Runtime/Bootstrap/KitforgeRoot.prefab";
 
-        [MenuItem("KitforgeLabs/UI Kit/Maintenance/Wire Catalog Into KitforgeRoot (Dev)")]
+        [MenuItem("Tools/KitforgeLabs/Test/Wire Catalog Into KitforgeRoot")]
         public static void WireAll()
         {
             var prefabsFolder = CatalogGroupBuilderShared.ResolvePrefabsFolder();
