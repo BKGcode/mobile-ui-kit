@@ -11,10 +11,13 @@ namespace KitforgeLabs.UIKit.Editor.Hub.Setup
     {
         private const string KitforgeRootPrefabPath = "Packages/com.kitforgelabs.mobile-ui-kit/Runtime/Bootstrap/KitforgeRoot.prefab";
         private const string BootstrapDefaultsMenuPath = "KitforgeLabs/UI Kit/Bootstrap Defaults";
+        private const string OpenDemoSceneMenuPath = "KitforgeLabs/UI Kit/Open Demo Scene";
+        private const string Step3DoneEditorPrefKey = "kf.hub.setup.step3.catalog_visited";
 
         private readonly KitforgeHubWindow _hostWindow;
 
         private VisualElement _root;
+        private VisualElement _demoBanner;
         private VisualElement _step1Card;
         private VisualElement _step2Card;
         private VisualElement _step3Card;
@@ -31,9 +34,11 @@ namespace KitforgeLabs.UIKit.Editor.Hub.Setup
         {
             _root = new VisualElement();
             _root.AddToClassList("kfh-wizard");
+            _demoBanner = BuildDemoBanner();
             _step1Card = BuildStepCard(1, "Bootstrap Defaults", BuildStep1Description(), "Run Bootstrap Defaults", RunStep1);
             _step2Card = BuildStepCard(2, "Add Scene Root", BuildStep2Description(), "Add Scene Root", RunStep2);
             _step3Card = BuildStepCard(3, "Browse Catalog", BuildStep3Description(), "Open Catalog Tab", RunStep3);
+            _root.Add(_demoBanner);
             _root.Add(_step1Card);
             _root.Add(_step2Card);
             _root.Add(_step3Card);
@@ -44,12 +49,36 @@ namespace KitforgeLabs.UIKit.Editor.Hub.Setup
             return _root;
         }
 
+        private VisualElement BuildDemoBanner()
+        {
+            var banner = new VisualElement();
+            banner.AddToClassList("kfh-wizard-banner");
+            var title = new Label("Recommended path — Open the Demo Scene");
+            title.AddToClassList("kfh-wizard-banner-title");
+            banner.Add(title);
+            var description = new Label("KitforgeDemoScene.unity ships pre-wired with the 17-element catalog, demo services and theme cycling. Press Play and explore. The 3 steps below are for starting from a blank scene.");
+            description.AddToClassList("kfh-wizard-banner-description");
+            banner.Add(description);
+            var button = new Button(OpenDemoScene) { text = "Open Demo Scene" };
+            button.AddToClassList("kfh-wizard-banner-button");
+            banner.Add(button);
+            return banner;
+        }
+
+        private void OpenDemoScene()
+        {
+            if (!EditorApplication.ExecuteMenuItem(OpenDemoSceneMenuPath))
+            {
+                Debug.LogError($"[KitforgeSetupWizard] Menu '{OpenDemoSceneMenuPath}' not found. Reinstall the KitforgeLabs UI Kit package.");
+            }
+        }
+
         public void Refresh()
         {
             RefreshStep(_step1Card, IsStep1Done());
             RefreshStep(_step2Card, IsStep2Done());
             RefreshStep(_step3Card, IsStep3Done());
-            _summaryLabel.text = AllStepsDone() ? "Setup complete — open the Catalog tab to browse the 17 elements and copy spawn snippets." : string.Empty;
+            _summaryLabel.text = AllStepsDone() ? "Setup complete — your scene is wired and you visited the Catalog. Copy spawn snippets and paste into your game code." : string.Empty;
         }
 
         private VisualElement BuildStepCard(int index, string title, string description, string actionLabel, Action onAction)
@@ -87,12 +116,12 @@ namespace KitforgeLabs.UIKit.Editor.Hub.Setup
             status.EnableInClassList("kfh-wizard-card-status--done", isDone);
         }
 
-        private bool AllStepsDone() => IsStep1Done() && IsStep2Done();
+        private bool AllStepsDone() => IsStep1Done() && IsStep2Done() && IsStep3Done();
 
         private bool IsStep1Done()
         {
             var guids = AssetDatabase.FindAssets($"t:{nameof(UIAnimPreset)}");
-            return guids != null && guids.Length >= 1;
+            return guids != null && guids.Length >= 10;
         }
 
         private bool IsStep2Done()
@@ -101,7 +130,7 @@ namespace KitforgeLabs.UIKit.Editor.Hub.Setup
             return binders != null && binders.Length > 0;
         }
 
-        private bool IsStep3Done() => false;
+        private bool IsStep3Done() => EditorPrefs.GetBool(Step3DoneEditorPrefKey, false);
 
         private void RunStep1() => InvokeMenu(BootstrapDefaultsMenuPath);
 
@@ -109,6 +138,7 @@ namespace KitforgeLabs.UIKit.Editor.Hub.Setup
 
         private void RunStep3()
         {
+            EditorPrefs.SetBool(Step3DoneEditorPrefKey, true);
             if (_hostWindow != null) _hostWindow.SwitchToTab(KitforgeHubState.HubTab.Catalog);
         }
 

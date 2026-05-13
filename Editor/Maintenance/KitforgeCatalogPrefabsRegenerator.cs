@@ -1,8 +1,8 @@
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEditor.PackageManager;
 using UnityEngine;
 
-namespace KitforgeLabs.UIKit.Editor.Generators
+namespace KitforgeLabs.UIKit.Editor.Maintenance
 {
     internal static class KitforgeCatalogPrefabsRegenerator
     {

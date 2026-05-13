@@ -1,4 +1,4 @@
-using KitforgeLabs.UIKit.Catalog.Confirm;
+﻿using KitforgeLabs.UIKit.Catalog.Confirm;
 using KitforgeLabs.UIKit.Catalog.Pause;
 using KitforgeLabs.UIKit.Catalog.Toasts;
 using KitforgeLabs.UIKit.Catalog.Tutorial;
@@ -10,9 +10,9 @@ using TMPro;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
-using static KitforgeLabs.UIKit.Editor.Generators.CatalogGroupBuilderShared;
+using static KitforgeLabs.UIKit.Editor.Maintenance.CatalogGroupBuilderShared;
 
-namespace KitforgeLabs.UIKit.Editor.Generators
+namespace KitforgeLabs.UIKit.Editor.Maintenance
 {
     internal static class CatalogGroupABuilder
     {

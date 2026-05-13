@@ -1,11 +1,11 @@
-using System.IO;
+﻿using System.IO;
 using KitforgeLabs.UIKit.Theme;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace KitforgeLabs.UIKit.Editor.Generators
+namespace KitforgeLabs.UIKit.Editor.Maintenance
 {
     internal static class CatalogGroupBuilderShared
     {

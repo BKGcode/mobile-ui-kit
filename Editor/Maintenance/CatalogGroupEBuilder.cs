@@ -1,13 +1,13 @@
-using KitforgeLabs.UIKit.Catalog.Screens;
+﻿using KitforgeLabs.UIKit.Catalog.Screens;
 using KitforgeLabs.UIKit.Services;
 using KitforgeLabs.UIKit.Theme;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
-using static KitforgeLabs.UIKit.Editor.Generators.CatalogGroupBuilderShared;
+using static KitforgeLabs.UIKit.Editor.Maintenance.CatalogGroupBuilderShared;
 
-namespace KitforgeLabs.UIKit.Editor.Generators
+namespace KitforgeLabs.UIKit.Editor.Maintenance
 {
     internal static class CatalogGroupEBuilder
     {

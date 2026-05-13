@@ -4,10 +4,37 @@ All notable changes to this package are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+## [1.3.0] — 2026-05-13
+
+Click & Play: the kit now ships a ready-to-run demo scene with mock services for every contract, so buyers see all 17 catalog elements working live before writing any code. The Setup Wizard surfaces the demo scene as the recommended path; the 3-step wizard remains for blank-scene workflows. Spawn snippets now include `using` imports and field declarations.
+
+### Added
+
+- **`Runtime/Demo/KitforgeDemoScene.unity`** — a single-scene showcase wiring the 17-element catalog, three themes and `DemoServicesBootstrap`. Open via top menu `KitforgeLabs → UI Kit → Open Demo Scene`. The scene boots into `MainMenuScreen` with HUDs showing live values (1250 coins / 80 gems / 5 energy), a quick-spawn side panel for popups not reachable from the main menu, and a top-right theme cycle button.
+- **`Runtime/Services/Demo/`** — 8 demo implementations of every service contract (`DemoEconomyService`, `DemoProgressionService`, `DemoShopDataProvider`, `DemoAdsService`, `DemoTimeService`, `DemoAudioRouter`, `DemoLocalizationService`, `DemoPlayerDataService` — in-memory, no PlayerPrefs writes). Plus `DemoServicesBootstrap` MonoBehaviour (`[DefaultExecutionOrder(-200)]`) that wires them into `UIServices` before any consumer's `OnEnable`. Kit ships with Null Object defaults for production, Demo Object defaults for the showcase, your impl for your game.
+- **`Runtime/Demo/DemoMenuController.cs`** — runtime controller that pushes `MainMenuScreen`, wires its events to the catalog popups, builds the quick-spawn side panel, and exposes a theme cycle button. Builds the overlay panel programmatically — no extra prefabs required.
+- **`Editor/Hub/KitforgeDemoLauncher.cs`** — top menu `KitforgeLabs → UI Kit → Open Demo Scene` (priority 10) opens the demo scene in Single mode after prompting to save modified scenes.
+- **`Editor/Maintenance/KitforgeDemoSceneBaker.cs`** — `(Dev)` tool that rebuilds `KitforgeDemoScene.unity` from `KitforgeRoot.prefab` + the three theme presets. Refuses to write into a read-only (Git-installed) package — embed the package first via `file:` in `manifest.json`.
+- **`Editor/Maintenance/KitforgeCatalogScreenshotBaker.cs`** — `(Dev)` tool that bakes catalog PNGs into `Documentation~/Screenshots/` while the demo scene runs in Play Mode. Captures one frame per element, then dismisses and moves on.
+- **Hub Setup Wizard "Recommended path" banner** — surfaces `Open Demo Scene` as the primary action above the 3-step blank-scene wizard. The wizard becomes the advanced path; the demo is the front door.
+- **Spawn snippet enrichment** — the Hub Catalog tab now emits the full block: `using` imports for the manager and the element namespace, `[SerializeField] private XManager _xManager;` declaration, and the `Show<T>(new XData { ... });` call. Buyers paste once into a script and it compiles.
+
 ### Changed
 
-- **Hub Catalog tab filter chips** — chips now scope by spawn pattern (Popup / Toast / Screen / HUD) instead of internal group letters (A / B / C / D / E). Cell layout simplified: group badge removed, detail meta no longer mentions group. Internal `KitforgeCatalogEntry.Group` field retained for kit-author tooling but no longer surfaced in buyer-facing Hub UI. `KitforgeHubState.CatalogGroupFilter` renamed to `CatalogPatternFilter` (serialized field `_catalogGroupFilter` → `_catalogPatternFilter`; one-time reset of persisted filter on first launch after upgrade — semantic value changed from group letter to pattern name).
-- **Hub Theme Studio "New Theme" button** — activated (previously placeholder, disabled). Click creates a new `UIThemeConfig` at `Assets/Settings/Themes/Theme_New.asset` (subtree auto-created if absent) with inline rename in Project window. Replaces the prior "use Assets → Create → KitforgeLabs → Theme" tooltip workaround.
+- **`Editor/Maintenance/` asmdef** — `KitforgeLabs.UIKit.Editor.Maintenance.asmdef` introduced with `defineConstraints: ["KITFORGE_DEV_MAINTENANCE"]`. All kit-author tooling (Catalog prefabs regenerator, Wire-into-KitforgeRoot tool, Demo Scene baker, Screenshot baker, plus the internal `CatalogGroup{A,B,C,D,E}Builder` + `CatalogGroupBuilderShared`) now lives there and only compiles when the kit author defines `KITFORGE_DEV_MAINTENANCE` in Player Settings. Buyers no longer see `Maintenance/.../(Dev)` menus, internal builders or shared helpers. `Editor/Generators/` retains only `DefaultUIAnimPresetsCreator` (buyer-facing Bootstrap Defaults).
+- **Hub Setup Wizard Step 3 ("Browse Catalog")** — now correctly marks Done once the buyer clicks the action button (persists via `EditorPrefs` key `kf.hub.setup.step3.catalog_visited`). `AllStepsDone()` now includes Step 3; the summary text updates accordingly. `IsStep1Done()` tightened from `>= 1` to `>= 10` so a single stray `UIAnimPreset` no longer false-positives.
+- **README rewritten for v1.3.0** — hero banner image (`Documentation~/Screenshots/HeroBanner.png`), Click & Play quickstart reduced to 2 steps (install + Open Demo Scene), Non-goals moved to the end, added "What's in the box", "Catalog" (with required services column) and "Services" sections, install URL pinned to `#v1.3.0`.
+- **Documentation~/CHEATSHEET.md "Quick start"** — rewritten around `Open Demo Scene` as Step 1, `Press Play` as Step 2, `Drag KitforgeRoot into your own scene` as Step 3.
+
+### Removed
+
+- **`Editor/Generators/CatalogGroup{A,B,C,D,E}Builder.cs` + `CatalogGroupBuilderShared.cs`** — moved (not deleted) to `Editor/Maintenance/`. CHANGELOG v1.1.0 had declared these "removed"; v1.2.0 silently restored them. v1.3.0 keeps them but isolates them behind the `KITFORGE_DEV_MAINTENANCE` define so buyers no longer see them in any code path.
+- **`Editor/Generators/KitforgeCatalogPrefabsRegenerator.cs` + `KitforgeCatalogWireTool.cs`** — moved to `Editor/Maintenance/` for the same reason.
+
+### Upgrade notes
+
+- **From v1.2.x**: no buyer action required. The demo scene and demo services are additive; existing wired scenes still work as-is. If you upgraded via Package Manager with the version pinned to `#v1.2.0`, bump the manifest tag to `#v1.3.0`.
+- **Kit author / contributor only**: to access the regenerate / wire / bake tools, add `KITFORGE_DEV_MAINTENANCE` to `Edit → Project Settings → Player → Other Settings → Scripting Define Symbols` in your host project.
 
 ## [1.2.0] — 2026-05-11
 

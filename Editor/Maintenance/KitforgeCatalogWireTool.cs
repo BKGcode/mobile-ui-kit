@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using KitforgeLabs.UIKit.Core;
 using KitforgeLabs.UIKit.HUD;
@@ -6,7 +6,7 @@ using KitforgeLabs.UIKit.Toast;
 using UnityEditor;
 using UnityEngine;
 
-namespace KitforgeLabs.UIKit.Editor.Generators
+namespace KitforgeLabs.UIKit.Editor.Maintenance
 {
     internal static class KitforgeCatalogWireTool
     {

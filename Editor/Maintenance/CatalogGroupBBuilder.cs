@@ -1,4 +1,4 @@
-using KitforgeLabs.UIKit.Catalog.HUD;
+﻿using KitforgeLabs.UIKit.Catalog.HUD;
 using KitforgeLabs.UIKit.Catalog.NotEnough;
 using KitforgeLabs.UIKit.Catalog.Reward;
 using KitforgeLabs.UIKit.Catalog.Shop;
@@ -8,9 +8,9 @@ using TMPro;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
-using static KitforgeLabs.UIKit.Editor.Generators.CatalogGroupBuilderShared;
+using static KitforgeLabs.UIKit.Editor.Maintenance.CatalogGroupBuilderShared;
 
-namespace KitforgeLabs.UIKit.Editor.Generators
+namespace KitforgeLabs.UIKit.Editor.Maintenance
 {
     internal static class CatalogGroupBBuilder
     {

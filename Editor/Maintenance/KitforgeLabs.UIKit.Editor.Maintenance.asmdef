@@ -1,0 +1,24 @@
+{
+    "name": "KitforgeLabs.UIKit.Editor.Maintenance",
+    "rootNamespace": "KitforgeLabs.UIKit.Editor.Maintenance",
+    "references": [
+        "KitforgeLabs.UIKit",
+        "KitforgeLabs.UIKit.Catalog",
+        "KitforgeLabs.UIKit.Demo",
+        "KitforgeLabs.UIKit.Editor",
+        "Unity.TextMeshPro"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [
+        "KITFORGE_DEV_MAINTENANCE"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

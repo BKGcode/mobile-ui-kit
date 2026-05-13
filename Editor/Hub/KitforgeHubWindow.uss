@@ -163,6 +163,39 @@
     -unity-font-style: italic;
 }
 
+.kfh-wizard-banner {
+    flex-direction: column;
+    background-color: rgb(45, 80, 130);
+    border-width: 1px;
+    border-color: rgb(70, 110, 170);
+    border-radius: 4px;
+    padding: 14px 18px;
+    margin-bottom: 16px;
+}
+
+.kfh-wizard-banner-title {
+    -unity-font-style: bold;
+    font-size: 14px;
+    color: rgb(255, 255, 255);
+    margin-bottom: 6px;
+}
+
+.kfh-wizard-banner-description {
+    color: rgb(220, 230, 245);
+    font-size: 12px;
+    margin-bottom: 10px;
+    white-space: normal;
+}
+
+.kfh-wizard-banner-button {
+    align-self: flex-start;
+    padding-left: 14px;
+    padding-right: 14px;
+    -unity-font-style: bold;
+    background-color: rgb(80, 130, 200);
+    color: rgb(255, 255, 255);
+}
+
 .kfh-catalog {
     flex-direction: row;
     flex-grow: 1;

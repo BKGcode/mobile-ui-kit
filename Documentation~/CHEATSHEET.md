@@ -4,13 +4,13 @@
 
 ---
 
-## 1. Quick start (drop-and-play)
+## 1. Quick start — Click & Play
 
-1. Drag `Packages/com.kitforgelabs.mobile-ui-kit/Runtime/Bootstrap/KitforgeRoot.prefab` into your scene.
-2. Press **Play** → kit boots, `Theme_Default` applies, zero LogError.
-3. Open **`KitforgeLabs → UI Kit → Hub`** → Setup wizard confirms the scene, Catalog tab generates `Show<T>(dto)` / `Push<T>(dto)` snippets, Theme Studio previews the 3 shipped themes.
+1. Open the demo scene: **`KitforgeLabs → UI Kit → Open Demo Scene`**.
+2. Press **Play**. HUDs show live values (`DemoEconomyService` ships 1250 coins / 80 gems / 5 energy). Main menu wires every popup. Side panel quick-spawns the rest. Top-right button cycles themes.
+3. When ready to start your game: drag `Packages/com.kitforgelabs.mobile-ui-kit/Runtime/Bootstrap/KitforgeRoot.prefab` into your scene. Swap `DemoServicesBootstrap` for your real service implementations on `UIServices`.
 
-`KitforgeRoot.prefab` ships pre-wired with: 3 managers (`PopupManager` / `UIManager` / `ToastManager`) + `UIServices` container + `EventSystem` + global `PopupBackdrop` + `KitforgeThemeBinder` bound to `Theme_Default`.
+`KitforgeRoot.prefab` ships pre-wired with: 3 managers (`PopupManager` / `UIManager` / `ToastManager`) + `UIServices` container + `EventSystem` + global `PopupBackdrop` + `KitforgeThemeBinder` bound to `Theme_Default`. With empty service slots `UIServices` falls back to Null Object defaults so the kit boots — wire `DemoServicesBootstrap` (in `Runtime/Services/Demo/`) or your own implementations to populate.
 
 ---
 

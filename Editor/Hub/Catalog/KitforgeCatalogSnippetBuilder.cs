@@ -47,24 +47,35 @@ namespace KitforgeLabs.UIKit.Editor.Hub.Catalog
         private static string BuildPopupSnippet(KitforgeCatalogEntry entry)
         {
             var dataType = ResolveDataTypeName(entry);
-            return $"_popupManager.Show<{entry.ComponentType.Name}>(new {dataType}\n{{\n    // ...\n}});";
+            return BuildSpawnTemplate("KitforgeLabs.UIKit.Core", entry.ComponentType.Namespace, "PopupManager", "_popupManager", "Show", entry.ComponentType.Name, dataType);
         }
 
         private static string BuildScreenSnippet(KitforgeCatalogEntry entry)
         {
             var dataType = ResolveDataTypeName(entry);
-            return $"_uiManager.Push<{entry.ComponentType.Name}>(new {dataType}\n{{\n    // ...\n}});";
+            return BuildSpawnTemplate("KitforgeLabs.UIKit.Core", entry.ComponentType.Namespace, "UIManager", "_uiManager", "Push", entry.ComponentType.Name, dataType);
         }
 
         private static string BuildToastSnippet(KitforgeCatalogEntry entry)
         {
             var dataType = ResolveDataTypeName(entry);
-            return $"_toastManager.Show<{entry.ComponentType.Name}>(new {dataType}\n{{\n    // ...\n}});";
+            return BuildSpawnTemplate("KitforgeLabs.UIKit.Toast", entry.ComponentType.Namespace, "ToastManager", "_toastManager", "Show", entry.ComponentType.Name, dataType);
         }
 
         private static string BuildHUDSnippet(KitforgeCatalogEntry entry)
         {
-            return $"// {entry.DisplayName} is a prefab. Drag the catalog cell into KitforgeRoot/UICanvas/ScreenRoot.\n// It auto-binds to the required services at runtime (see description above).";
+            return $"// {entry.DisplayName} is a prefab — drag it under KitforgeRoot/UICanvas/ScreenRoot.\n// It auto-binds at runtime to the required services (see description above).\n// No code required.";
+        }
+
+        private static string BuildSpawnTemplate(string managerNamespace, string componentNamespace, string managerType, string managerField, string method, string componentName, string dataType)
+        {
+            return $"// 1. Add these usings at the top of your script:\n" +
+                   $"using {managerNamespace};\n" +
+                   $"using {componentNamespace};\n\n" +
+                   $"// 2. Wire the manager once via Inspector or DI:\n" +
+                   $"[SerializeField] private {managerType} {managerField};\n\n" +
+                   $"// 3. Spawn:\n" +
+                   $"{managerField}.{method}<{componentName}>(new {dataType}\n{{\n    // ...\n}});";
         }
 
         private static string ResolveDataTypeName(KitforgeCatalogEntry entry)
