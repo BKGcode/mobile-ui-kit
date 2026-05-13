@@ -29,6 +29,7 @@ namespace KitforgeLabs.UIKit.Editor.Maintenance
             var themes = LoadThemes();
             if (themes == null) return;
             var scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
+            CreateMainCamera();
             var root = (GameObject)PrefabUtility.InstantiatePrefab(prefab);
             PrefabUtility.UnpackPrefabInstance(root, PrefabUnpackMode.OutermostRoot, InteractionMode.AutomatedAction);
             AttachDemoComponents(root, themes);
@@ -36,6 +37,20 @@ namespace KitforgeLabs.UIKit.Editor.Maintenance
             EditorSceneManager.SaveScene(scene, DestinationScenePath);
             AssetDatabase.ImportAsset(DestinationScenePath, ImportAssetOptions.ForceUpdate);
             Debug.Log($"[KitforgeDemoSceneBaker] Demo scene baked at {DestinationScenePath}. Commit the .unity asset to ship it with the package.");
+        }
+
+        private static void CreateMainCamera()
+        {
+            var camGO = new GameObject("Main Camera", typeof(Camera), typeof(AudioListener));
+            camGO.tag = "MainCamera";
+            camGO.transform.position = new Vector3(0f, 1f, -10f);
+            var cam = camGO.GetComponent<Camera>();
+            cam.clearFlags = CameraClearFlags.SolidColor;
+            cam.backgroundColor = new Color(0.12f, 0.13f, 0.17f, 1f);
+            cam.orthographic = false;
+            cam.fieldOfView = 60f;
+            cam.nearClipPlane = 0.3f;
+            cam.farClipPlane = 1000f;
         }
 
         private static bool ValidateWritable()

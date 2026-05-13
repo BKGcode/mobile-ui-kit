@@ -15,6 +15,7 @@ using KitforgeLabs.UIKit.Catalog.Tutorial;
 using KitforgeLabs.UIKit.Core;
 using KitforgeLabs.UIKit.Editor.Hub.Catalog;
 using KitforgeLabs.UIKit.Services;
+using KitforgeLabs.UIKit.Services.Demo;
 using KitforgeLabs.UIKit.Theme;
 using UnityEditor;
 using UnityEditor.SceneManagement;
@@ -70,6 +71,7 @@ namespace KitforgeLabs.UIKit.Editor.Maintenance
             public Camera Cam;
             public Canvas Canvas;
             public RenderTexture RenderTex;
+            public UIServices Services;
         }
 
         private static CaptureRig BuildRig()
@@ -88,7 +90,24 @@ namespace KitforgeLabs.UIKit.Editor.Maintenance
             ConfigureCanvas(canvasGO, cam);
             var rt = new RenderTexture(Width, Height, 24, RenderTextureFormat.ARGB32) { name = "KitforgeBakeRT" };
             cam.targetTexture = rt;
-            return new CaptureRig { RigRoot = rigRoot, Cam = cam, Canvas = canvasGO.GetComponent<Canvas>(), RenderTex = rt };
+            var services = BuildDemoServices(rigRoot);
+            return new CaptureRig { RigRoot = rigRoot, Cam = cam, Canvas = canvasGO.GetComponent<Canvas>(), RenderTex = rt, Services = services };
+        }
+
+        private static UIServices BuildDemoServices(GameObject rigRoot)
+        {
+            var servicesGO = new GameObject("BakeServices", typeof(UIServices));
+            servicesGO.transform.SetParent(rigRoot.transform, false);
+            var services = servicesGO.GetComponent<UIServices>();
+            services.SetEconomy(new DemoEconomyService());
+            services.SetPlayerData(new DemoPlayerDataService());
+            services.SetProgression(new DemoProgressionService());
+            services.SetShopData(new DemoShopDataProvider());
+            services.SetAds(new DemoAdsService());
+            services.SetTime(new DemoTimeService());
+            services.SetAudio(new DemoAudioRouter());
+            services.SetLocalization(new DemoLocalizationService());
+            return services;
         }
 
         private static void ConfigureCanvas(GameObject canvasGO, Camera cam)
@@ -112,7 +131,7 @@ namespace KitforgeLabs.UIKit.Editor.Maintenance
             try
             {
                 ResetTransformForCapture(instance);
-                BindData(instance, entry, theme);
+                BindData(instance, entry, theme, rig.Services);
                 Canvas.ForceUpdateCanvases();
                 rig.Cam.Render();
                 SaveRenderTextureAsPng(rig.RenderTex, $"{OutputDirectory}/{IndexFor(entry):00}_{entry.ComponentType.Name}.png");
@@ -144,11 +163,11 @@ namespace KitforgeLabs.UIKit.Editor.Maintenance
             if (cg != null) cg.alpha = 1f;
         }
 
-        private static void BindData(GameObject instance, KitforgeCatalogEntry entry, UIThemeConfig theme)
+        private static void BindData(GameObject instance, KitforgeCatalogEntry entry, UIThemeConfig theme, UIServices services)
         {
             var module = instance.GetComponent<UIModuleBase>();
             if (module == null) return;
-            module.Initialize(theme, null);
+            module.Initialize(theme, services);
             var data = BuildMockData(entry);
             if (data != null && BindUntypedMethod != null) BindUntypedMethod.Invoke(module, new[] { data });
         }

@@ -1,7 +1,7 @@
 {
   "name": "com.kitforgelabs.mobile-ui-kit",
   "displayName": "KitforgeLabs · UI Kit",
-  "version": "1.3.2",
+  "version": "1.3.3",
   "unity": "6000.1",
   "description": "Mobile UGUI kit for hybrid-casual games. Click & Play: open the Demo Scene, press Play, see all 17 catalog elements (popups, toasts, screens, HUDs) running live with demo services and three themes. Then drop KitforgeRoot.prefab into your own scene and reuse the spawn snippets the KitforgeLabs Hub generates for you.",
   "keywords": [

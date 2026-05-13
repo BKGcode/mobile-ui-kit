@@ -166,12 +166,32 @@ namespace KitforgeLabs.UIKit.Editor.Hub.Catalog
             var cell = new VisualElement();
             cell.AddToClassList("kfh-catalog-cell");
             cell.userData = entry;
+            cell.Add(BuildCellThumbnail(entry));
             cell.Add(BuildCellName(entry));
             cell.Add(BuildCellPattern(entry));
             cell.RegisterCallback<ClickEvent>(_ => SelectEntry(entry));
             RegisterDragCallbacks(cell, entry);
             UpdateCellSelection(cell, entry);
             return cell;
+        }
+
+        private VisualElement BuildCellThumbnail(KitforgeCatalogEntry entry)
+        {
+            var holder = new VisualElement();
+            holder.AddToClassList("kfh-catalog-cell-thumbnail");
+            var tex = KitforgeCatalogThumbnails.LoadFor(entry);
+            if (tex == null)
+            {
+                holder.AddToClassList("kfh-catalog-cell-thumbnail--placeholder");
+                var pattern = new Label(entry.Pattern.ToString());
+                pattern.AddToClassList("kfh-catalog-cell-thumbnail-fallback");
+                holder.Add(pattern);
+                return holder;
+            }
+            var image = new Image { image = tex, scaleMode = ScaleMode.ScaleToFit };
+            image.AddToClassList("kfh-catalog-cell-thumbnail-image");
+            holder.Add(image);
+            return holder;
         }
 
         private void RegisterDragCallbacks(VisualElement cell, KitforgeCatalogEntry entry)
@@ -279,11 +299,31 @@ namespace KitforgeLabs.UIKit.Editor.Hub.Catalog
             var pane = new VisualElement();
             pane.Add(BuildDetailTitle(entry));
             pane.Add(BuildDetailMeta(entry));
+            pane.Add(BuildDetailPreview(entry));
             pane.Add(BuildDetailDescription(entry));
             pane.Add(BuildDragInstruction(entry));
             pane.Add(BuildFieldList(entry));
             pane.Add(BuildSnippetField(entry));
             return pane;
+        }
+
+        private VisualElement BuildDetailPreview(KitforgeCatalogEntry entry)
+        {
+            var holder = new VisualElement();
+            holder.AddToClassList("kfh-catalog-detail-preview");
+            var tex = KitforgeCatalogThumbnails.LoadFor(entry);
+            if (tex == null)
+            {
+                holder.AddToClassList("kfh-catalog-detail-preview--empty");
+                var note = new Label(entry.Pattern == KitforgeSpawnPattern.HUD ? "HUDs require live services to render — open the Demo Scene to see this in action." : "Preview not available yet.");
+                note.AddToClassList("kfh-catalog-detail-preview-empty-label");
+                holder.Add(note);
+                return holder;
+            }
+            var image = new Image { image = tex, scaleMode = ScaleMode.ScaleToFit };
+            image.AddToClassList("kfh-catalog-detail-preview-image");
+            holder.Add(image);
+            return holder;
         }
 
         private Label BuildDetailTitle(KitforgeCatalogEntry entry)

@@ -4,6 +4,19 @@ All notable changes to this package are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+## [1.3.3] — 2026-05-13
+
+### Added
+
+- **Hub Catalog tab thumbnails** — every cell now renders a 110px thumbnail of the catalog element, loaded directly from `Documentation~/Screenshots/` via `File.ReadAllBytes` (no asset duplication). The detail panel adds a 280px preview between meta and description. HUD entries fall back to a textual placeholder with a hint to open the Demo Scene for live rendering. New file `Editor/Hub/Catalog/KitforgeCatalogThumbnails.cs` caches textures and disposes them on assembly reload.
+- **Main Camera in baked Demo Scene** — `KitforgeDemoSceneBaker` now creates a `Main Camera` GameObject (`tag=MainCamera`, AudioListener, dark background `rgb(0.12, 0.13, 0.17)`, perspective 60°) before instantiating `KitforgeRoot.prefab`. GameView no longer renders black and the "Display 1 No cameras rendering" warning is gone.
+
+### Changed
+
+- **`KitforgeCatalogScreenshotBaker` now wires demo services** into the capture rig: a temporary `UIServices` MonoBehaviour holds `DemoEconomyService` / `DemoShopDataProvider` / `DemoPlayerDataService` / etc., passed as the `services` argument to `module.Initialize(theme, services)`. `ShopPopup` now bakes with the item grid populated, `SettingsPopup` with sliders/toggles bound, `RewardPopup` with currency icons. No more `LogError` during EditMode bakes.
+- **`Runtime/Demo/KitforgeDemoScene.unity` rebaked** to include the Main Camera.
+- **`Documentation~/Screenshots/06_ShopPopup.png`, `12_GameOverPopup.png`, `15_SettingsPopup.png` rebaked** with service-driven content visible.
+
 ## [1.3.2] — 2026-05-13
 
 ### Removed

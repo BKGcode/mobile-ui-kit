@@ -276,7 +276,7 @@
 
 .kfh-catalog-cell {
     width: 160px;
-    height: 110px;
+    height: 200px;
     flex-direction: column;
     background-color: rgb(58, 58, 58);
     border-width: 1px;
@@ -285,6 +285,33 @@
     margin: 4px;
     padding: 8px;
     cursor: link;
+}
+
+.kfh-catalog-cell-thumbnail {
+    width: 100%;
+    height: 110px;
+    background-color: rgb(28, 30, 36);
+    border-radius: 3px;
+    margin-bottom: 6px;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.kfh-catalog-cell-thumbnail--placeholder {
+    background-color: rgb(48, 50, 56);
+}
+
+.kfh-catalog-cell-thumbnail-fallback {
+    color: rgb(160, 165, 175);
+    font-size: 10px;
+    -unity-font-style: italic;
+}
+
+.kfh-catalog-cell-thumbnail-image {
+    flex-grow: 1;
+    width: 100%;
+    height: 100%;
 }
 
 .kfh-catalog-cell:hover {
@@ -509,6 +536,35 @@
     color: rgb(170, 170, 170);
     margin-bottom: 12px;
     white-space: normal;
+}
+
+.kfh-catalog-detail-preview {
+    width: 100%;
+    height: 280px;
+    background-color: rgb(28, 30, 36);
+    border-radius: 4px;
+    margin-bottom: 14px;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.kfh-catalog-detail-preview--empty {
+    background-color: rgb(48, 50, 56);
+}
+
+.kfh-catalog-detail-preview-empty-label {
+    color: rgb(180, 185, 195);
+    font-size: 12px;
+    -unity-font-style: italic;
+    white-space: normal;
+    padding: 12px;
+}
+
+.kfh-catalog-detail-preview-image {
+    flex-grow: 1;
+    width: 100%;
+    height: 100%;
 }
 
 .kfh-catalog-detail-description {
