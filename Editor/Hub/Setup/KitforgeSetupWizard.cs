@@ -9,7 +9,7 @@ namespace KitforgeLabs.UIKit.Editor.Hub.Setup
     internal sealed class KitforgeSetupWizard
     {
         private const string KitforgeRootPrefabPath = "Packages/com.kitforgelabs.mobile-ui-kit/Runtime/Bootstrap/KitforgeRoot.prefab";
-        private const string OpenDemoSceneMenuPath = "KitforgeLabs/UI Kit/Open Demo Scene";
+        private const string OpenDemoSceneMenuPath = "KitForge Labs/UI Kit/Open Demo Scene";
         private const string Step2DoneEditorPrefKey = "kf.hub.setup.step2.catalog_visited";
 
         private readonly KitforgeHubWindow _hostWindow;

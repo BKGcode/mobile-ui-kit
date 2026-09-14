@@ -117,7 +117,7 @@ namespace KitforgeLabs.UIKit.Demo
 
         private void CreateTitleBlock(Transform parent)
         {
-            var titleGO = CreateText(parent, "Title", "Kitforge UI Kit · Demo", 32f, FontStyles.Bold, TextAlignmentOptions.Left, Color.white);
+            var titleGO = CreateText(parent, "Title", "KitForge Labs UI Kit · Demo", 32f, FontStyles.Bold, TextAlignmentOptions.Left, Color.white);
             var rt = (RectTransform)titleGO.transform;
             rt.anchorMin = new Vector2(0f, 0f);
             rt.anchorMax = new Vector2(0.65f, 1f);
@@ -384,9 +384,9 @@ namespace KitforgeLabs.UIKit.Demo
         private void OpenHub()
         {
 #if UNITY_EDITOR
-            EditorApplication.ExecuteMenuItem("KitforgeLabs/UI Kit/Hub");
+            EditorApplication.ExecuteMenuItem("KitForge Labs/UI Kit/Hub");
 #else
-            Debug.Log("[DemoMenuController] Open KitforgeLabs → UI Kit → Hub from the Editor menu.");
+            Debug.Log("[DemoMenuController] Open KitForge Labs → UI Kit → Hub from the Editor menu.");
 #endif
         }
 

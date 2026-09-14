@@ -1,6 +1,8 @@
-# KitforgeLabs · UI Kit
+# KitForge Labs — UI Kit
 
 > Mobile UGUI kit for hybrid-casual games. **Click. Play. Ship.**
+
+_Part of the **KitForge Labs** toolset — the runtime UI companion to the [Tech Art editor-tools suite](https://github.com/BKGcode/techart-tools). Separate package, shared studio brand._
 
 ![Catalog preview](Documentation~/Screenshots/HeroBanner.png)
 
@@ -16,7 +18,7 @@
 - **`UIThemeConfig`** — one `ScriptableObject` that re-skins every screen, popup, HUD and toast. Three presets ship in (`Theme_Default`, `Theme_Casual`, `Theme_Premium`).
 - **17-element catalog** — 10 popups (Confirm · Pause · Tutorial · Reward · Shop · NotEnoughCurrency · DailyLogin · LevelComplete · GameOver · Settings) · 1 toast (Notification) · 2 screens (Loading · MainMenu) · 4 HUDs (Coins · Gems · Energy · Timer). All prefabs pre-wired.
 - **Demo Scene** — `KitforgeDemoScene.unity` with `DemoServicesBootstrap` providing in-memory economy, progression, shop, ads, time and localization data. Press Play and explore.
-- **KitforgeLabs Hub** (`KitforgeLabs → UI Kit → Hub`) — Setup wizard, Catalog browser with copy-paste snippets, Theme Studio, Test launcher, inline Cheatsheet.
+- **KitForge Labs Hub** (`KitForge Labs → UI Kit → Hub`) — Setup wizard, Catalog browser with copy-paste snippets, Theme Studio, Test launcher, inline Cheatsheet.
 
 ---
 
@@ -28,7 +30,7 @@
    ```
    Or via Package Manager → **Add package from git URL…**
 
-2. **Open the demo scene.** Top menu: **`KitforgeLabs → UI Kit → Open Demo Scene`**. Press Play. HUDs show live values, the main menu wires every popup, the side panel quick-spawns the rest, and a top-right button cycles themes.
+2. **Open the demo scene.** Top menu: **`KitForge Labs → UI Kit → Open Demo Scene`**. Press Play. HUDs show live values, the main menu wires every popup, the side panel quick-spawns the rest, and a top-right button cycles themes.
 
 That's it. Drag `KitforgeRoot.prefab` into your own scene when you want to start your game, swap `DemoServicesBootstrap` for your real service implementations.
 
@@ -95,7 +97,7 @@ _popupManager.Show<ConfirmPopup>(new ConfirmPopupData
 
 Three presets ship in `Runtime/Theme/Presets/`. Swap at design time by assigning any `UIThemeConfig.asset` to `KitforgeRoot/KitforgeThemeBinder._theme`. Swap at runtime via `_themeBinder.SetTheme(myTheme)` — re-distributes to the three managers and re-initializes cached instances.
 
-Create your own theme: **Assets → Create → KitforgeLabs → UI Kit → Theme** (or duplicate a preset). Tune 16 colors, sprite slots, 1 font, audio cues, default animation preset and safe-area config in the Inspector.
+Create your own theme: **Assets → Create → KitForge Labs → UI Kit → Theme** (or duplicate a preset). Tune 16 colors, sprite slots, 1 font, audio cues, default animation preset and safe-area config in the Inspector.
 
 ---
 
@@ -144,7 +146,7 @@ Three implementation tiers ship in:
 
 ## License
 
-Proprietary — KitforgeLabs. See `LICENSE.md` (TBD before public release).
+Proprietary — KitForge Labs. See `LICENSE.md` (TBD before public release).
 
 ---
 

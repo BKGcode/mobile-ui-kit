@@ -18,10 +18,10 @@ namespace KitforgeLabs.UIKit.Editor.Hub
         private VisualElement _sidebar;
         private VisualElement _content;
 
-        [MenuItem("KitforgeLabs/UI Kit/Hub")]
+        [MenuItem("KitForge Labs/UI Kit/Hub")]
         public static void Open()
         {
-            var w = GetWindow<KitforgeHubWindow>("Kitforge Hub");
+            var w = GetWindow<KitforgeHubWindow>("KitForge Labs Hub");
             w.minSize = new Vector2(900f, 560f);
         }
 
@@ -60,7 +60,7 @@ namespace KitforgeLabs.UIKit.Editor.Hub
         {
             var header = new VisualElement();
             header.AddToClassList("kfh-header");
-            var title = new Label("Kitforge Hub");
+            var title = new Label("KitForge Labs Hub");
             title.AddToClassList("kfh-header-title");
             header.Add(title);
             var sub = new Label("Single front door for the kit — Setup · Catalog · Theme · Test · Help.");

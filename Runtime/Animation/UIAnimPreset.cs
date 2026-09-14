@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace KitforgeLabs.UIKit.Animation
 {
-    [CreateAssetMenu(menuName = "KitforgeLabs/UI Kit/Anim Preset", fileName = "UIAnimPreset", order = 10)]
+    [CreateAssetMenu(menuName = "KitForge Labs/UI Kit/Anim Preset", fileName = "UIAnimPreset", order = 10)]
     public class UIAnimPreset : ScriptableObject
     {
         [Header("Show")]

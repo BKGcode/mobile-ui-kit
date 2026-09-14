@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace KitforgeLabs.UIKit.Theme
 {
-    [CreateAssetMenu(menuName = "KitforgeLabs/UI Kit/Theme", fileName = "UIThemeConfig", order = 0)]
+    [CreateAssetMenu(menuName = "KitForge Labs/UI Kit/Theme", fileName = "UIThemeConfig", order = 0)]
     public class UIThemeConfig : ScriptableObject
     {
         [Header("Colors")]

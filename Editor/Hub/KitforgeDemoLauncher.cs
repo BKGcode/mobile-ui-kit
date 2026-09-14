@@ -8,7 +8,7 @@ namespace KitforgeLabs.UIKit.Editor.Hub
     {
         private const string DemoScenePath = "Packages/com.kitforgelabs.mobile-ui-kit/Runtime/Demo/KitforgeDemoScene.unity";
 
-        [MenuItem("KitforgeLabs/UI Kit/Open Demo Scene", priority = 10)]
+        [MenuItem("KitForge Labs/UI Kit/Open Demo Scene", priority = 10)]
         public static void OpenDemoScene()
         {
             if (EditorApplication.isPlayingOrWillChangePlaymode)
@@ -20,7 +20,7 @@ namespace KitforgeLabs.UIKit.Editor.Hub
             var sceneAsset = AssetDatabase.LoadAssetAtPath<SceneAsset>(DemoScenePath);
             if (sceneAsset == null)
             {
-                Debug.LogError($"[KitforgeDemoLauncher] Demo scene not found at {DemoScenePath}. Reinstall the KitforgeLabs UI Kit package.");
+                Debug.LogError($"[KitforgeDemoLauncher] Demo scene not found at {DemoScenePath}. Reinstall the KitForge Labs UI Kit package.");
                 return;
             }
             EditorSceneManager.OpenScene(DemoScenePath, OpenSceneMode.Single);
