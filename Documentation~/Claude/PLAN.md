@@ -73,7 +73,9 @@ Parking. `added:` date required so `/_plan prune` knows what to archive.
 
 Closed items with DoD evidence. Empties on tag (`/_plan tidy --post-tag`).
 
-(Empty — current dev is unreleased after v1.3.4. The WIP commit `70bc4de` "feat(demo): redesign Demo Scene as showcase" lives in §2 Now until smoke passes; then promotes to §5 + rotates to CHANGELOG at v1.3.5 tag.)
+- Studio brand unified to `KitForge Labs` (display) — DoD: buyer-visible surfaces (displayName, author, README, Hub title, top-level + Create menus) present `KitForge Labs`; code identifiers unchanged. Shipped commit `3c0bb3a`, pushed to `main`. **(Already written to CHANGELOG `[Unreleased]` — do NOT re-add at tag.)**
+
+(Current dev is unreleased after v1.3.4. The WIP commit `70bc4de` "feat(demo): redesign Demo Scene as showcase" lives in §2 Now until smoke passes; then promotes to §5 + rotates to CHANGELOG at v1.3.5 tag.)
 
 ---
 
@@ -98,6 +100,7 @@ Append-only. Every architectural decision, scope change, or rejected approach la
 - 2026-05-13 — Removed `Bootstrap Defaults` menu (v1.3.2) — **because** kit no longer asks buyers to run a setup tool; `UIAnimPreset_Playful.asset` ships pre-wired in 3 stock themes
 - 2026-05-13 — Maintenance menus relocated to `Tools/KitforgeLabs/Test/...` — **because** top-level `KitforgeLabs/UI Kit/` menu must be buyer-facing only (Hub + Open Demo Scene); separation explicit
 - 2026-05-18 — Migration to v2 planning protocol (UPM variant at `Documentation~/Claude/`) — **because** ecosystem `philosophy §18` mandates single-source PLAN.md per project; UPM convention `~`-suffixed folders excluded from consumer Unity imports keeps workspace out of buyer projects
+- 2026-09-14 — Studio brand DISPLAY unified to `KitForge Labs` (two words), `conventions.md` §Studio brand revised — **because** the studio ships multiple products (techart-tools already reads `KitForge Labs`) and mobile-ui-kit must present as the same studio to buyers; supersedes the 2026-05-17 one-word lock for DISPLAY surfaces only — code identifiers (`KitforgeLabs.UIKit.*` namespace, package id, `Assets/KitforgeLabs/...` folder, dev menu) stay frozen for compatibility. Shipped commit `3c0bb3a`
 
 ---
 
@@ -110,7 +113,7 @@ Throwaway exploration. If an experiment graduates, promote to §1 Blocks.
 ---
 
 <!-- INTEGRITY MARKER — do not edit by hand
-last_updated: 2026-05-18T13:00Z
-updated_by: migration-v1-to-v2-upm
+last_updated: 2026-09-14T00:00Z
+updated_by: brand-unify-kitforge-labs
 plan_version: v1
 -->

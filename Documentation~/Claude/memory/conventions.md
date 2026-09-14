@@ -8,25 +8,28 @@ type: reference
 
 UPM package `com.kitforgelabs.mobile-ui-kit` targeting Unity Asset Store ($30-60 price band). Global ecosystem rules in `~/.claude/memory/unity-rules` and `~/.claude/memory/ecosystem_philosophy.md` apply unless contradicted here.
 
-## Studio brand — KitforgeLabs (canonical, no other name)
+## Studio brand — `KitForge Labs` (display canon) · `KitforgeLabs` (code identifiers)
 
-All project surfaces that carry studio attribution MUST use `KitforgeLabs`. Casing: capital `K` only (`KitforgeLabs`, not `KitForgeLabs`, not `kitforgelabs`, not `Kit Forge Labs`).
+Studio-wide brand decision (revised 2026-09-14, user-approved — supersedes the 2026-05-17 one-word lock for DISPLAY surfaces only): the **displayed** studio name is **`KitForge Labs`** (two words), aligned across all KitForge Labs products (techart-tools already presents this way; mobile-ui-kit now matches — separate packages, shared studio brand). Code identifiers already frozen under the one-word `KitforgeLabs` spelling stay as-is — renaming them breaks installs, buyer references, and saved assets.
 
-Surfaces specific to KF_MobileUIKit:
-- `package.json` `displayName`: `KitforgeLabs · UI Kit`
-- `package.json` `author.name`: `KitforgeLabs`
-- Top-level menu (buyer-facing): `KitforgeLabs/UI Kit/...` (only Hub + Open Demo Scene)
-- Kit-author maintenance menus: `Tools/KitforgeLabs/Test/...` (compile-gated by `KITFORGE_DEV_MAINTENANCE` Player Settings define)
-- Asset folder root in consumer projects: `Assets/KitforgeLabs/UI Kit/Settings/...`
+**Display attribution — use `KitForge Labs` (two words):**
+- `package.json` `displayName`: `KitForge Labs UI Kit`
+- `package.json` `author.name`: `KitForge Labs`
+- Top-level menu (buyer-facing): `KitForge Labs/UI Kit/...` (only Hub + Open Demo Scene) + the `Create → KitForge Labs → UI Kit → Theme / Anim Preset` asset menus
+- README.md attribution + heading + footer, and any buyer-visible label / dialog / log text
+- Hub window title
+
+**Code identifiers — stay one-word `KitforgeLabs` (do NOT rename — breaking):**
+- Package id: `com.kitforgelabs.mobile-ui-kit`
 - Namespace: `KitforgeLabs.UIKit.*` (NOT `KitforgeLabs.MobileUIKit.*` — renamed in v1.1.0)
-- README.md attribution + heading
-- CHANGELOG.md heading
+- Asset folder root in consumer projects: `Assets/KitforgeLabs/UI Kit/Settings/...`
+- Kit-author maintenance menus: `Tools/KitforgeLabs/Test/...` (dev-only, `KITFORGE_DEV_MAINTENANCE`-gated; not buyer-facing, so outside the display rebrand)
 
 `BKGcode` is the **GitHub account/organization slug only**, never used as studio attribution. Acceptable contexts: repo slug `BKGcode/mobile-ui-kit`, GitHub URLs.
 
-**Why:** user-enforced single-referent rule, validated 2026-05-17 across the KitforgeLabs studio. Mixed brands fragment attribution and confuse buyers about origin.
+**Why:** the studio ships more than one product; buyers must read techart-tools and mobile-ui-kit as the same studio. The 2026-05-17 single-referent lock predated the multi-product brand and is superseded for display surfaces only. Casing: `KitForge Labs` for display, `KitforgeLabs` (capital `K` only) for code.
 
-**How to apply:** any new surface that touches studio attribution defaults to `KitforgeLabs`. Do not propose alternatives.
+**How to apply:** any new BUYER-VISIBLE surface uses `KitForge Labs`; any code identifier keeps the frozen one-word `KitforgeLabs`. Shipped 2026-09-14 (commit `3c0bb3a`).
 
 ---
 

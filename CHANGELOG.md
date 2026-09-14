@@ -4,6 +4,10 @@ All notable changes to this package are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+### Changed
+
+- **Studio brand presented as `KitForge Labs`** (two words) across all buyer-visible surfaces, aligning mobile-ui-kit with the KitForge Labs Tech Art Tools suite (separate package, shared studio brand). `package.json` `displayName` → `KitForge Labs UI Kit`, `author.name` → `KitForge Labs`; README heading/footer + family line; Hub window title; and the buyer-facing top-level menu moved from `KitforgeLabs → UI Kit → …` to **`KitForge Labs → UI Kit → …`** (`Open Demo Scene`, `Hub`, and the `Create → KitForge Labs → UI Kit → Theme / Anim Preset` asset menus). Code identifiers are unchanged — namespace `KitforgeLabs.UIKit.*`, package id `com.kitforgelabs.mobile-ui-kit`, the `Assets/KitforgeLabs/UI Kit/Settings` folder, and the dev-only `Tools/KitforgeLabs/Test` menu keep the frozen one-word spelling (renaming would break installs and references). Buyers upgrading will see the top-level menu relocate under `KitForge Labs`.
+
 ## [1.3.4] — 2026-05-13
 
 ### Fixed
