@@ -366,7 +366,7 @@ namespace KitforgeLabs.UIKit.Demo
             rt.offsetMin = new Vector2(14f, 6f);
             rt.offsetMax = new Vector2(-14f, 0f);
             var lbl = go.GetComponent<TMP_Text>();
-            lbl.enableWordWrapping = true;
+            lbl.textWrappingMode = TextWrappingModes.Normal;
         }
 
         private void BuildBottomCta(Transform canvasRoot)
